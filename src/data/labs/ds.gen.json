@@ -1,0 +1,609 @@
+[
+ {
+  "id": "01",
+  "aim": "Import and export datasets in CSV, Excel and JSON using Pandas.",
+  "code": "import pandas as pd\n\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie'], 'Age': [25, 30, 35]})\ndf.to_csv('01.csv', index=False)\ndf.to_json('01.json', orient='records')\ndf.to_excel('01.xlsx', index=False)\n\nprint(\"CSV Data:\\n\", pd.read_csv('01.csv'))\nprint(\"\\nJSON Data:\\n\", pd.read_json('01.json'))\nprint(\"\\nExcel Data:\\n\", pd.read_excel('01.xlsx'))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "CSV Data:\n       Name  Age\n0    Alice   25\n1      Bob   30\n2  Charlie   35\n\nJSON Data:\n       Name  Age\n0    Alice   25\n1      Bob   30\n2  Charlie   35\n\nExcel Data:\n       Name  Age\n0    Alice   25\n1      Bob   30\n2  Charlie   35",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "02",
+  "aim": "Data preprocessing: missing values, duplicates and inconsistent data.",
+  "code": "import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Bob', 'David', 'eve '],\n                   'Age': [25, np.nan, np.nan, 40, 22],\n                   'Salary': [50000, 60000, 60000, -10000, 45000]})\n\ndf['Age'] = df['Age'].fillna(df['Age'].median())\ndf = df.drop_duplicates()\ndf['Name'] = df['Name'].str.strip().str.title()\ns = df['Salary'].where(df['Salary'] > 0)\ndf['Salary'] = s.fillna(s.median())\nprint(df)\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "    Name   Age   Salary\n0  Alice  25.0  50000.0\n1    Bob  25.0  60000.0\n3  David  40.0  50000.0\n4    Eve  22.0  45000.0",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "03",
+  "aim": "Descriptive statistics: mean, median, mode, variance, std dev, covariance.",
+  "code": "import pandas as pd\n\ndf = pd.DataFrame({'A': [10, 20, 20, 30, 40, 50], 'B': [15, 25, 25, 35, 45, 55]})\n\nprint(\"Mean:\\n\", df.mean())\nprint(\"\\nMedian:\\n\", df.median())\nprint(\"\\nMode:\\n\", df.mode())\nprint(\"\\nVariance:\\n\", df.var())\nprint(\"\\nStandard Deviation:\\n\", df.std())\nprint(\"\\nCovariance:\\n\", df.cov())\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Mean:\n A    28.333333\nB    33.333333\ndtype: float64\n\nMedian:\n A    25.0\nB    30.0\ndtype: float64\n\nMode:\n     A   B\n0  20  25\n\nVariance:\n A    216.666667\nB    216.666667\ndtype: float64\n\nStandard Deviation:\n A    14.719601\nB    14.719601\ndtype: float64\n\nCovariance:\n             A           B\nA  216.666667  216.666667\nB  216.666667  216.666667",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "04",
+  "aim": "Compute and visualize covariance and correlation matrices.",
+  "code": "import pandas as pd\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame({'A': [10, 20, 20, 30, 40, 50],\n                   'B': [15, 25, 25, 35, 45, 55],\n                   'C': [5, 10, 15, 20, 25, 30]})\nprint(\"Covariance Matrix:\\n\", df.cov())\nprint(\"\\nCorrelation Matrix:\\n\", df.corr())\n\nfig, ax = plt.subplots(1, 2, figsize=(12, 5))\nsns.heatmap(df.cov(), annot=True, cmap='coolwarm', ax=ax[0]).set_title(\"Covariance Matrix\")\nsns.heatmap(df.corr(), annot=True, cmap='coolwarm', ax=ax[1]).set_title(\"Correlation Matrix\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Covariance Matrix:\n             A           B      C\nA  216.666667  216.666667  135.0\nB  216.666667  216.666667  135.0\nC  135.000000  135.000000   87.5\n\nCorrelation Matrix:\n           A         B         C\nA  1.000000  1.000000  0.980469\nB  1.000000  1.000000  0.980469\nC  0.980469  0.980469  1.000000",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/04.png"
+  ]
+ },
+ {
+  "id": "05",
+  "aim": "Analyze univariate and multivariate normal distributions.",
+  "code": "import numpy as np\nimport matplotlib.pyplot as plt\n\ndata = np.random.normal(50, 10, 1000)\nmulti = np.random.multivariate_normal([50, 30], [[100, 50], [50, 64]], 1000)\nprint(\"Univariate Mean:\", data.mean(), \" Std:\", data.std())\nprint(\"Multivariate Mean:\", multi.mean(axis=0))\nprint(\"Multivariate Covariance:\\n\", np.cov(multi, rowvar=False))\n\nfig, ax = plt.subplots(1, 2, figsize=(12, 5))\nax[0].hist(data, bins=30)\nax[0].set_title(\"Univariate Normal Distribution\")\nax[1].scatter(multi[:, 0], multi[:, 1], alpha=0.5)\nax[1].set_title(\"Multivariate Normal Distribution\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Univariate Mean: 49.67332303089289  Std: 9.824210693574127\nMultivariate Mean: [49.88341838 29.75859401]\nMultivariate Covariance:\n [[103.73097274  55.03180105]\n [ 55.03180105  72.89431088]]",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/05.png"
+  ]
+ },
+ {
+  "id": "06",
+  "aim": "Hypothesis testing using SciPy.",
+  "code": "from scipy import stats\n\nt, p = stats.ttest_1samp([48, 52, 51, 49, 50, 53, 47, 52, 51, 50], 50)\nprint(\"T-statistic:\", t)\nprint(\"P-value:\", p)\nprint(\"Reject the null hypothesis\" if p < 0.05 else \"Fail to reject the null hypothesis\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "T-statistic: 0.5023310149673481\nP-value: 0.6274948659508928\nFail to reject the null hypothesis",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "07",
+  "aim": "Confidence intervals for population parameters.",
+  "code": "import numpy as np\nfrom scipy import stats\n\ndata = [48, 52, 51, 49, 50, 53, 47, 52, 51, 50]\nmean = np.mean(data)\nprint(\"Mean:\", mean)\nprint(\"95% Confidence Interval:\", stats.t.interval(0.95, len(data) - 1, loc=mean, scale=stats.sem(data)))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Mean: 50.3\n95% Confidence Interval: (np.float64(48.94900408571514), np.float64(51.650995914284856))",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "08",
+  "aim": "Manipulate and transform datasets using Pandas.",
+  "code": "import pandas as pd\n\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie', 'David'],\n                   'Age': [25, 30, 35, 40],\n                   'Salary': [50000, 60000, 70000, 80000]})\ndf['Bonus'] = df['Salary'] * 0.10\nprint(\"After Adding Bonus:\\n\", df)\nprint(\"\\nFiltered (Age > 30):\\n\", df[df['Age'] > 30])\nprint(\"\\nSorted by Salary:\\n\", df.sort_values('Salary', ascending=False))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "After Adding Bonus:\n       Name  Age  Salary   Bonus\n0    Alice   25   50000  5000.0\n1      Bob   30   60000  6000.0\n2  Charlie   35   70000  7000.0\n3    David   40   80000  8000.0\n\nFiltered (Age > 30):\n       Name  Age  Salary   Bonus\n2  Charlie   35   70000  7000.0\n3    David   40   80000  8000.0\n\nSorted by Salary:\n       Name  Age  Salary   Bonus\n3    David   40   80000  8000.0\n2  Charlie   35   70000  7000.0\n1      Bob   30   60000  6000.0\n0    Alice   25   50000  5000.0",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "09",
+  "aim": "Visualize data using Matplotlib and Seaborn.",
+  "code": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\ndf = pd.DataFrame({'Age': [25, 30, 35, 40, 45], 'Salary': [50000, 60000, 70000, 80000, 90000]})\n\nfig, ax = plt.subplots(1, 2, figsize=(12, 5))\nax[0].plot(df['Age'], df['Salary'], marker='o')\nax[0].set_title(\"Matplotlib Line Plot\")\nsns.scatterplot(data=df, x='Age', y='Salary', ax=ax[1]).set_title(\"Seaborn Scatter Plot\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "(graph only - no printed output)",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/09.png"
+  ]
+ },
+ {
+  "id": "10",
+  "aim": "Bar chart, histogram, pie chart, box plot, scatter plot and heatmap.",
+  "code": "import pandas as pd\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\ndf = pd.DataFrame({'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],\n                   'Age': [25, 30, 35, 40, 45],\n                   'Salary': [50000, 60000, 70000, 80000, 90000]})\n\nfig, ax = plt.subplots(2, 3, figsize=(15, 9))\nax[0, 0].bar(df['Name'], df['Salary'])\nax[0, 0].set_title(\"Bar Chart\")\nax[0, 1].hist(df['Age'], bins=5)\nax[0, 1].set_title(\"Histogram\")\nax[0, 2].pie(df['Salary'], labels=df['Name'], autopct='%1.1f%%')\nax[0, 2].set_title(\"Pie Chart\")\nax[1, 0].boxplot(df['Salary'])\nax[1, 0].set_title(\"Box Plot\")\nax[1, 1].scatter(df['Age'], df['Salary'])\nax[1, 1].set_title(\"Scatter Plot\")\nsns.heatmap(df[['Age', 'Salary']].corr(), annot=True, ax=ax[1, 2]).set_title(\"Heatmap\")\nplt.tight_layout()\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "(graph only - no printed output)",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/10.png"
+  ]
+ },
+ {
+  "id": "11",
+  "aim": "Simple Linear Regression using Scikit-learn.",
+  "code": "import pandas as pd\nimport matplotlib.pyplot as plt\nfrom sklearn.linear_model import LinearRegression\n\ndf = pd.DataFrame({'Experience': range(1, 11),\n                   'Salary': [30000, 35000, 41000, 44000, 52000, 55000, 62000, 66000, 71000, 78000]})\nX, y = df[['Experience']], df['Salary']\n\nmodel = LinearRegression().fit(X, y)\nprint(\"Slope:\", model.coef_[0], \" Intercept:\", model.intercept_)\nprint(\"R2 Score:\", model.score(X, y))\nprint(\"Predicted Salary for 11 years:\", model.predict(pd.DataFrame({'Experience': [11]}))[0])\n\nplt.scatter(X, y, label=\"Data\")\nplt.plot(X, model.predict(X), color='red', label=\"Regression Line\")\nplt.title(\"Simple Linear Regression\")\nplt.legend()\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Slope: 5248.48484848485  Intercept: 24533.333333333325\nR2 Score: 0.9965768897535254\nPredicted Salary for 11 years: 82266.66666666667",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/11.png"
+  ]
+ },
+ {
+  "id": "12",
+  "aim": "Multiple Linear Regression with model evaluation.",
+  "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn.metrics import mean_squared_error, r2_score\n\ndf = pd.DataFrame({\n    'Experience': range(1, 16),\n    'Education': [12, 14, 16, 16, 14, 18, 16, 18, 20, 16, 18, 20, 18, 20, 22],\n    'Projects': [2, 3, 5, 4, 6, 7, 6, 8, 9, 8, 10, 11, 10, 12, 13],\n    'Salary': [39000, 44500, 49500, 50500, 53000, 59500, 61000, 68500,\n               71000, 69000, 76500, 81500, 81000, 85000, 91500]})\nX, y = df.drop(columns='Salary'), df['Salary']\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)\n\nmodel = LinearRegression().fit(X_train, y_train)\ny_pred = model.predict(X_test)\nprint(\"Coefficients:\", model.coef_)\nprint(\"Intercept:\", model.intercept_)\nprint(\"MSE:\", mean_squared_error(y_test, y_pred))\nprint(\"R2 Score:\", r2_score(y_test, y_pred))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Coefficients: [2866.65373507 1107.60162076   96.64209664]\nIntercept: 22505.043320832818\nMSE: 2101589.657324817\nR2 Score: 0.9804974976120563",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/12.png"
+  ]
+ },
+ {
+  "id": "13",
+  "aim": "Ridge and Lasso Regression.",
+  "code": "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import Ridge, Lasso\n\ndf = pd.DataFrame({\n    'Experience': range(1, 16),\n    'Education': [12, 14, 16, 16, 14, 18, 16, 18, 20, 16, 18, 20, 18, 20, 22],\n    'Projects': [2, 3, 5, 4, 6, 7, 6, 8, 9, 8, 10, 11, 10, 12, 13],\n    'Distance': [12, 30, 8, 25, 40, 15, 33, 6, 22, 18, 35, 10, 28, 20, 14],\n    'Salary': [39000, 44500, 49500, 50500, 53000, 59500, 61000, 68500,\n               71000, 69000, 76500, 81500, 81000, 85000, 91500]})\nX_train, X_test, y_train, y_test = train_test_split(df.drop(columns='Salary'), df['Salary'], test_size=0.3, random_state=1)\n\nfor name, m in [('Ridge', Ridge(alpha=1.0)), ('Lasso', Lasso(alpha=100.0, max_iter=10000))]:\n    model = make_pipeline(StandardScaler(), m).fit(X_train, y_train)\n    print(f\"{name} R2 Score:\", model.score(X_test, y_test))\n    print(f\"{name} Coefs:\", m.coef_.round(2))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Ridge R2 Score: 0.9735442276317761\nRidge Coefs: [7769.75 3114.27 5702.76 -193.01]\nLasso R2 Score: 0.9800886182117426\nLasso Coefs: [13465.47  3363.96   408.81    -0.  ]",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/13.png"
+  ]
+ },
+ {
+  "id": "14",
+  "aim": "Model selection using train-test split and cross-validation.",
+  "code": "from sklearn.datasets import make_classification\nfrom sklearn.model_selection import train_test_split, cross_val_score\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.tree import DecisionTreeClassifier\n\nX, y = make_classification(n_samples=500, n_features=8, n_informative=5, n_redundant=2, random_state=42)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)\n\nmodels = {'Logistic Regression': LogisticRegression(), 'kNN': KNeighborsClassifier(),\n          'Decision Tree': DecisionTreeClassifier(random_state=42)}\ncv = {}\nfor name, m in models.items():\n    test = m.fit(X_train, y_train).score(X_test, y_test)\n    cv[name] = cross_val_score(m, X, y, cv=5).mean()\n    print(f\"{name:20s} Test Accuracy: {test:.4f}  5-Fold CV: {cv[name]:.4f}\")\nprint(\"Best model:\", max(cv, key=cv.get))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Logistic Regression  Test Accuracy: 0.8480  5-Fold CV: 0.8440\nkNN                  Test Accuracy: 0.9120  5-Fold CV: 0.9180\nDecision Tree        Test Accuracy: 0.8720  5-Fold CV: 0.9000\nBest model: kNN",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/14.png"
+  ]
+ },
+ {
+  "id": "15",
+  "aim": "Model evaluation: confusion matrix, accuracy, precision, recall, F1, ROC-AUC.",
+  "code": "from sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, roc_auc_score\n\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)\n\nmodel = make_pipeline(StandardScaler(), LogisticRegression()).fit(X_train, y_train)\ny_pred = model.predict(X_test)\ny_prob = model.predict_proba(X_test)[:, 1]\n\nprint(\"Confusion Matrix:\\n\", confusion_matrix(y_test, y_pred))\nprint(\"Accuracy:\", accuracy_score(y_test, y_pred))\nprint(\"Precision:\", precision_score(y_test, y_pred))\nprint(\"Recall:\", recall_score(y_test, y_pred))\nprint(\"F1-Score:\", f1_score(y_test, y_pred))\nprint(\"ROC-AUC:\", roc_auc_score(y_test, y_prob))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Confusion Matrix:\n [[53  1]\n [ 2 87]]\nAccuracy: 0.9790209790209791\nPrecision: 0.9886363636363636\nRecall: 0.9775280898876404\nF1-Score: 0.9830508474576272\nROC-AUC: 0.9977111943404079",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/15.png"
+  ]
+ },
+ {
+  "id": "16",
+  "aim": "k-Nearest Neighbors (kNN) classification.",
+  "code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.metrics import accuracy_score, confusion_matrix\n\niris = load_iris()\nX_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=0.3, random_state=42)\n\nknn = KNeighborsClassifier(n_neighbors=5).fit(X_train, y_train)\ny_pred = knn.predict(X_test)\nprint(\"kNN Accuracy:\", accuracy_score(y_test, y_pred))\nprint(\"Confusion Matrix:\\n\", confusion_matrix(y_test, y_pred))\nprint(\"Prediction for [5.1, 3.5, 1.4, 0.2]:\", iris.target_names[knn.predict([[5.1, 3.5, 1.4, 0.2]])[0]])\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "kNN Accuracy: 1.0\nConfusion Matrix:\n [[19  0  0]\n [ 0 13  0]\n [ 0  0 13]]\nPrediction for [5.1, 3.5, 1.4, 0.2]: setosa",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/16.png"
+  ]
+ },
+ {
+  "id": "17",
+  "aim": "Decision Tree classification.",
+  "code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeClassifier, export_text\nfrom sklearn.metrics import accuracy_score\n\niris = load_iris()\nX_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=0.3, random_state=42)\n\ndt = DecisionTreeClassifier(criterion='gini', max_depth=3, random_state=42).fit(X_train, y_train)\nprint(\"Decision Tree Accuracy:\", accuracy_score(y_test, dt.predict(X_test)))\nprint(\"\\nDecision Rules:\\n\" + export_text(dt, feature_names=iris.feature_names))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Decision Tree Accuracy: 1.0\n\nDecision Rules:\n|--- petal length (cm) <= 2.45\n|   |--- class: 0\n|--- petal length (cm) >  2.45\n|   |--- petal length (cm) <= 4.75\n|   |   |--- petal width (cm) <= 1.60\n|   |   |   |--- class: 1\n|   |   |--- petal width (cm) >  1.60\n|   |   |   |--- class: 2\n|   |--- petal length (cm) >  4.75\n|   |   |--- petal width (cm) <= 1.75\n|   |   |   |--- class: 1\n|   |   |--- petal width (cm) >  1.75\n|   |   |   |--- class: 2",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/17.png"
+  ]
+ },
+ {
+  "id": "18",
+  "aim": "Support Vector Machine (SVM) classification.",
+  "code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.svm import SVC\nfrom sklearn.metrics import accuracy_score\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n\nfor kernel in ['linear', 'poly', 'rbf']:\n    svm = SVC(kernel=kernel).fit(X_train, y_train)\n    print(f\"SVM ({kernel}) Accuracy:\", accuracy_score(y_test, svm.predict(X_test)))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "SVM (linear) Accuracy: 1.0\nSVM (poly) Accuracy: 0.9777777777777777\nSVM (rbf) Accuracy: 1.0",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/18.png"
+  ]
+ },
+ {
+  "id": "19",
+  "aim": "Random Forest classification.",
+  "code": "from sklearn.datasets import load_wine\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score\n\nX, y = load_wine(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n\nrf = RandomForestClassifier(n_estimators=100, random_state=42).fit(X_train, y_train)\nprint(\"Random Forest Accuracy:\", accuracy_score(y_test, rf.predict(X_test)))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Random Forest Accuracy: 1.0",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/19.png"
+  ]
+ },
+ {
+  "id": "20",
+  "aim": "Naive Bayes classification.",
+  "code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.naive_bayes import GaussianNB\nfrom sklearn.metrics import accuracy_score\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n\nnb = GaussianNB().fit(X_train, y_train)\nprint(\"Naive Bayes Accuracy:\", accuracy_score(y_test, nb.predict(X_test)))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Naive Bayes Accuracy: 0.9777777777777777",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/20.png"
+  ]
+ },
+ {
+  "id": "21",
+  "aim": "Logistic Regression for binary classification.",
+  "code": "from sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score\n\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)\n\nmodel = make_pipeline(StandardScaler(), LogisticRegression()).fit(X_train, y_train)\nprint(\"Logistic Regression Accuracy:\", accuracy_score(y_test, model.predict(X_test)))\nprint(\"P(benign) for first test sample:\", model.predict_proba(X_test[:1])[0, 1])\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Logistic Regression Accuracy: 0.9790209790209791\nP(benign) for first test sample: 0.8766704261947693",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/21.png"
+  ]
+ },
+ {
+  "id": "22",
+  "aim": "Compare classification algorithms on the same dataset.",
+  "code": "from sklearn.datasets import load_wine\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import accuracy_score\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.tree import DecisionTreeClassifier\nfrom sklearn.svm import SVC\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.naive_bayes import GaussianNB\n\nX, y = load_wine(return_X_y=True)\nX = StandardScaler().fit_transform(X)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n\nmodels = {\"Logistic Regression\": LogisticRegression(), \"kNN\": KNeighborsClassifier(),\n          \"Decision Tree\": DecisionTreeClassifier(random_state=42), \"SVM\": SVC(),\n          \"Random Forest\": RandomForestClassifier(random_state=42), \"Naive Bayes\": GaussianNB()}\nfor name, model in models.items():\n    model.fit(X_train, y_train)\n    print(f\"{name:20s} Accuracy: {accuracy_score(y_test, model.predict(X_test)):.4f}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Logistic Regression  Accuracy: 0.9815\nkNN                  Accuracy: 0.9630\nDecision Tree        Accuracy: 0.9630\nSVM                  Accuracy: 0.9815\nRandom Forest        Accuracy: 1.0000\nNaive Bayes          Accuracy: 1.0000",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/22.png"
+  ]
+ },
+ {
+  "id": "23",
+  "aim": "K-Means clustering.",
+  "code": "import matplotlib.pyplot as plt\nfrom sklearn.datasets import make_blobs\nfrom sklearn.cluster import KMeans\n\nX, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.8, random_state=42)\nkmeans = KMeans(n_clusters=4, n_init=10, random_state=42)\nlabels = kmeans.fit_predict(X)\nprint(\"Cluster Centres:\\n\", kmeans.cluster_centers_)\n\nplt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis')\nplt.scatter(*kmeans.cluster_centers_.T, c='red', marker='X', s=200)\nplt.title(\"K-Means Clustering\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Cluster Centres:\n [[-2.63715917  8.98563949]\n [-6.84180708 -6.84038791]\n [ 4.70253968  2.02807134]\n [-8.83330596  7.21790214]]",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/23.png"
+  ]
+ },
+ {
+  "id": "24",
+  "aim": "Hierarchical clustering with dendrogram.",
+  "code": "import matplotlib.pyplot as plt\nfrom scipy.cluster.hierarchy import linkage, dendrogram, fcluster\nfrom sklearn.datasets import make_blobs\n\nX, _ = make_blobs(n_samples=50, centers=3, cluster_std=2.5, random_state=7)\nZ = linkage(X, method='ward')\nprint(\"Cluster labels:\", fcluster(Z, t=3, criterion='maxclust'))\n\ndendrogram(Z)\nplt.title(\"Hierarchical Clustering Dendrogram\")\nplt.xlabel(\"Sample index\")\nplt.ylabel(\"Distance\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Cluster labels: [3 1 3 2 3 3 3 1 2 1 3 1 2 2 3 2 3 3 2 1 3 3 1 2 3 3 3 3 1 3 1 2 1 2 3 3 1\n 3 2 3 1 3 2 1 3 1 3 1 1 1]",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/24.png"
+  ]
+ },
+ {
+  "id": "25",
+  "aim": "Compare clustering algorithms using performance metrics.",
+  "code": "from sklearn.datasets import make_blobs\nfrom sklearn.cluster import KMeans, AgglomerativeClustering\nfrom sklearn.mixture import GaussianMixture\nfrom sklearn.metrics import silhouette_score, davies_bouldin_score\n\nX, _ = make_blobs(n_samples=400, centers=4, cluster_std=[0.6, 1.2, 0.8, 1.6], random_state=42)\n\nmodels = {'K-Means': KMeans(n_clusters=4, n_init=10, random_state=42),\n          'Agglomerative': AgglomerativeClustering(n_clusters=4),\n          'Gaussian Mixture': GaussianMixture(n_components=4, random_state=42)}\nfor name, m in models.items():\n    labels = m.fit_predict(X)\n    print(f\"{name:16s} Silhouette: {silhouette_score(X, labels):.4f}  Davies-Bouldin: {davies_bouldin_score(X, labels):.4f}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "K-Means          Silhouette: 0.7821  Davies-Bouldin: 0.3085\nAgglomerative    Silhouette: 0.7820  Davies-Bouldin: 0.3093\nGaussian Mixture Silhouette: 0.7751  Davies-Bouldin: 0.3142",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/25.png"
+  ]
+ },
+ {
+  "id": "26",
+  "aim": "Recommendation system using collaborative filtering.",
+  "code": "import pandas as pd\nfrom sklearn.metrics.pairwise import cosine_similarity\n\nratings = pd.DataFrame({\n    'Inception':     [5, 4, 0, 1, 0, 5],\n    'Interstellar':  [5, 5, 4, 0, 1, 4],\n    'The Matrix':    [4, 0, 5, 1, 2, 5],\n    'Titanic':       [1, 1, 0, 5, 4, 0],\n    'The Notebook':  [0, 1, 1, 5, 5, 1],\n    'La La Land':    [1, 0, 2, 4, 5, 0],\n    'Avengers':      [4, 5, 4, 2, 0, 0]\n}, index=['Asha', 'Rahul', 'Meera', 'Arjun', 'Priya', 'Karan'])\n\nsim = pd.DataFrame(cosine_similarity(ratings), index=ratings.index, columns=ratings.index)\nprint(\"User Similarity Matrix:\\n\", sim.round(2))\n\nuser = 'Priya'\nsimilar = sim[user].drop(user).idxmax()\nrecs = ratings.loc[similar, ratings.loc[user] == 0].sort_values(ascending=False)\nprint(f\"\\n{user} is most similar to {similar}\")\nprint(f\"Recommended for {user}:\", list(recs.index))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "User Similarity Matrix:\n        Asha  Rahul  Meera  Arjun  Priya  Karan\nAsha   1.00   0.87   0.80   0.33   0.28   0.87\nRahul  0.87   1.00   0.63   0.34   0.20   0.61\nMeera  0.80   0.63   1.00   0.39   0.44   0.65\nArjun  0.33   0.34   0.39   1.00   0.94   0.22\nPriya  0.28   0.20   0.44   0.94   1.00   0.28\nKaran  0.87   0.61   0.65   0.22   0.28   1.00\n\nPriya is most similar to Arjun\nRecommended for Priya: ['Avengers', 'Inception']",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "27",
+  "aim": "Content-based recommendation system.",
+  "code": "import pandas as pd\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\nmovies = pd.DataFrame({\n    'Title': ['Inception', 'Interstellar', 'The Matrix', 'Titanic',\n              'The Notebook', 'La La Land', 'Avengers', 'Iron Man',\n              'Gravity', 'Pride and Prejudice'],\n    'Genre': ['SciFi Thriller', 'SciFi Adventure', 'SciFi Action', 'Romance Drama',\n              'Romance Drama', 'Romance Musical', 'Action Superhero', 'Action Superhero',\n              'SciFi Thriller', 'Romance Drama'],\n    'Description': [\n        'A thief enters dreams to steal secrets and plant an idea in a mind',\n        'Astronauts travel through a wormhole in space to save humanity',\n        'A hacker learns reality is a simulation and fights the machines',\n        'A love story aboard a ship that sinks in the ocean',\n        'A young couple falls in love despite family and class differences',\n        'A musician and an actress fall in love while chasing dreams in the city',\n        'Superheroes team up to save the world from an alien invasion',\n        'A billionaire engineer builds a powered suit and becomes a superhero',\n        'Astronauts are stranded in space after an accident and fight to survive',\n        'A love story about pride, class and family in old England']})\n\ntfidf = TfidfVectorizer(stop_words='english').fit_transform(movies['Genre'] + ' ' + movies['Description'])\nsim = cosine_similarity(tfidf)\n\nscores = pd.Series(sim[1], index=movies['Title']).drop('Interstellar').sort_values(ascending=False)\nprint(\"Recommendations for 'Interstellar':\\n\", scores.head(3).round(3))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Recommendations for 'Interstellar':\n Title\nGravity       0.285\nAvengers      0.106\nThe Matrix    0.064\ndtype: float64",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "28",
+  "aim": "SVD for dimensionality reduction.",
+  "code": "import numpy as np\nfrom sklearn.datasets import load_digits\nfrom sklearn.decomposition import TruncatedSVD\n\nA = np.array([[3, 1, 1], [-1, 3, 1], [2, 2, 2], [1, 0, 4]], dtype=float)\nU, S, Vt = np.linalg.svd(A, full_matrices=False)\nprint(\"Singular Values:\", S.round(4))\nprint(\"Rank-2 Approximation:\\n\", (U[:, :2] @ np.diag(S[:2]) @ Vt[:2]).round(4))\n\nX = load_digits().data\nsvd = TruncatedSVD(n_components=20, random_state=42)\nX_reduced = svd.fit_transform(X)\nprint(\"\\nOriginal Shape:\", X.shape)\nprint(\"Reduced Shape:\", X_reduced.shape)\nprint(\"Variance Kept:\", svd.explained_variance_ratio_.sum())\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Singular Values: [5.7605 3.2422 2.7027]\nRank-2 Approximation:\n [[ 1.9225  0.3353  2.0951]\n [-0.9314  3.0423  0.9303]\n [ 1.5023  1.693   2.5058]\n [ 2.2701  0.7835  2.7092]]\n\nOriginal Shape: (1797, 64)\nReduced Shape: (1797, 20)\nVariance Kept: 0.8940622384867832",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "29",
+  "aim": "PCA for feature extraction and dimensionality reduction.",
+  "code": "import matplotlib.pyplot as plt\nfrom sklearn.datasets import load_wine\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.decomposition import PCA\n\nwine = load_wine()\nX = StandardScaler().fit_transform(wine.data)\npca = PCA(n_components=2)\nX_pca = pca.fit_transform(X)\nprint(\"Original Shape:\", X.shape, \" Reduced Shape:\", X_pca.shape)\nprint(\"Explained Variance Ratio:\", pca.explained_variance_ratio_)\n\nplt.scatter(X_pca[:, 0], X_pca[:, 1], c=wine.target, cmap='viridis')\nplt.xlabel(\"PC1\")\nplt.ylabel(\"PC2\")\nplt.title(\"PCA of Wine Dataset\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Original Shape: (178, 13)  Reduced Shape: (178, 2)\nExplained Variance Ratio: [0.36198848 0.1920749 ]",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "30",
+  "aim": "Compare PCA and SVD on a dataset.",
+  "code": "import time\nfrom sklearn.datasets import load_digits\nfrom sklearn.decomposition import PCA, TruncatedSVD\n\nX = load_digits().data\n\nfor name, model in [('PCA', PCA(n_components=10)), ('SVD', TruncatedSVD(n_components=10, random_state=42))]:\n    start = time.time()\n    model.fit_transform(X)\n    t = time.time() - start\n    print(f\"{name} Time: {t:.5f}s | Explained Var: {model.explained_variance_ratio_.sum():.4f}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "PCA Time: 0.00221s | Explained Var: 0.7382\nSVD Time: 0.00156s | Explained Var: 0.7324",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "31",
+  "aim": "Text preprocessing: tokenization, stop-word removal, stemming.",
+  "code": "import nltk\nfrom nltk.tokenize import word_tokenize\nfrom nltk.corpus import stopwords\nfrom nltk.stem import PorterStemmer\n\nnltk.download('punkt_tab', quiet=True)\nnltk.download('stopwords', quiet=True)\n\ntext = \"\"\"Data Science is an interdisciplinary field that uses scientific methods,\nprocesses, algorithms and systems to extract knowledge from data. Data scientists\nare analyzing large datasets, building predictive models, and communicating their\nfindings clearly. The studies of machine learning are running everywhere today!\"\"\"\n\ntokens = [w for w in word_tokenize(text.lower()) if w.isalnum()]\nfiltered = [w for w in tokens if w not in stopwords.words('english')]\nstemmed = [PorterStemmer().stem(w) for w in filtered]\n\nprint(\"Tokens:\", tokens)\nprint(\"\\nAfter Stop-word Removal:\", filtered)\nprint(\"\\nAfter Stemming:\", stemmed)\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Tokens: ['data', 'science', 'is', 'an', 'interdisciplinary', 'field', 'that', 'uses', 'scientific', 'methods', 'processes', 'algorithms', 'and', 'systems', 'to', 'extract', 'knowledge', 'from', 'data', 'data', 'scientists', 'are', 'analyzing', 'large', 'datasets', 'building', 'predictive', 'models', 'and', 'communicating', 'their', 'findings', 'clearly', 'the', 'studies', 'of', 'machine', 'learning', 'are', 'running', 'everywhere', 'today']\n\nAfter Stop-word Removal: ['data', 'science', 'interdisciplinary', 'field', 'uses', 'scientific', 'methods', 'processes', 'algorithms', 'systems', 'extract', 'knowledge', 'data', 'data', 'scientists', 'analyzing', 'large', 'datasets', 'building', 'predictive', 'models', 'communicating', 'findings', 'clearly', 'studies', 'machine', 'learning', 'running', 'everywhere', 'today']\n\nAfter Stemming: ['data', 'scienc', 'interdisciplinari', 'field', 'use', 'scientif', 'method', 'process', 'algorithm', 'system', 'extract', 'knowledg', 'data', 'data', 'scientist', 'analyz', 'larg', 'dataset', 'build', 'predict', 'model', 'commun', 'find', 'clearli', 'studi', 'machin', 'learn', 'run', 'everywher', 'today']",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "32",
+  "aim": "Information retrieval using TF-IDF.",
+  "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndocs = [\n    \"Python is a popular programming language for data science and machine learning\",\n    \"Machine learning algorithms learn patterns from data to make predictions\",\n    \"Deep learning uses neural networks with many layers\",\n    \"Pandas and NumPy are Python libraries for data analysis\",\n    \"Football is the most popular sport in the world\",\n    \"The World Cup is a famous football tournament held every four years\",\n    \"Healthy food and regular exercise keep the body fit\",\n    \"Neural networks are inspired by the human brain\"]\n\nvectorizer = TfidfVectorizer(stop_words='english')\ntfidf = vectorizer.fit_transform(docs)\nprint(\"Vocabulary:\", vectorizer.get_feature_names_out())\n\nquery = \"python data analysis\"\nscores = cosine_similarity(vectorizer.transform([query]), tfidf)[0]\nprint(f\"\\nTop results for '{query}':\")\nfor i in scores.argsort()[::-1][:3]:\n    print(f\"D{i} (Score: {scores[i]:.4f}): {docs[i]}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Vocabulary: ['algorithms' 'analysis' 'body' 'brain' 'cup' 'data' 'deep' 'exercise'\n 'famous' 'fit' 'food' 'football' 'healthy' 'held' 'human' 'inspired'\n 'language' 'layers' 'learn' 'learning' 'libraries' 'machine' 'make'\n 'networks' 'neural' 'numpy' 'pandas' 'patterns' 'popular' 'predictions'\n 'programming' 'python' 'regular' 'science' 'sport' 'tournament' 'uses'\n 'world' 'years']\n\nTop results for 'python data analysis':\nD3 (Score: 0.6526): Pandas and NumPy are Python libraries for data analysis\nD0 (Score: 0.3311): Python is a popular programming language for data science and machine learning\nD1 (Score: 0.1350): Machine learning algorithms learn patterns from data to make predictions",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "33",
+  "aim": "Document similarity using cosine similarity.",
+  "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndocs = [\"The cat sat on the mat\",\n        \"The dog sat on the log\",\n        \"The cat and the dog are popular pets\",\n        \"Machine learning finds patterns in data\",\n        \"Deep learning is a part of machine learning\",\n        \"Data science uses machine learning and statistics\"]\n\nsim = cosine_similarity(TfidfVectorizer().fit_transform(docs))\nprint(\"Cosine Similarity Matrix:\\n\", sim.round(3))\nprint(f\"\\nSimilarity (Doc 0 & Doc 1): {sim[0][1]:.4f}\")\nprint(f\"Similarity (Doc 0 & Doc 3): {sim[0][3]:.4f}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Cosine Similarity Matrix:\n [[1.    0.661 0.443 0.    0.    0.   ]\n [0.661 1.    0.443 0.    0.    0.   ]\n [0.443 0.443 1.    0.    0.    0.111]\n [0.    0.    0.    1.    0.264 0.329]\n [0.    0.    0.    0.264 1.    0.247]\n [0.    0.    0.111 0.329 0.247 1.   ]]\n\nSimilarity (Doc 0 & Doc 1): 0.6611\nSimilarity (Doc 0 & Doc 3): 0.0000",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "34",
+  "aim": "Create and analyze social network graphs using NetworkX.",
+  "code": "import networkx as nx\nimport matplotlib.pyplot as plt\n\nG = nx.Graph([('Asha', 'Rahul'), ('Asha', 'Meera'), ('Rahul', 'Meera'), ('Meera', 'Arjun'),\n              ('Arjun', 'Priya'), ('Arjun', 'Karan'), ('Priya', 'Karan'), ('Karan', 'Dev')])\n\nprint(\"Nodes:\", G.nodes())\nprint(\"Edges:\", G.edges())\nprint(\"Degree:\", dict(G.degree()))\nprint(\"Shortest path Asha -> Dev:\", nx.shortest_path(G, 'Asha', 'Dev'))\n\nnx.draw(G, with_labels=True, node_color='lightgreen', node_size=1200)\nplt.title(\"Friendship Network\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Nodes: ['Asha', 'Rahul', 'Meera', 'Arjun', 'Priya', 'Karan', 'Dev']\nEdges: [('Asha', 'Rahul'), ('Asha', 'Meera'), ('Rahul', 'Meera'), ('Meera', 'Arjun'), ('Arjun', 'Priya'), ('Arjun', 'Karan'), ('Priya', 'Karan'), ('Karan', 'Dev')]\nDegree: {'Asha': 2, 'Rahul': 2, 'Meera': 3, 'Arjun': 3, 'Priya': 2, 'Karan': 3, 'Dev': 1}\nShortest path Asha -> Dev: ['Asha', 'Meera', 'Arjun', 'Karan', 'Dev']",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "35",
+  "aim": "Community detection in a social network graph.",
+  "code": "import networkx as nx\nfrom networkx.algorithms.community import greedy_modularity_communities\n\nG = nx.karate_club_graph()\ncommunities = list(greedy_modularity_communities(G))\n\nprint(f\"Detected {len(communities)} communities:\")\nfor i, comm in enumerate(communities, 1):\n    print(f\"Community {i}: {sorted(comm)}\")\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Detected 3 communities:\nCommunity 1: [8, 14, 15, 18, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]\nCommunity 2: [1, 2, 3, 7, 9, 12, 13, 17, 21]\nCommunity 3: [0, 4, 5, 6, 10, 11, 16, 19]",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "36",
+  "aim": "Graph partitioning and neighborhood properties.",
+  "code": "import networkx as nx\nfrom networkx.algorithms.community import kernighan_lin_bisection\n\nG = nx.karate_club_graph()\n\nA, B = kernighan_lin_bisection(G, seed=42)\nprint(\"Partition A:\", sorted(A))\nprint(\"Partition B:\", sorted(B))\nprint(\"Edges cut:\", nx.cut_size(G, A, B))\n\nnode = 0\nprint(f\"\\nNeighbors of node {node}:\", sorted(G.neighbors(node)))\nprint(f\"Degree of node {node}:\", G.degree(node))\nprint(f\"Clustering Coefficient of node {node}:\", nx.clustering(G, node))\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Partition A: [8, 14, 15, 18, 20, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]\nPartition B: [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 16, 17, 19, 21]\nEdges cut: 10\n\nNeighbors of node 0: [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 17, 19, 21, 31]\nDegree of node 0: 16\nClustering Coefficient of node 0: 0.15",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "37",
+  "aim": "Interactive data visualization using Plotly.",
+  "code": "import plotly.express as px\n\ndf = px.data.iris()\nfig = px.scatter(df, x='sepal_length', y='sepal_width', color='species',\n                 size='petal_length', hover_data=['petal_width'], title=\"Interactive Iris Scatter Plot\")\nfig.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "(opens an interactive Plotly dashboard in the web browser - no printed output)",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/37.png"
+  ]
+ },
+ {
+  "id": "38",
+  "aim": "Visualize multidimensional data: pair plots and dimensionality reduction.",
+  "code": "import seaborn as sns\nimport matplotlib.pyplot as plt\nfrom sklearn.datasets import load_iris\nfrom sklearn.decomposition import PCA\n\niris = load_iris(as_frame=True)\ndf = iris.data\ndf['species'] = iris.target_names[iris.target]\n\nsns.pairplot(df, hue='species')\nplt.show()\n\nX_pca = PCA(n_components=2).fit_transform(df.drop(columns='species'))\nsns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['species'])\nplt.title(\"2D PCA Visualization\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "(graph only - no printed output)",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/38_1.png",
+   "/graphs/38_2.png"
+  ]
+ },
+ {
+  "id": "39",
+  "aim": "Exploratory Data Analysis (EDA) on a real-world dataset.",
+  "code": "import seaborn as sns\nimport matplotlib.pyplot as plt\nfrom sklearn.datasets import load_wine\n\ndf = load_wine(as_frame=True).frame\n\ndf.info()\nprint(\"\\nSummary Statistics:\\n\", df.describe())\nprint(\"\\nMissing Values:\\n\", df.isnull().sum())\n\nsns.boxplot(data=df, x='target', y='alcohol')\nplt.title(\"Alcohol by Wine Class\")\nplt.show()\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "<class 'pandas.DataFrame'>\nRangeIndex: 178 entries, 0 to 177\nData columns (total 14 columns):\n #   Column                        Non-Null Count  Dtype\n---  ------                        --------------  -----\n 0   alcohol                       178 non-null    float64\n 1   malic_acid                    178 non-null    float64\n 2   ash                           178 non-null    float64\n 3   alcalinity_of_ash             178 non-null    float64\n 4   magnesium                     178 non-null    float64\n 5   total_phenols                 178 non-null    float64\n 6   flavanoids                    178 non-null    float64\n 7   nonflavanoid_phenols          178 non-null    float64\n 8   proanthocyanins               178 non-null    float64\n 9   color_intensity               178 non-null    float64\n 10  hue                           178 non-null    float64\n 11  od280/od315_of_diluted_wines  178 non-null    float64\n 12  proline                       178 non-null    float64\n 13  target                        178 non-null    int64\ndtypes: float64(13), int64(1)\nmemory usage: 19.6 KB\n\nSummary Statistics:\n           alcohol  malic_acid  ...      proline      target\ncount  178.000000  178.000000  ...   178.000000  178.000000\nmean    13.000618    2.336348  ...   746.893258    0.938202\nstd      0.811827    1.117146  ...   314.907474    0.775035\nmin     11.030000    0.740000  ...   278.000000    0.000000\n25%     12.362500    1.602500  ...   500.500000    0.000000\n50%     13.050000    1.865000  ...   673.500000    1.000000\n75%     13.677500    3.082500  ...   985.000000    2.000000\nmax     14.830000    5.800000  ...  1680.000000    2.000000\n\n[8 rows x 14 columns]\n\nMissing Values:\n alcohol                         0\nmalic_acid                      0\nash                             0\nalcalinity_of_ash               0\nmagnesium                       0\ntotal_phenols                   0\nflavanoids                      0\nnonflavanoid_phenols            0\nproanthocyanins                 0\ncolor_intensity                 0\nhue                             0\nod280/od315_of_diluted_wines    0\nproline                         0\ntarget                          0\ndtype: int64",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/39.png"
+  ]
+ },
+ {
+  "id": "40",
+  "aim": "End-to-end data science app: preprocess, visualize, model, evaluate, predict.",
+  "code": "import seaborn as sns\nimport matplotlib.pyplot as plt\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import classification_report, confusion_matrix\n\n# 1. Load data\ndata = load_breast_cancer(as_frame=True)\ndf = data.frame\n\n# 2. Preprocessing\ndf = df.drop_duplicates().dropna()\nX, y = df.drop(columns='target'), df['target']\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\nscaler = StandardScaler()\nX_train, X_test = scaler.fit_transform(X_train), scaler.transform(X_test)\n\n# 3. Visualization\nsns.countplot(x=y)\nplt.title(\"Class Balance (0 = malignant, 1 = benign)\")\nplt.show()\n\n# 4. Model\nmodel = LogisticRegression().fit(X_train, y_train)\n\n# 5. Evaluation\ny_pred = model.predict(X_test)\nprint(\"Confusion Matrix:\\n\", confusion_matrix(y_test, y_pred))\nprint(\"\\nClassification Report:\\n\", classification_report(y_test, y_pred))\n\n# 6. Prediction\nprint(\"Prediction for first test patient:\", data.target_names[model.predict(X_test[:1])[0]])\n",
+  "lang": "python",
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Confusion Matrix:\n [[41  2]\n [ 1 70]]\n\nClassification Report:\n               precision    recall  f1-score   support\n\n           0       0.98      0.95      0.96        43\n           1       0.97      0.99      0.98        71\n\n    accuracy                           0.97       114\n   macro avg       0.97      0.97      0.97       114\nweighted avg       0.97      0.97      0.97       114\n\nPrediction for first test patient: benign",
+    "verified": true
+   }
+  ],
+  "images": [
+   "/graphs/40.png"
+  ]
+ }
+]

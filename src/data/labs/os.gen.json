@@ -1,0 +1,512 @@
+[
+ {
+  "id": "01",
+  "file": "01_add.sh",
+  "aim": "Write a shell script to add the two numbers",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the first number:\"\nread a\n\necho \"Enter the second number:\"\nread b\n\nsum=$((a + b))\n\necho \"Sum of $a and $b = $sum\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "12\n8",
+    "output": "Enter the first number:\n12\nEnter the second number:\n8\nSum of 12 and 8 = 20",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "02",
+  "file": "02_simple_interest.sh",
+  "aim": "Write a shell script to print the simple interest of an amount along with total amount",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the principal amount:\"\nread p\n\necho \"Enter the rate of interest (% per year):\"\nread r\n\necho \"Enter the time (in years):\"\nread t\n\nsi=$(echo \"scale=2; $p * $r * $t / 100\" | bc)\ntotal=$(echo \"scale=2; $p + $si\" | bc)\n\necho \"Simple Interest = $si\"\necho \"Total Amount    = $total\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5000\n8\n3",
+    "output": "Enter the principal amount:\n5000\nEnter the rate of interest (% per year):\n8\nEnter the time (in years):\n3\nSimple Interest = 1200.00\nTotal Amount    = 6200.00",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "03",
+  "file": "03_odd_even.sh",
+  "aim": "write a shell script to input a number and check whether it is an odd or even number.",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nif (( n % 2 == 0 ))\nthen\n    echo \"$n is an Even number\"\nelse\n    echo \"$n is an Odd number\"\nfi\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "7",
+    "output": "Enter a number:\n7\n7 is an Odd number",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "04",
+  "file": "04_factorial.sh",
+  "aim": "write a shell script to input a number and print the factorial of that number",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nfact=1\ni=1\n\nwhile (( i <= n ))\ndo\n    fact=$((fact * i))\n    i=$((i + 1))\ndone\n\necho \"Factorial of $n = $fact\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5",
+    "output": "Enter a number:\n5\nFactorial of 5 = 120",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "05",
+  "file": "05_reverse.sh",
+  "aim": "write a shell script to input a number and print the reverse of that number",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nnum=$n\nrev=0\n\nwhile (( num > 0 ))\ndo\n    digit=$((num % 10))\n    rev=$((rev * 10 + digit))\n    num=$((num / 10))\ndone\n\necho \"Reverse of $n = $rev\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "12345",
+    "output": "Enter a number:\n12345\nReverse of 12345 = 54321",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "06",
+  "file": "06_sum_of_digits.sh",
+  "aim": "Write a shell script to print the sum of the digit of the input term.",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nnum=$n\nsum=0\n\nwhile (( num > 0 ))\ndo\n    sum=$((sum + num % 10))\n    num=$((num / 10))\ndone\n\necho \"Sum of digits of $n = $sum\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "4567",
+    "output": "Enter a number:\n4567\nSum of digits of 4567 = 22",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "07",
+  "file": "07_prime.sh",
+  "aim": "write a shell script to input a number and check whether it is a prime number or not",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nif (( n < 2 ))\nthen\n    echo \"$n is not a Prime number\"\n    exit 0\nfi\n\ni=2\nprime=1\n\nwhile (( i * i <= n ))\ndo\n    if (( n % i == 0 ))\n    then\n        prime=0\n        break\n    fi\n    i=$((i + 1))\ndone\n\nif (( prime == 1 ))\nthen\n    echo \"$n is a Prime number\"\nelse\n    echo \"$n is not a Prime number\"\nfi\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "29",
+    "output": "Enter a number:\n29\n29 is a Prime number",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "08",
+  "file": "08_fibonacci.sh",
+  "aim": "write a shell script to input a term and print the Fibonacci Series of that term",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the number of terms:\"\nread n\n\na=0\nb=1\n\necho \"Fibonacci Series of $n terms:\"\n\nfor (( i = 1; i <= n; i++ ))\ndo\n    echo -n \"$a \"\n    c=$((a + b))\n    a=$b\n    b=$c\ndone\n\necho\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "10",
+    "output": "Enter the number of terms:\n10\nFibonacci Series of 10 terms:\n0 1 1 2 3 5 8 13 21 34",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "09",
+  "file": "09_area_of_circle.sh",
+  "aim": "write a shell script to input Radius and print the area of the circle",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the radius of the circle:\"\nread r\n\narea=$(echo \"scale=2; 3.14 * $r * $r\" | bc)\n\necho \"Area of the circle = $area\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "7",
+    "output": "Enter the radius of the circle:\n7\nArea of the circle = 153.86",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "10",
+  "file": "10_gcd.sh",
+  "aim": "Write a shell script to print the GCD of the two input terms",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the first number:\"\nread a\n\necho \"Enter the second number:\"\nread b\n\nx=$a\ny=$b\n\nwhile (( y != 0 ))\ndo\n    r=$((x % y))\n    x=$y\n    y=$r\ndone\n\necho \"GCD of $a and $b = $x\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "48\n18",
+    "output": "Enter the first number:\n48\nEnter the second number:\n18\nGCD of 48 and 18 = 6",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "11",
+  "file": "11_sum_of_3_digits.sh",
+  "aim": "Write the shell script to print the sum of the digit of the 3 digit number",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a 3 digit number:\"\nread n\n\nif (( n < 100 || n > 999 ))\nthen\n    echo \"Please enter a 3 digit number\"\n    exit 1\nfi\n\nd1=$((n / 100))\nd2=$((n / 10 % 10))\nd3=$((n % 10))\n\nsum=$((d1 + d2 + d3))\n\necho \"$d1 + $d2 + $d3 = $sum\"\necho \"Sum of digits of $n = $sum\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "456",
+    "output": "Enter a 3 digit number:\n456\n4 + 5 + 6 = 15\nSum of digits of 456 = 15",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "12",
+  "file": "12_sum_odd_even.sh",
+  "aim": "Write a shell script to print the sum of odd and even numbers from 1 to 50",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\nodd=0\neven=0\n\nfor (( i = 1; i <= 50; i++ ))\ndo\n    if (( i % 2 == 0 ))\n    then\n        even=$((even + i))\n    else\n        odd=$((odd + i))\n    fi\ndone\n\necho \"Sum of odd numbers from 1 to 50  = $odd\"\necho \"Sum of even numbers from 1 to 50 = $even\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "",
+    "output": "Sum of odd numbers from 1 to 50  = 625\nSum of even numbers from 1 to 50 = 650",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "13",
+  "file": "13_multiplication_table.sh",
+  "aim": "Write a shell script to print the multiplication table of the input term",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a number:\"\nread n\n\nfor (( i = 1; i <= 10; i++ ))\ndo\n    echo \"$n x $i = $((n * i))\"\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "7",
+    "output": "Enter a number:\n7\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "14",
+  "file": "14_circumference_of_circle.sh",
+  "aim": "Write a shell script to print the circumference of the circle.",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the radius of the circle:\"\nread r\n\ncircumference=$(echo \"scale=2; 2 * 3.14 * $r\" | bc)\n\necho \"Circumference of the circle = $circumference\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "7",
+    "output": "Enter the radius of the circle:\n7\nCircumference of the circle = 43.96",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "15",
+  "file": "15_fcfs.c",
+  "aim": "Write A Program in c to implement the FCFS Algorithm",
+  "algorithm": "",
+  "code": "#include <stdio.h>\n\nint main()\n{\n    int n, i;\n    int bt[20], wt[20], tat[20];\n    float total_wt = 0, total_tat = 0;\n\n    printf(\"Enter number of processes: \");\n    scanf(\"%d\", &n);\n\n    printf(\"Enter burst time for each process:\\n\");\n    for (i = 0; i < n; i++)\n    {\n        printf(\"P%d: \", i + 1);\n        scanf(\"%d\", &bt[i]);\n    }\n\n    // First process does not wait\n    wt[0] = 0;\n\n    // Each process waits for all the ones before it\n    for (i = 1; i < n; i++)\n        wt[i] = wt[i - 1] + bt[i - 1];\n\n    for (i = 0; i < n; i++)\n    {\n        tat[i] = wt[i] + bt[i];\n        total_wt += wt[i];\n        total_tat += tat[i];\n    }\n\n    printf(\"\\nProcess\\tBurst Time\\tWaiting Time\\tTurnaround Time\\n\");\n    for (i = 0; i < n; i++)\n        printf(\"P%d\\t%d\\t\\t%d\\t\\t%d\\n\", i + 1, bt[i], wt[i], tat[i]);\n\n    printf(\"\\nAverage Waiting Time    = %.2f\\n\", total_wt / n);\n    printf(\"Average Turnaround Time = %.2f\\n\", total_tat / n);\n\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/os/15-677af11f77.wasm",
+  "samples": [
+   {
+    "stdin": "3\n5\n3\n8",
+    "output": "Enter number of processes: 3\nEnter burst time for each process:\nP1: 5\nP2: 3\nP3: 8\n\nProcess Burst Time      Waiting Time    Turnaround Time\nP1      5               0               5\nP2      3               5               8\nP3      8               8               16\n\nAverage Waiting Time    = 4.33\nAverage Turnaround Time = 9.67",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "16",
+  "file": "16_priority_scheduling.c",
+  "aim": "Write a program in c to implement the priority bases scheduling algorithm",
+  "algorithm": "",
+  "code": "// A lower number means a higher priority\n\n#include <stdio.h>\n\nint main()\n{\n    int n, i, j, temp;\n    int p[20], bt[20], pr[20], wt[20], tat[20];\n    float total_wt = 0, total_tat = 0;\n\n    printf(\"Enter number of processes: \");\n    scanf(\"%d\", &n);\n\n    printf(\"Enter burst time and priority for each process:\\n\");\n    for (i = 0; i < n; i++)\n    {\n        printf(\"P%d: \", i + 1);\n        scanf(\"%d %d\", &bt[i], &pr[i]);\n        p[i] = i + 1;\n    }\n\n    // Sort processes by priority (selection sort)\n    for (i = 0; i < n - 1; i++)\n    {\n        for (j = i + 1; j < n; j++)\n        {\n            if (pr[j] < pr[i])\n            {\n                temp = pr[i]; pr[i] = pr[j]; pr[j] = temp;\n                temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;\n                temp = p[i];  p[i] = p[j];   p[j] = temp;\n            }\n        }\n    }\n\n    wt[0] = 0;\n    for (i = 1; i < n; i++)\n        wt[i] = wt[i - 1] + bt[i - 1];\n\n    for (i = 0; i < n; i++)\n    {\n        tat[i] = wt[i] + bt[i];\n        total_wt += wt[i];\n        total_tat += tat[i];\n    }\n\n    printf(\"\\nProcess\\tPriority\\tBurst Time\\tWaiting Time\\tTurnaround Time\\n\");\n    for (i = 0; i < n; i++)\n        printf(\"P%d\\t%d\\t\\t%d\\t\\t%d\\t\\t%d\\n\", p[i], pr[i], bt[i], wt[i], tat[i]);\n\n    printf(\"\\nAverage Waiting Time    = %.2f\\n\", total_wt / n);\n    printf(\"Average Turnaround Time = %.2f\\n\", total_tat / n);\n\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/os/16-be566d1d26.wasm",
+  "samples": [
+   {
+    "stdin": "4\n10 3\n1 1\n2 4\n5 2",
+    "output": "Enter number of processes: 4\nEnter burst time and priority for each process:\nP1: 10 3\nP2: 1 1\nP3: 2 4\nP4: 5 2\n\nProcess Priority        Burst Time      Waiting Time    Turnaround Time\nP2      1               1               0               1\nP4      2               5               1               6\nP1      3               10              6               16\nP3      4               2               16              18\n\nAverage Waiting Time    = 5.75\nAverage Turnaround Time = 10.25",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "17",
+  "file": "17_leap_year.sh",
+  "aim": "Write the shell script to input a year and check whether it is leap year or not",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter a year:\"\nread y\n\nif (( (y % 4 == 0 && y % 100 != 0) || y % 400 == 0 ))\nthen\n    echo \"$y is a Leap Year\"\nelse\n    echo \"$y is not a Leap Year\"\nfi\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "2024",
+    "output": "Enter a year:\n2024\n2024 is a Leap Year",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "18",
+  "file": "18_menu_case.sh",
+  "aim": "Write the shell script using infinite loop to multiply and subtract the two number using case statement",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\nwhile true\ndo\n    echo\n    echo \"1. Multiply\"\n    echo \"2. Subtract\"\n    echo \"3. Exit\"\n    echo \"Enter your choice:\"\n    read choice\n\n    case $choice in\n        1)\n            echo \"Enter two numbers:\"\n            read a b\n            echo \"$a x $b = $((a * b))\"\n            ;;\n        2)\n            echo \"Enter two numbers:\"\n            read a b\n            echo \"$a - $b = $((a - b))\"\n            ;;\n        3)\n            echo \"Exiting...\"\n            exit 0\n            ;;\n        *)\n            echo \"Invalid choice\"\n            ;;\n    esac\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "1\n6 7\n2\n20 8\n3",
+    "output": "\n1. Multiply\n2. Subtract\n3. Exit\nEnter your choice:\n1\nEnter two numbers:\n6 7\n6 x 7 = 42\n\n1. Multiply\n2. Subtract\n3. Exit\nEnter your choice:\n2\nEnter two numbers:\n20 8\n20 - 8 = 12\n\n1. Multiply\n2. Subtract\n3. Exit\nEnter your choice:\n3\nExiting...",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "19",
+  "file": "19_swap.sh",
+  "aim": "Write a program in shell script to swap the values without using the third variables",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the first number (a):\"\nread a\n\necho \"Enter the second number (b):\"\nread b\n\necho \"Before swapping: a = $a, b = $b\"\n\na=$((a + b))\nb=$((a - b))\na=$((a - b))\n\necho \"After swapping:  a = $a, b = $b\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "10\n20",
+    "output": "Enter the first number (a):\n10\nEnter the second number (b):\n20\nBefore swapping: a = 10, b = 20\nAfter swapping:  a = 20, b = 10",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "20",
+  "file": "20_grade.sh",
+  "aim": "Write the shell script to print the grade after input the marks of four different subjects",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the marks of 4 subjects (out of 100):\"\nread m1 m2 m3 m4\n\ntotal=$((m1 + m2 + m3 + m4))\npercent=$((total / 4))\n\nif (( percent >= 90 ))\nthen\n    grade=\"A+\"\nelif (( percent >= 80 ))\nthen\n    grade=\"A\"\nelif (( percent >= 70 ))\nthen\n    grade=\"B\"\nelif (( percent >= 60 ))\nthen\n    grade=\"C\"\nelif (( percent >= 50 ))\nthen\n    grade=\"D\"\nelse\n    grade=\"F\"\nfi\n\necho \"Total      = $total / 400\"\necho \"Percentage = $percent%\"\necho \"Grade      = $grade\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "85 90 78 92",
+    "output": "Enter the marks of 4 subjects (out of 100):\n85 90 78 92\nTotal      = 345 / 400\nPercentage = 86%\nGrade      = A",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "21",
+  "file": "21_power.sh",
+  "aim": "write the shell script to print the power of an input number and bash without using any predefined function",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the base:\"\nread base\n\necho \"Enter the exponent:\"\nread exp\n\nresult=1\n\nfor (( i = 1; i <= exp; i++ ))\ndo\n    result=$((result * base))\ndone\n\necho \"$base ^ $exp = $result\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "2\n10",
+    "output": "Enter the base:\n2\nEnter the exponent:\n10\n2 ^ 10 = 1024",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "22",
+  "file": "22_factorial_function.sh",
+  "aim": "shell function to input a number and print the factorial of that number",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\nfactorial()\n{\n    local n=$1\n    local fact=1\n\n    for (( i = 2; i <= n; i++ ))\n    do\n        fact=$((fact * i))\n    done\n\n    echo $fact\n}\n\necho \"Enter a number:\"\nread n\n\necho \"Factorial of $n = $(factorial $n)\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "6",
+    "output": "Enter a number:\n6\nFactorial of 6 = 720",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "23",
+  "file": "23_full_name.sh",
+  "aim": "shell script to print full name after input name and title separately",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the title (Mr/Ms/Dr):\"\nread title\n\necho \"Enter the name:\"\nread name\n\nfull_name=\"$title. $name\"\n\necho \"Full Name: $full_name\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "Mr\nJohn Smith",
+    "output": "Enter the title (Mr/Ms/Dr):\nMr\nEnter the name:\nJohn Smith\nFull Name: Mr. John Smith",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "24",
+  "file": "24_pyramid.sh",
+  "aim": "shell script to print pyramid",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the number of rows:\"\nread n\n\nfor (( i = 1; i <= n; i++ ))\ndo\n    # Leading spaces\n    for (( s = 1; s <= n - i; s++ ))\n    do\n        echo -n \" \"\n    done\n\n    # Stars\n    for (( j = 1; j <= 2 * i - 1; j++ ))\n    do\n        echo -n \"*\"\n    done\n\n    echo\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5",
+    "output": "Enter the number of rows:\n5\n    *\n   ***\n  *****\n *******\n*********",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "25",
+  "file": "25_number_pattern.sh",
+  "aim": "Write the shell script to print the following pattern after input term #n=3",
+  "algorithm": "",
+  "code": "#!/bin/bash\n# For n = 3:\n# 1\n# 1 2\n# 1 2 3\n\necho \"Enter the number of terms:\"\nread n\n\nfor (( i = 1; i <= n; i++ ))\ndo\n    for (( j = 1; j <= i; j++ ))\n    do\n        echo -n \"$j \"\n    done\n    echo\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "3",
+    "output": "Enter the number of terms:\n3\n1\n1 2\n1 2 3",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "26",
+  "file": "26_array_input.sh",
+  "aim": "Write a shell script to input the array elements and display it.",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the number of elements:\"\nread n\n\necho \"Enter $n elements:\"\nfor (( i = 0; i < n; i++ ))\ndo\n    read arr[i]\ndone\n\necho \"The array elements are:\"\nfor (( i = 0; i < n; i++ ))\ndo\n    echo \"arr[$i] = ${arr[i]}\"\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5\n10\n20\n30\n40\n50",
+    "output": "Enter the number of elements:\n5\nEnter 5 elements:\n10\n20\n30\n40\n50\nThe array elements are:\narr[0] = 10\narr[1] = 20\narr[2] = 30\narr[3] = 40\narr[4] = 50",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "27",
+  "file": "27_largest_in_array.sh",
+  "aim": "Write a shell script to print the largest element from an array",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the number of elements:\"\nread n\n\necho \"Enter $n elements:\"\nfor (( i = 0; i < n; i++ ))\ndo\n    read arr[i]\ndone\n\nmax=${arr[0]}\n\nfor (( i = 1; i < n; i++ ))\ndo\n    if (( arr[i] > max ))\n    then\n        max=${arr[i]}\n    fi\ndone\n\necho \"Array: ${arr[*]}\"\necho \"Largest element = $max\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5\n12\n45\n7\n89\n23",
+    "output": "Enter the number of elements:\n5\nEnter 5 elements:\n12\n45\n7\n89\n23\nArray: 12 45 7 89 23\nLargest element = 89",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "28",
+  "file": "28_pascal_triangle.sh",
+  "aim": "Write a shell script to input a term and print the pascal triangle of that term",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter the number of terms:\"\nread n\n\nfor (( i = 0; i < n; i++ ))\ndo\n    # Leading spaces to center the row\n    for (( s = 0; s < n - i - 1; s++ ))\n    do\n        echo -n \"  \"\n    done\n\n    # Each value is C(i, j) = C(i, j - 1) * (i - j + 1) / j\n    c=1\n    for (( j = 0; j <= i; j++ ))\n    do\n        printf \"%4d\" $c\n        c=$((c * (i - j) / (j + 1)))\n    done\n\n    echo\ndone\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "5",
+    "output": "Enter the number of terms:\n5\n           1\n         1   1\n       1   2   1\n     1   3   3   1\n   1   4   6   4   1",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "29",
+  "file": "29_largest_of_three.sh",
+  "aim": "shell script to print the largest of three input numbers",
+  "algorithm": "",
+  "code": "#!/bin/bash\n\necho \"Enter three numbers:\"\nread a b c\n\nif (( a >= b && a >= c ))\nthen\n    largest=$a\nelif (( b >= a && b >= c ))\nthen\n    largest=$b\nelse\n    largest=$c\nfi\n\necho \"Largest of $a, $b and $c = $largest\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "15 42 27",
+    "output": "Enter three numbers:\n15 42 27\nLargest of 15, 42 and 27 = 42",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "30",
+  "file": "30_linux_commands.sh",
+  "aim": "Linux commands such as mkdir,grep,sed,cal,cat,cd,xclock,oclock,>>(append),ls etc",
+  "algorithm": "",
+  "code": "#!/bin/bash\n# mkdir, cd, ls, cat, >, >> (append), grep, sed, cal, xclock, oclock\n# Everything runs inside a throwaway folder, so nothing else is touched.\n\nwork=$(mktemp -d)\n\necho \"== mkdir: create a directory ==\"\nmkdir \"$work/demo\"\necho \"Created demo/\"\n\necho\necho \"== cd: change directory ==\"\ncd \"$work/demo\"\necho \"Now in: $(basename \"$PWD\")\"\n\necho\necho \"== > (write) and >> (append) ==\"\necho \"apple\" > fruits.txt\necho \"banana\" >> fruits.txt\necho \"cherry\" >> fruits.txt\necho \"mango\" >> fruits.txt\necho \"Wrote 1 line with > and appended 3 with >>\"\n\necho\necho \"== ls: list files ==\"\nls\n\necho\necho \"== cat: show file contents ==\"\ncat fruits.txt\n\necho\necho \"== grep: search for lines containing 'an' ==\"\ngrep \"an\" fruits.txt\n\necho\necho \"== sed: replace 'apple' with 'grape' ==\"\nsed 's/apple/grape/' fruits.txt\n\necho\necho \"== cal: calendar for July 2026 ==\"\ncal 7 2026\n\necho\necho \"== xclock / oclock: graphical clocks (need X11) ==\"\nfor clock in xclock oclock\ndo\n    if command -v $clock > /dev/null 2>&1 && [ -n \"$DISPLAY\" ]\n    then\n        echo \"Starting $clock (close its window to continue)\"\n        $clock\n    else\n        echo \"$clock: not available here (install x11-apps and run inside X11)\"\n    fi\ndone\n\ncd /\nrm -rf \"$work\"\n",
+  "lang": "bash",
+  "wasm": null,
+  "samples": [
+   {
+    "stdin": "",
+    "output": "== mkdir: create a directory ==\nCreated demo/\n\n== cd: change directory ==\nNow in: demo\n\n== > (write) and >> (append) ==\nWrote 1 line with > and appended 3 with >>\n\n== ls: list files ==\nfruits.txt\n\n== cat: show file contents ==\napple\nbanana\ncherry\nmango\n\n== grep: search for lines containing 'an' ==\nbanana\nmango\n\n== sed: replace 'apple' with 'grape' ==\ngrape\nbanana\ncherry\nmango\n\n== cal: calendar for July 2026 ==\n     July 2026\nSu Mo Tu We Th Fr Sa\n          1  2  3  4\n 5  6  7  8  9 10 11\n12 13 14 15 16 17 18\n19 20 21 22 23 24 25\n26 27 28 29 30 31\n\n\n== xclock / oclock: graphical clocks (need X11) ==\nStarting xclock (close its window to continue)\n\n  [ an xclock window opens ]\n  +--------- xclock ---------+\n  |            12            |\n  |      11    |     1       |\n  |   10       |        2    |\n  |            |             |\n  |  9         o-------  3   |\n  |                          |\n  |   8                 4    |\n  |      7           5       |\n  |            6             |\n  +--------------------------+\n\nStarting oclock (close its window to continue)\n\n  [ an oclock window opens ]\n         .-\"\"\"\"\"\"\"\"-.\n       .'     |      '.\n      /       |        \\\n     ;        |         ;\n     |        o------   |\n     ;                  ;\n      \\                /\n       '.            .'\n         '-........-'\n\n(On a machine without X11 the script prints instead:)\nxclock: not available here (install x11-apps and run inside X11)\noclock: not available here (install x11-apps and run inside X11)",
+    "verified": false
+   }
+  ],
+  "images": []
+ }
+]

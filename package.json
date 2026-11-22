@@ -1,0 +1,57 @@
+{
+  "name": "rgulab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "labs": "node scripts/build-labs.mjs",
+    "labs:sync": "SYNC=1 node scripts/build-labs.mjs",
+    "datasets": "python3 scripts/make_datasets.py",
+    "vendor": "node scripts/vendor.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bjorn3/browser_wasi_shim": "0.4.2",
+    "@codemirror/lang-cpp": "^6.0.3",
+    "@codemirror/lang-python": "^6.2.1",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/legacy-modes": "^6.5.5",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
+    "@uiw/codemirror-theme-github": "^4.25.12",
+    "@uiw/react-codemirror": "^4.25.12",
+    "canvas-confetti": "^1.9.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "just-bash": "3.6.1",
+    "lucide-react": "^1.77.0",
+    "next": "16.4.6",
+    "next-themes": "^0.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tailwind-merge": "^3.7.1",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@yowasp/clang": "22.0.0-git20695-13",
+    "esbuild": "^0.28.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  }
+}

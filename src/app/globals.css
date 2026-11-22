@@ -1,0 +1,103 @@
+@import "../styles/tokens.css";
+
+/* Nunito carries the friendly, rounded game look for both display and UI text. */
+@theme inline {
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --animate-pop: pop 320ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  --animate-shake: shake 360ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-float: float 2.4s ease-in-out infinite;
+  --animate-rise: rise 240ms cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  @keyframes pop {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes rise {
+    0% { transform: translateY(16px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@layer components {
+  /* The chunky "3D" control: a solid ledge underneath that collapses on press. */
+  .ledge {
+    box-shadow: 0 4px 0 var(--ledge, var(--ds-border-strong));
+    transition: transform 120ms cubic-bezier(0.2, 0, 0, 1), filter 120ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .ledge:not(:disabled):active,
+  .ledge[data-pressed="true"] {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--ledge, var(--ds-border-strong));
+  }
+  .ledge:not(:disabled):hover {
+    filter: brightness(1.06);
+  }
+
+  .card {
+    background: var(--ds-bg-elevated);
+    border: 2px solid var(--ds-border);
+    border-radius: 16px;
+  }
+
+  .code-surface {
+    background: var(--ds-bg-muted);
+    border: 2px solid var(--ds-border);
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  /* Tiny Python highlighter classes (src/lib/highlight.tsx) */
+  .tok-kw { color: var(--ds-hue-purple); font-weight: 600; }
+  .tok-str { color: var(--ds-hue-green); }
+  .tok-num { color: var(--ds-hue-orange); }
+  .tok-com { color: var(--ds-fg-muted); font-style: italic; }
+  .tok-fn { color: var(--ds-hue-blue); }
+  .tok-blt { color: var(--ds-hue-teal); }
+  .dark .tok-kw { color: #C89BFF; }
+  .dark .tok-str { color: #8BE36A; }
+  .dark .tok-num { color: #FFB45C; }
+  .dark .tok-fn { color: #6CC4FF; }
+  .dark .tok-blt { color: #4FD8CF; }
+}
+
+/* Per-lab accent. The shadcn bridge vars are re-declared so they resolve against the
+   lab's accent instead of the root one. DS keeps the default green. */
+.lab-os, .lab-daa {
+  --primary: var(--ds-accent);
+  --primary-foreground: var(--ds-accent-fg);
+  --ring: var(--ds-accent);
+  --ds-focus-ring: var(--ds-accent);
+}
+.lab-os { --ds-accent: var(--ds-hue-purple); --ds-accent-ledge: var(--ds-hue-purple-ledge); --ds-accent-subtle: #F3ECFB; --ds-accent-fg: #FFFFFF; }
+.dark .lab-os, .dark.lab-os { --ds-accent: #C89BFF; --ds-accent-ledge: #8A4FCB; --ds-accent-subtle: #221833; --ds-accent-fg: #0A0A0A; }
+.lab-daa { --ds-accent: var(--ds-hue-orange); --ds-accent-ledge: var(--ds-hue-orange-ledge); --ds-accent-subtle: #FBEFE3; --ds-accent-fg: #FFFFFF; }
+.dark .lab-daa, .dark.lab-daa { --ds-accent: #FFB45C; --ds-accent-ledge: #AD5A00; --ds-accent-subtle: #2B1C0C; --ds-accent-fg: #0A0A0A; }
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  h1, h2, h3 { font-weight: 800; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* CodeMirror inherits our mono face and surfaces */
+.cm-editor { font-family: var(--font-mono); font-size: 13.5px; height: 100%; }
+.cm-editor.cm-focused { outline: none; }
+.cm-scroller { font-family: var(--font-mono) !important; }

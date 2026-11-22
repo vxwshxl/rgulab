@@ -1,0 +1,466 @@
+[
+ {
+  "id": "01",
+  "file": "01_linear.c",
+  "aim": "Write a program in c to search an element using linear search and find its execution time using the time function.",
+  "algorithm": "Algorithm: LinearSearch(A, n, x)\n\n1. Start\n2. For i <- 0 to (n-1) do\n3.        if x == A[i] then\n4.              print \"Element Found\"\n5.              exit\n6. If (i==n) then\n7.         print \"Element Not Found\"\n8. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,x,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n    printf(\"Enter the element to search:\");\n    scanf(\"%d\",&x);\n\n    clock_t start=clock();\n    for(i=0;i<n;i++) {\n        count++;\n        if(x==a[i])\n            break;\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(i==n)\n        printf(\"\\n%d is not found\",x);\n    else\n        printf(\"\\n%d is found at position %d\",x,i+1);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: best case O(1), worst case O(n)\");\n    printf(\"\\nSpace complexity: O(1)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/01-67be96095c.wasm",
+  "samples": [
+   {
+    "stdin": "6\n14 27 8 35 19 42\n35",
+    "output": "Enter the number of elements:6\nEnter the elements:14 27 8 35 19 42\nEnter the element to search:35\n\n35 is found at position 4\nNumber of comparisons:4\nTime taken:0.000003 seconds\nTime complexity: best case O(1), worst case O(n)\nSpace complexity: O(1)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "02",
+  "file": "02_binary.c",
+  "aim": "Write a program in c to search an element using binary search and find its execution time using the time function.",
+  "algorithm": "Algorithm: BinarySearch(A, n, x)\n\n1. Start\n2. low <- 0, high <- (n-1)\n3. While (low <= high) do\n4.        mid <- (low+high)/2\n5.        if x == A[mid] then\n6.              print \"Element Found\"\n7.              exit\n8.        else if A[mid] < x then\n9.              low <- mid+1\n10.       else\n11.             high <- mid-1\n12. If (low > high) then\n13.        print \"Element Not Found\"\n14. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,x,low,high,mid,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements in ascending order:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n    printf(\"Enter the element to search:\");\n    scanf(\"%d\",&x);\n\n    clock_t start=clock();\n    low=0;\n    high=n-1;\n    while(low<=high) {\n        count++;\n        mid=(low+high)/2;\n        if(x==a[mid])\n            break;\n        else if(a[mid]<x)\n            low=mid+1;\n        else\n            high=mid-1;\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(low>high)\n        printf(\"\\n%d is not found\",x);\n    else\n        printf(\"\\n%d is found at position %d\",x,mid+1);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: best case O(1), worst case O(log n)\");\n    printf(\"\\nSpace complexity: O(1)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/02-42cf3f0b53.wasm",
+  "samples": [
+   {
+    "stdin": "7\n8 14 19 27 35 42 56\n42",
+    "output": "Enter the number of elements:7\nEnter the elements in ascending order:8 14 19 27 35 42 56\nEnter the element to search:42\n\n42 is found at position 6\nNumber of comparisons:2\nTime taken:0.000005 seconds\nTime complexity: best case O(1), worst case O(log n)\nSpace complexity: O(1)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "03",
+  "file": "03_bubble.c",
+  "aim": "Write a program in c to sort the elements using bubble sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: BubbleSort(A, n)\n\n1. Start\n2. For i <- 0 to (n-2) do\n3.        For j <- 0 to (n-i-2) do\n4.              if A[j] > A[j+1] then\n5.                    temp <- A[j]\n6.                    A[j] <- A[j+1]\n7.                    A[j+1] <- temp\n8. Print the sorted array A\n9. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,j,temp,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    for(i=0;i<n-1;i++) {\n        for(j=0;j<n-i-1;j++) {\n            count++;\n            if(a[j]>a[j+1]) {\n                temp=a[j];\n                a[j]=a[j+1];\n                a[j+1]=temp;\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter bubble sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n^2)\");\n    printf(\"\\nSpace complexity: O(1)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/03-d7a4b19b46.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter bubble sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:15\nTime taken:0.000005 seconds\nTime complexity: O(n^2)\nSpace complexity: O(1)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "04",
+  "file": "04_selection.c",
+  "aim": "Write a program in c to sort the elements using selection sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: SelectionSort(A, n)\n\n1. Start\n2. For i <- 0 to (n-2) do\n3.        min <- i\n4.        For j <- i+1 to (n-1) do\n5.              if A[j] < A[min] then\n6.                    min <- j\n7.        temp <- A[i]\n8.        A[i] <- A[min]\n9.        A[min] <- temp\n10. Print the sorted array A\n11. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,j,min,temp,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    for(i=0;i<n-1;i++) {\n        min=i;\n        for(j=i+1;j<n;j++) {\n            count++;\n            if(a[j]<a[min])\n                min=j;\n        }\n        temp=a[i];\n        a[i]=a[min];\n        a[min]=temp;\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter selection sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n^2)\");\n    printf(\"\\nSpace complexity: O(1)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/04-c1d724426b.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter selection sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:15\nTime taken:0.000006 seconds\nTime complexity: O(n^2)\nSpace complexity: O(1)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "05",
+  "file": "05_insertion.c",
+  "aim": "Write a program in c to sort the elements using insertion sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: InsertionSort(A, n)\n\n1. Start\n2. For i <- 1 to (n-1) do\n3.        key <- A[i]\n4.        j <- i-1\n5.        While (j >= 0 and A[j] > key) do\n6.              A[j+1] <- A[j]\n7.              j <- j-1\n8.        A[j+1] <- key\n9. Print the sorted array A\n10. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,j,key,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    for(i=1;i<n;i++) {\n        key=a[i];\n        j=i-1;\n        while(j>=0) {\n            count++;\n            if(a[j]>key) {\n                a[j+1]=a[j];\n                j--;\n            }\n            else\n                break;\n        }\n        a[j+1]=key;\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter insertion sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: best case O(n), worst case O(n^2)\");\n    printf(\"\\nSpace complexity: O(1)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/05-5775b7dad8.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter insertion sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:12\nTime taken:0.000005 seconds\nTime complexity: best case O(n), worst case O(n^2)\nSpace complexity: O(1)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "06",
+  "file": "06_radix.c",
+  "aim": "Write a program in c to sort the elements using radix sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: RadixSort(A, n)\n\n1. Start\n2. max <- largest element of A\n3. exp <- 1\n4. While (max/exp > 0) do\n5.        CountSort(A, n, exp)\n6.        exp <- exp*10\n7. Print the sorted array A\n8. Stop\n\nAlgorithm: CountSort(A, n, exp)\n\n1. For i <- 0 to 9 do\n2.        bucket[i] <- 0\n3. For i <- 0 to (n-1) do\n4.        d <- (A[i]/exp) mod 10\n5.        bucket[d] <- bucket[d]+1\n6. For i <- 1 to 9 do\n7.        bucket[i] <- bucket[i]+bucket[i-1]\n8. For i <- (n-1) down to 0 do\n9.        d <- (A[i]/exp) mod 10\n10.       bucket[d] <- bucket[d]-1\n11.       output[bucket[d]] <- A[i]\n12. For i <- 0 to (n-1) do\n13.       A[i] <- output[i]\n14. Return",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint count=0;\n\nvoid countSort(int a[],int n,int exp) {\n    int output[n],bucket[10],i;\n\n    for(i=0;i<10;i++)\n        bucket[i]=0;\n    for(i=0;i<n;i++) {\n        count++;\n        bucket[(a[i]/exp)%10]++;\n    }\n    for(i=1;i<10;i++)\n        bucket[i]=bucket[i]+bucket[i-1];\n    for(i=n-1;i>=0;i--) {\n        count++;\n        output[--bucket[(a[i]/exp)%10]]=a[i];\n    }\n    for(i=0;i<n;i++)\n        a[i]=output[i];\n}\n\nint main() {\n    int n,i,max,exp;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    max=a[0];\n    for(i=1;i<n;i++)\n        if(a[i]>max)\n            max=a[i];\n    for(exp=1;max/exp>0;exp=exp*10)\n        countSort(a,n,exp);\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter radix sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of operations:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(d*n)\");\n    printf(\"\\nSpace complexity: O(n+k)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/06-63f46ff7d7.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter radix sorting:\t8\t14\t19\t27\t35\t42\nNumber of operations:24\nTime taken:0.000009 seconds\nTime complexity: O(d*n)\nSpace complexity: O(n+k)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "07",
+  "file": "07_bucket.c",
+  "aim": "Write a program in c to sort the elements using bucket sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: BucketSort(A, n)\n\n1. Start\n2. max <- largest element of A\n3. For i <- 0 to (n-1) do\n4.        size[i] <- 0\n5. For i <- 0 to (n-1) do\n6.        index <- (A[i]*n)/(max+1)\n7.        bucket[index][size[index]] <- A[i]\n8.        size[index] <- size[index]+1\n9. For i <- 0 to (n-1) do\n10.       sort bucket[i] using insertion sort\n11. k <- 0\n12. For i <- 0 to (n-1) do\n13.       For j <- 0 to (size[i]-1) do\n14.             A[k] <- bucket[i][j]\n15.             k <- k+1\n16. Print the sorted array A\n17. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,j,k,key,index,max,count=0;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    max=a[0];\n    for(i=1;i<n;i++)\n        if(a[i]>max)\n            max=a[i];\n\n    int bucket[n][n],size[n];\n    for(i=0;i<n;i++)\n        size[i]=0;\n\n    for(i=0;i<n;i++) {\n        index=(a[i]*n)/(max+1);\n        bucket[index][size[index]++]=a[i];\n    }\n\n    for(i=0;i<n;i++) {\n        for(j=1;j<size[i];j++) {\n            key=bucket[i][j];\n            k=j-1;\n            while(k>=0) {\n                count++;\n                if(bucket[i][k]>key) {\n                    bucket[i][k+1]=bucket[i][k];\n                    k--;\n                }\n                else\n                    break;\n            }\n            bucket[i][k+1]=key;\n        }\n    }\n\n    k=0;\n    for(i=0;i<n;i++)\n        for(j=0;j<size[i];j++)\n            a[k++]=bucket[i][j];\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter bucket sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: average O(n+k), worst O(n^2)\");\n    printf(\"\\nSpace complexity: O(n^2)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/07-aa5a0c4bce.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter bucket sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:1\nTime taken:0.000002 seconds\nTime complexity: average O(n+k), worst O(n^2)\nSpace complexity: O(n^2)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "08",
+  "file": "08_quick.c",
+  "aim": "Write a program in c to sort the elements using quick sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: QuickSort(A, low, high)\n\n1. Start\n2. If (low < high) then\n3.        p <- Partition(A, low, high)\n4.        QuickSort(A, low, p-1)\n5.        QuickSort(A, p+1, high)\n6. Stop\n\nAlgorithm: Partition(A, low, high)\n\n1. pivot <- A[high]\n2. i <- low-1\n3. For j <- low to (high-1) do\n4.        if A[j] <= pivot then\n5.              i <- i+1\n6.              swap A[i] and A[j]\n7. swap A[i+1] and A[high]\n8. Return i+1",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint count=0;\n\nint partition(int a[],int low,int high) {\n    int pivot=a[high];\n    int i=low-1,j,temp;\n\n    for(j=low;j<high;j++) {\n        count++;\n        if(a[j]<=pivot) {\n            i++;\n            temp=a[i];\n            a[i]=a[j];\n            a[j]=temp;\n        }\n    }\n    temp=a[i+1];\n    a[i+1]=a[high];\n    a[high]=temp;\n    return i+1;\n}\n\nvoid quickSort(int a[],int low,int high) {\n    if(low<high) {\n        int p=partition(a,low,high);\n        quickSort(a,low,p-1);\n        quickSort(a,p+1,high);\n    }\n}\n\nint main() {\n    int n,i;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    quickSort(a,0,n-1);\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter quick sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n log n) average, O(n^2) worst\");\n    printf(\"\\nSpace complexity: O(log n) average, O(n) worst\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/08-d30d4604f4.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter quick sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:9\nTime taken:0.000006 seconds\nTime complexity: O(n log n) average, O(n^2) worst\nSpace complexity: O(log n) average, O(n) worst",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "09",
+  "file": "09_merge.c",
+  "aim": "Write a program in c to sort the elements using merge sort and find its execution time using the time function.",
+  "algorithm": "Algorithm: MergeSort(A, low, high)\n\n1. Start\n2. If (low < high) then\n3.        mid <- (low+high)/2\n4.        MergeSort(A, low, mid)\n5.        MergeSort(A, mid+1, high)\n6.        Merge(A, low, mid, high)\n7. Stop\n\nAlgorithm: Merge(A, low, mid, high)\n\n1. n1 <- mid-low+1, n2 <- high-mid\n2. Copy A[low..mid] into L[0..n1-1] and A[mid+1..high] into R[0..n2-1]\n3. i <- 0, j <- 0, k <- low\n4. While (i < n1 and j < n2) do\n5.        if L[i] <= R[j] then\n6.              A[k] <- L[i], i <- i+1\n7.        else\n8.              A[k] <- R[j], j <- j+1\n9.        k <- k+1\n10. Copy the remaining elements of L and R into A\n11. Return",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint count=0;\n\nvoid merge(int a[],int low,int mid,int high) {\n    int n1=mid-low+1,n2=high-mid;\n    int left[n1],right[n2];\n    int i,j,k;\n\n    for(i=0;i<n1;i++)\n        left[i]=a[low+i];\n    for(j=0;j<n2;j++)\n        right[j]=a[mid+1+j];\n\n    i=0;\n    j=0;\n    k=low;\n    while(i<n1 && j<n2) {\n        count++;\n        if(left[i]<=right[j])\n            a[k++]=left[i++];\n        else\n            a[k++]=right[j++];\n    }\n    while(i<n1)\n        a[k++]=left[i++];\n    while(j<n2)\n        a[k++]=right[j++];\n}\n\nvoid mergeSort(int a[],int low,int high) {\n    if(low<high) {\n        int mid=(low+high)/2;\n        mergeSort(a,low,mid);\n        mergeSort(a,mid+1,high);\n        merge(a,low,mid,high);\n    }\n}\n\nint main() {\n    int n,i;\n    printf(\"Enter the number of elements:\");\n    scanf(\"%d\",&n);\n    int a[n];\n    printf(\"Enter the elements:\");\n    for(i=0;i<n;i++)\n        scanf(\"%d\",&a[i]);\n\n    clock_t start=clock();\n    mergeSort(a,0,n-1);\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nAfter merge sorting:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",a[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n log n)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/09-2d9d1e50f0.wasm",
+  "samples": [
+   {
+    "stdin": "6\n42 8 27 14 35 19",
+    "output": "Enter the number of elements:6\nEnter the elements:42 8 27 14 35 19\n\nAfter merge sorting:\t8\t14\t19\t27\t35\t42\nNumber of comparisons:11\nTime taken:0.000008 seconds\nTime complexity: O(n log n)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "10",
+  "file": "10_fibonacci_recursive.c",
+  "aim": "Write a program in c to find the fibonacci series using recursion and find its execution time using the time function.",
+  "algorithm": "Algorithm: Fib(n)\n\n1. Start\n2. If (n <= 1) then\n3.        Return n\n4. Return Fib(n-1) + Fib(n-2)\n5. Stop\n\nAlgorithm: FibonacciSeries(n)\n\n1. Start\n2. For i <- 0 to (n-1) do\n3.        print Fib(i)\n4. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint calls=0;\n\nint fib(int n) {\n    calls++;\n    if(n<=1)\n        return n;\n    return fib(n-1)+fib(n-2);\n}\n\nint main() {\n    int n,i;\n    printf(\"Enter the number of terms:\");\n    scanf(\"%d\",&n);\n\n    clock_t start=clock();\n    printf(\"\\nFibonacci series:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",fib(i));\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nNumber of function calls:%d\",calls);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(2^n)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/10-d318c94bb8.wasm",
+  "samples": [
+   {
+    "stdin": "10",
+    "output": "Enter the number of terms:10\n\nFibonacci series:\t0\t1\t1\t2\t3\t5\t8\t13\t21\t34\nNumber of function calls:276\nTime taken:0.000009 seconds\nTime complexity: O(2^n)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "11",
+  "file": "11_fibonacci_dynamic.c",
+  "aim": "Write a program in c to find the fibonacci series using dynamic programming and find its execution time using the time function.",
+  "algorithm": "Algorithm: FibonacciDP(n)\n\n1. Start\n2. For i <- 0 to (n-1) do\n3.        if (i <= 1) then\n4.              F[i] <- i\n5.        else\n6.              F[i] <- F[i-1] + F[i-2]\n7. Print F[0..n-1]\n8. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,count=0;\n    printf(\"Enter the number of terms:\");\n    scanf(\"%d\",&n);\n    int f[n];\n\n    clock_t start=clock();\n    for(i=0;i<n;i++) {\n        count++;\n        if(i<=1)\n            f[i]=i;\n        else\n            f[i]=f[i-1]+f[i-2];\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nFibonacci series:\");\n    for(i=0;i<n;i++)\n        printf(\"\\t%d\",f[i]);\n    printf(\"\\nNumber of iterations:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/11-3b3de6f0aa.wasm",
+  "samples": [
+   {
+    "stdin": "10",
+    "output": "Enter the number of terms:10\n\nFibonacci series:\t0\t1\t1\t2\t3\t5\t8\t13\t21\t34\nNumber of iterations:10\nTime taken:0.000003 seconds\nTime complexity: O(n)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "12",
+  "file": "12_matrix_chain_multi.c",
+  "aim": "Write a program in c to find the minimum number of scalar multiplications needed for matrix chain multiplication using dynamic programming and find its execution time using the time function.",
+  "algorithm": "Algorithm: MatrixChainOrder(p, n)\n\n1. Start\n2. For i <- 1 to n do\n3.        m[i][i] <- 0\n4. For l <- 2 to n do\n5.        For i <- 1 to (n-l+1) do\n6.              j <- i+l-1\n7.              m[i][j] <- infinity\n8.              For k <- i to (j-1) do\n9.                    q <- m[i][k] + m[k+1][j] + p[i-1]*p[k]*p[j]\n10.                   if q < m[i][j] then\n11.                         m[i][j] <- q\n12.                         s[i][j] <- k\n13. Print m[1][n] and PrintOrder(s, 1, n)\n14. Stop\n\nAlgorithm: PrintOrder(s, i, j)\n\n1. If (i == j) then\n2.        print \"A\"i\n3. else\n4.        print \"(\"\n5.        PrintOrder(s, i, s[i][j])\n6.        PrintOrder(s, s[i][j]+1, j)\n7.        print \")\"",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint s[20][20];\n\nvoid printOrder(int i,int j) {\n    if(i==j) {\n        printf(\"A%d\",i);\n        return;\n    }\n    printf(\"(\");\n    printOrder(i,s[i][j]);\n    printOrder(s[i][j]+1,j);\n    printf(\")\");\n}\n\nint main() {\n    int n,i,j,k,l,count=0;\n    printf(\"Enter the number of matrices:\");\n    scanf(\"%d\",&n);\n    int p[n+1];\n    printf(\"Enter the %d dimensions (matrix i is p[i-1] x p[i]):\",n+1);\n    for(i=0;i<=n;i++)\n        scanf(\"%d\",&p[i]);\n    int m[20][20];\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++)\n        m[i][i]=0;\n    for(l=2;l<=n;l++) {\n        for(i=1;i<=n-l+1;i++) {\n            j=i+l-1;\n            m[i][j]=999999999;\n            for(k=i;k<j;k++) {\n                count++;\n                int cost=m[i][k]+m[k+1][j]+p[i-1]*p[k]*p[j];\n                if(cost<m[i][j]) {\n                    m[i][j]=cost;\n                    s[i][j]=k;\n                }\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nCost table:\");\n    for(i=1;i<=n;i++) {\n        printf(\"\\n\");\n        for(j=1;j<=n;j++)\n            if(j<i)\n                printf(\"\\t-\");\n            else\n                printf(\"\\t%d\",m[i][j]);\n    }\n    printf(\"\\nMinimum number of multiplications:%d\",m[1][n]);\n    printf(\"\\nOptimal parenthesization:\");\n    printOrder(1,n);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n^3)\");\n    printf(\"\\nSpace complexity: O(n^2)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/12-fa2ee13ad7.wasm",
+  "samples": [
+   {
+    "stdin": "4\n5 4 6 2 7",
+    "output": "Enter the number of matrices:4\nEnter the 5 dimensions (matrix i is p[i-1] x p[i]):5 4 6 2 7\n\nCost table:\n\t0\t120\t88\t158\n\t-\t0\t48\t104\n\t-\t-\t0\t84\n\t-\t-\t-\t0\nMinimum number of multiplications:158\nOptimal parenthesization:((A1(A2A3))A4)\nNumber of comparisons:10\nTime taken:0.000004 seconds\nTime complexity: O(n^3)\nSpace complexity: O(n^2)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "13",
+  "file": "13_knapsack_algorithm.c",
+  "aim": "Write a program in c to solve the 0/1 knapsack problem using dynamic programming and find its execution time using the time function.",
+  "algorithm": "Algorithm: Knapsack01(v, wt, n, W)\n\n1. Start\n2. For w <- 0 to W do\n3.        V[0][w] <- 0\n4. For i <- 1 to n do\n5.        For w <- 0 to W do\n6.              if wt[i] <= w and v[i] + V[i-1][w-wt[i]] > V[i-1][w] then\n7.                    V[i][w] <- v[i] + V[i-1][w-wt[i]]\n8.                    keep[i][w] <- 1\n9.              else\n10.                   V[i][w] <- V[i-1][w]\n11.                   keep[i][w] <- 0\n12. print \"Maximum value\" V[n][W]\n13. w <- W\n14. For i <- n down to 1 do\n15.       if keep[i][w] == 1 then\n16.             print \"Item i selected\"\n17.             w <- w - wt[i]\n18. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,W,i,w,count=0;\n    printf(\"Enter the number of items:\");\n    scanf(\"%d\",&n);\n    int v[n+1],wt[n+1];\n    printf(\"Enter the values of %d items:\",n);\n    for(i=1;i<=n;i++)\n        scanf(\"%d\",&v[i]);\n    printf(\"Enter the weights of %d items:\",n);\n    for(i=1;i<=n;i++)\n        scanf(\"%d\",&wt[i]);\n    printf(\"Enter the capacity of the knapsack:\");\n    scanf(\"%d\",&W);\n    int V[n+1][W+1],keep[n+1][W+1];\n\n    clock_t start=clock();\n    for(w=0;w<=W;w++)\n        V[0][w]=0;\n    for(i=1;i<=n;i++) {\n        for(w=0;w<=W;w++) {\n            count++;\n            if(wt[i]<=w && v[i]+V[i-1][w-wt[i]]>V[i-1][w]) {\n                V[i][w]=v[i]+V[i-1][w-wt[i]];\n                keep[i][w]=1;\n            }\n            else {\n                V[i][w]=V[i-1][w];\n                keep[i][w]=0;\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nV[i,w] table:\\ni\\\\w\");\n    for(w=0;w<=W;w++)\n        printf(\"\\t%d\",w);\n    for(i=0;i<=n;i++) {\n        printf(\"\\n%d\",i);\n        for(w=0;w<=W;w++)\n            printf(\"\\t%d\",V[i][w]);\n    }\n    printf(\"\\nMaximum value:%d\",V[n][W]);\n    printf(\"\\nItems selected:\");\n    w=W;\n    for(i=n;i>=1;i--) {\n        if(keep[i][w]==1) {\n            printf(\"\\tItem %d(v=%d,w=%d)\",i,v[i],wt[i]);\n            w=w-wt[i];\n        }\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(nW)\");\n    printf(\"\\nSpace complexity: O(nW)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/13-dbe787973a.wasm",
+  "samples": [
+   {
+    "stdin": "4\n10 40 30 50\n5 4 6 3\n10",
+    "output": "Enter the number of items:4\nEnter the values of 4 items:10 40 30 50\nEnter the weights of 4 items:5 4 6 3\nEnter the capacity of the knapsack:10\n\nV[i,w] table:\ni\\w\t0\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n1\t0\t0\t0\t0\t0\t10\t10\t10\t10\t10\t10\n2\t0\t0\t0\t0\t40\t40\t40\t40\t40\t50\t50\n3\t0\t0\t0\t0\t40\t40\t40\t40\t40\t50\t70\n4\t0\t0\t0\t50\t50\t50\t50\t90\t90\t90\t90\nMaximum value:90\nItems selected:\tItem 4(v=50,w=3)\tItem 2(v=40,w=4)\nNumber of comparisons:44\nTime taken:0.000001 seconds\nTime complexity: O(nW)\nSpace complexity: O(nW)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "14",
+  "file": "14_lcs.c",
+  "aim": "Write a program in c to find the longest common subsequence (LCS) of two sequences using dynamic programming and find its execution time using the time function.",
+  "algorithm": "Algorithm: LCS-Length(X, Y, m, n)\n\n1. Start\n2. For i <- 1 to m do\n3.        c[i][0] <- 0\n4. For j <- 0 to n do\n5.        c[0][j] <- 0\n6. For i <- 1 to m do\n7.        For j <- 1 to n do\n8.              if X[i] == Y[j] then\n9.                    c[i][j] <- c[i-1][j-1] + 1\n10.                   b[i][j] <- 'D'\n11.             else if c[i-1][j] >= c[i][j-1] then\n12.                   c[i][j] <- c[i-1][j]\n13.                   b[i][j] <- 'U'\n14.             else\n15.                   c[i][j] <- c[i][j-1]\n16.                   b[i][j] <- 'L'\n17. print \"Length of LCS\" c[m][n]\n18. PrintLCS(b, X, m, n)\n19. Stop\n\nAlgorithm: PrintLCS(b, X, i, j)\n\n1. If (i == 0 or j == 0) then\n2.        Return\n3. If b[i][j] == 'D' then\n4.        PrintLCS(b, X, i-1, j-1)\n5.        print X[i]\n6. else if b[i][j] == 'U' then\n7.        PrintLCS(b, X, i-1, j)\n8. else\n9.        PrintLCS(b, X, i, j-1)",
+  "code": "#include<stdio.h>\n#include<string.h>\n#include<time.h>\n\nint c[50][50];\nchar b[50][50];\nchar x[50],y[50];\n\nvoid printLCS(int i,int j) {\n    if(i==0 || j==0)\n        return;\n    if(b[i][j]=='D') {\n        printLCS(i-1,j-1);\n        printf(\"%c\",x[i-1]);\n    }\n    else if(b[i][j]=='U')\n        printLCS(i-1,j);\n    else\n        printLCS(i,j-1);\n}\n\nint main() {\n    int m,n,i,j,count=0;\n    printf(\"Enter the first sequence X:\");\n    scanf(\"%s\",x);\n    printf(\"Enter the second sequence Y:\");\n    scanf(\"%s\",y);\n    m=strlen(x);\n    n=strlen(y);\n\n    clock_t start=clock();\n    for(i=1;i<=m;i++)\n        c[i][0]=0;\n    for(j=0;j<=n;j++)\n        c[0][j]=0;\n    for(i=1;i<=m;i++) {\n        for(j=1;j<=n;j++) {\n            count++;\n            if(x[i-1]==y[j-1]) {\n                c[i][j]=c[i-1][j-1]+1;\n                b[i][j]='D';\n            }\n            else if(c[i-1][j]>=c[i][j-1]) {\n                c[i][j]=c[i-1][j];\n                b[i][j]='U';\n            }\n            else {\n                c[i][j]=c[i][j-1];\n                b[i][j]='L';\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nc[i,j] table (D=diagonal, U=up, L=left):\\n\\t\\t\");\n    for(j=0;j<n;j++)\n        printf(\"%c\\t\",y[j]);\n    for(i=0;i<=m;i++) {\n        printf(\"\\n\");\n        if(i==0)\n            printf(\"\\t\");\n        else\n            printf(\"%c\\t\",x[i-1]);\n        for(j=0;j<=n;j++)\n            if(i==0 || j==0)\n                printf(\"%d\\t\",c[i][j]);\n            else\n                printf(\"%d%c\\t\",c[i][j],b[i][j]);\n    }\n    printf(\"\\nLength of LCS:%d\",c[m][n]);\n    printf(\"\\nLCS:\");\n    printLCS(m,n);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(mn)\");\n    printf(\"\\nSpace complexity: O(mn)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/14-e1720611a2.wasm",
+  "samples": [
+   {
+    "stdin": "ABCBDAB\nBDCABA",
+    "output": "Enter the first sequence X:ABCBDAB\nEnter the second sequence Y:BDCABA\n\nc[i,j] table (D=diagonal, U=up, L=left):\n\t\tB\tD\tC\tA\tB\tA\n\t0\t0\t0\t0\t0\t0\t0\nA\t0\t0U\t0U\t0U\t1D\t1L\t1D\nB\t0\t1D\t1L\t1L\t1U\t2D\t2L\nC\t0\t1U\t1U\t2D\t2L\t2U\t2U\nB\t0\t1D\t1U\t2U\t2U\t3D\t3L\nD\t0\t1U\t2D\t2U\t2U\t3U\t3U\nA\t0\t1U\t2U\t2U\t3D\t3U\t4D\nB\t0\t1D\t2U\t2U\t3U\t4D\t4U\nLength of LCS:4\nLCS:BCBA\nNumber of comparisons:42\nTime taken:0.000002 seconds\nTime complexity: O(mn)\nSpace complexity: O(mn)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "15",
+  "file": "15_fractional_knapsack.c",
+  "aim": "Write a program in c to solve the fractional knapsack problem using the greedy method and find its execution time using the time function.",
+  "algorithm": "Algorithm: FractionalKnapsack(v, w, n, W)\n\n1. Start\n2. For i <- 1 to n do\n3.        r[i] <- v[i]/w[i]\n4.        x[i] <- 0\n5. Sort the items in decreasing order of r[i] (merge sort)\n6. remaining <- W, total <- 0\n7. For each item i in sorted order, while remaining > 0 do\n8.        if w[i] <= remaining then\n9.              x[i] <- 1\n10.             remaining <- remaining - w[i]\n11.       else\n12.             x[i] <- remaining/w[i]\n13.             remaining <- 0\n14.       total <- total + x[i]*v[i]\n15. print \"Maximum value\" total\n16. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\ndouble r[50];\nint count=0;\n\nvoid merge(int a[],int low,int mid,int high) {\n    int n1=mid-low+1,n2=high-mid;\n    int left[n1],right[n2];\n    int i,j,k;\n\n    for(i=0;i<n1;i++)\n        left[i]=a[low+i];\n    for(j=0;j<n2;j++)\n        right[j]=a[mid+1+j];\n\n    i=0;\n    j=0;\n    k=low;\n    while(i<n1 && j<n2) {\n        count++;\n        if(r[left[i]]>=r[right[j]])\n            a[k++]=left[i++];\n        else\n            a[k++]=right[j++];\n    }\n    while(i<n1)\n        a[k++]=left[i++];\n    while(j<n2)\n        a[k++]=right[j++];\n}\n\nvoid mergeSort(int a[],int low,int high) {\n    if(low<high) {\n        int mid=(low+high)/2;\n        mergeSort(a,low,mid);\n        mergeSort(a,mid+1,high);\n        merge(a,low,mid,high);\n    }\n}\n\nint main() {\n    int n,i,k;\n    double W;\n    printf(\"Enter the number of items:\");\n    scanf(\"%d\",&n);\n    double v[n+1],w[n+1],x[n+1];\n    int order[n];\n    printf(\"Enter the values of %d items:\",n);\n    for(i=1;i<=n;i++)\n        scanf(\"%lf\",&v[i]);\n    printf(\"Enter the weights of %d items:\",n);\n    for(i=1;i<=n;i++)\n        scanf(\"%lf\",&w[i]);\n    printf(\"Enter the capacity of the knapsack:\");\n    scanf(\"%lf\",&W);\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++) {\n        r[i]=v[i]/w[i];\n        x[i]=0;\n        order[i-1]=i;\n    }\n    mergeSort(order,0,n-1);\n    double remaining=W,total=0;\n    for(k=0;k<n && remaining>0;k++) {\n        i=order[k];\n        count++;\n        if(w[i]<=remaining) {\n            x[i]=1;\n            remaining=remaining-w[i];\n        }\n        else {\n            x[i]=remaining/w[i];\n            remaining=0;\n        }\n        total=total+x[i]*v[i];\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nItems in decreasing order of value/weight:\\nItem\\tValue\\tWeight\\tv/w\\tFraction\");\n    for(k=0;k<n;k++) {\n        i=order[k];\n        printf(\"\\n%d\\t%g\\t%g\\t%g\\t%g\",i,v[i],w[i],r[i],x[i]);\n    }\n    printf(\"\\nMaximum value:%g\",total);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n log n)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/15-a60c03b028.wasm",
+  "samples": [
+   {
+    "stdin": "4\n10 40 30 50\n5 4 6 3\n10",
+    "output": "Enter the number of items:4\nEnter the values of 4 items:10 40 30 50\nEnter the weights of 4 items:5 4 6 3\nEnter the capacity of the knapsack:10\n\nItems in decreasing order of value/weight:\nItem\tValue\tWeight\tv/w\tFraction\n4\t50\t3\t16.6667\t1\n2\t40\t4\t10\t1\n3\t30\t6\t5\t0.5\n1\t10\t5\t2\t0\nMaximum value:105\nNumber of comparisons:8\nTime taken:0.000006 seconds\nTime complexity: O(n log n)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "16",
+  "file": "16_job_scheduling.c",
+  "aim": "Write a program in c to solve the job sequencing with deadlines problem using the greedy method and find its execution time using the time function.",
+  "algorithm": "Algorithm: JobSequencing(p, d, n)\n\n1. Start\n2. maxd <- largest deadline\n3. For t <- 1 to maxd do\n4.        slot[t] <- 0\n5. Sort the jobs in decreasing order of profit p[i] (merge sort)\n6. total <- 0\n7. For each job i in sorted order do\n8.        For t <- d[i] down to 1 do\n9.              if slot[t] == 0 then\n10.                   slot[t] <- i\n11.                   total <- total + p[i]\n12.                   break\n13. print the jobs in slot[1..maxd] and total\n14. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint p[50];\nint count=0;\n\nvoid merge(int a[],int low,int mid,int high) {\n    int n1=mid-low+1,n2=high-mid;\n    int left[n1],right[n2];\n    int i,j,k;\n\n    for(i=0;i<n1;i++)\n        left[i]=a[low+i];\n    for(j=0;j<n2;j++)\n        right[j]=a[mid+1+j];\n\n    i=0;\n    j=0;\n    k=low;\n    while(i<n1 && j<n2) {\n        count++;\n        if(p[left[i]]>=p[right[j]])\n            a[k++]=left[i++];\n        else\n            a[k++]=right[j++];\n    }\n    while(i<n1)\n        a[k++]=left[i++];\n    while(j<n2)\n        a[k++]=right[j++];\n}\n\nvoid mergeSort(int a[],int low,int high) {\n    if(low<high) {\n        int mid=(low+high)/2;\n        mergeSort(a,low,mid);\n        mergeSort(a,mid+1,high);\n        merge(a,low,mid,high);\n    }\n}\n\nint main() {\n    int n,i,k,t,maxd=0,total=0;\n    printf(\"Enter the number of jobs:\");\n    scanf(\"%d\",&n);\n    int d[n+1],order[n];\n    printf(\"Enter the profits of %d jobs:\",n);\n    for(i=1;i<=n;i++)\n        scanf(\"%d\",&p[i]);\n    printf(\"Enter the deadlines of %d jobs:\",n);\n    for(i=1;i<=n;i++) {\n        scanf(\"%d\",&d[i]);\n        if(d[i]>maxd)\n            maxd=d[i];\n    }\n    int slot[maxd+1];\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++)\n        order[i-1]=i;\n    for(t=1;t<=maxd;t++)\n        slot[t]=0;\n    mergeSort(order,0,n-1);\n    for(k=0;k<n;k++) {\n        i=order[k];\n        for(t=d[i];t>=1;t--) {\n            count++;\n            if(slot[t]==0) {\n                slot[t]=i;\n                total=total+p[i];\n                break;\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nJobs in decreasing order of profit:\\nJob\\tProfit\\tDeadline\");\n    for(k=0;k<n;k++) {\n        i=order[k];\n        printf(\"\\nJ%d\\t%d\\t%d\",i,p[i],d[i]);\n    }\n    printf(\"\\nJob sequence:\");\n    for(t=1;t<=maxd;t++)\n        if(slot[t]!=0)\n            printf(\"\\tJ%d\",slot[t]);\n    printf(\"\\nMaximum profit:%d\",total);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n^2)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/16-2d3795ff5f.wasm",
+  "samples": [
+   {
+    "stdin": "5\n100 19 27 25 15\n2 1 2 1 3",
+    "output": "Enter the number of jobs:5\nEnter the profits of 5 jobs:100 19 27 25 15\nEnter the deadlines of 5 jobs:2 1 2 1 3\n\nJobs in decreasing order of profit:\nJob\tProfit\tDeadline\nJ1\t100\t2\nJ3\t27\t2\nJ4\t25\t1\nJ2\t19\t1\nJ5\t15\t3\nJob sequence:\tJ3\tJ1\tJ5\nMaximum profit:142\nNumber of comparisons:14\nTime taken:0.000003 seconds\nTime complexity: O(n^2)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "17",
+  "file": "17_huffman.c",
+  "aim": "Write a program in c to construct an optimal prefix code using Huffman coding (greedy method) and find its execution time using the time function.",
+  "algorithm": "Algorithm: Huffman(C, f, n)\n\n1. Start\n2. Q <- min-priority queue of all n characters, keyed on frequency f\n3. For i <- 1 to (n-1) do\n4.        allocate a new node z\n5.        x <- ExtractMin(Q)\n6.        y <- ExtractMin(Q)\n7.        left[z] <- x\n8.        right[z] <- y\n9.        f[z] <- f[x] + f[y]\n10.       Insert(Q, z)\n11. root <- ExtractMin(Q)\n12. PrintCodes(root, \"\")\n13. Stop\n\nAlgorithm: PrintCodes(z, code)\n\n1. If z is a leaf then\n2.        print character of z and code\n3.        Return\n4. PrintCodes(left[z], code + \"0\")\n5. PrintCodes(right[z], code + \"1\")",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nchar ch[100];\nint f[100],lft[100],rgt[100];\nint Q[100],qsize=0,comp=0;\nint code[100];\n\nvoid heapify(int i) {\n    int smallest=i,l=2*i+1,r=2*i+2;\n    if(l<qsize) {\n        comp++;\n        if(f[Q[l]]<f[Q[smallest]])\n            smallest=l;\n    }\n    if(r<qsize) {\n        comp++;\n        if(f[Q[r]]<f[Q[smallest]])\n            smallest=r;\n    }\n    if(smallest!=i) {\n        int t=Q[i];\n        Q[i]=Q[smallest];\n        Q[smallest]=t;\n        heapify(smallest);\n    }\n}\n\nint extractMin() {\n    int min=Q[0];\n    Q[0]=Q[qsize-1];\n    qsize--;\n    heapify(0);\n    return min;\n}\n\nvoid insert(int z) {\n    int i=qsize;\n    Q[qsize++]=z;\n    while(i>0) {\n        int p=(i-1)/2;\n        comp++;\n        if(f[Q[i]]>=f[Q[p]])\n            break;\n        int t=Q[i];\n        Q[i]=Q[p];\n        Q[p]=t;\n        i=p;\n    }\n}\n\nvoid printCodes(int z,int depth) {\n    int i;\n    if(lft[z]==-1 && rgt[z]==-1) {\n        printf(\"\\n%c\\t%d\\t\",ch[z],f[z]);\n        if(depth==0)\n            printf(\"0\");\n        for(i=0;i<depth;i++)\n            printf(\"%d\",code[i]);\n        return;\n    }\n    code[depth]=0;\n    printCodes(lft[z],depth+1);\n    code[depth]=1;\n    printCodes(rgt[z],depth+1);\n}\n\nint main() {\n    int n,i;\n    printf(\"Enter the number of characters:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %d characters:\",n);\n    for(i=0;i<n;i++)\n        scanf(\" %c\",&ch[i]);\n    printf(\"Enter the frequencies of %d characters:\",n);\n    for(i=0;i<n;i++) {\n        scanf(\"%d\",&f[i]);\n        lft[i]=rgt[i]=-1;\n    }\n\n    clock_t start=clock();\n    for(i=0;i<n;i++)\n        insert(i);\n    int next=n;\n    for(i=1;i<=n-1;i++) {\n        int z=next++;\n        int x=extractMin();\n        int y=extractMin();\n        lft[z]=x;\n        rgt[z]=y;\n        f[z]=f[x]+f[y];\n        insert(z);\n    }\n    int root=extractMin();\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nHuffman codes:\\nChar\\tFreq\\tCode\");\n    printCodes(root,0);\n    printf(\"\\nTotal frequency at root:%d\",f[root]);\n    printf(\"\\nNumber of comparisons:%d\",comp);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n log n)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/17-623688cff9.wasm",
+  "samples": [
+   {
+    "stdin": "6\na b c d e f\n45 13 12 16 9 5",
+    "output": "Enter the number of characters:6\nEnter the 6 characters:a b c d e f\nEnter the frequencies of 6 characters:45 13 12 16 9 5\n\nHuffman codes:\nChar\tFreq\tCode\na\t45\t0\nc\t12\t100\nb\t13\t101\nf\t5\t1100\ne\t9\t1101\nd\t16\t111\nTotal frequency at root:100\nNumber of comparisons:27\nTime taken:0.000005 seconds\nTime complexity: O(n log n)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "18",
+  "file": "18_n_queen.c",
+  "aim": "Write a program in c to solve the N-Queen problem using backtracking and find its execution time using the time function.",
+  "algorithm": "Algorithm: Place(k, i)\n(returns true if a queen can be placed in row k, column i)\n\n1. For j <- 1 to (k-1) do\n2.        if x[j] == i or |x[j] - i| == |j - k| then\n3.              Return false\n4. Return true\n\nAlgorithm: NQueens(k, n)\n\n1. Start\n2. For i <- 1 to n do\n3.        if Place(k, i) then\n4.              x[k] <- i\n5.              if k == n then\n6.                    print x[1..n]\n7.              else\n8.                    NQueens(k+1, n)\n9. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint x[20],first[20];\nint n,solutions=0,comp=0;\n\nint place(int k,int i) {\n    int j;\n    for(j=1;j<k;j++) {\n        comp++;\n        if(x[j]==i || x[j]-i==j-k || x[j]-i==k-j)\n            return 0;\n    }\n    return 1;\n}\n\nvoid nQueens(int k) {\n    int i,j;\n    for(i=1;i<=n;i++) {\n        if(place(k,i)) {\n            x[k]=i;\n            if(k==n) {\n                solutions++;\n                printf(\"\\nSolution %d:\",solutions);\n                for(j=1;j<=n;j++)\n                    printf(\"\\t%d\",x[j]);\n                if(solutions==1)\n                    for(j=1;j<=n;j++)\n                        first[j]=x[j];\n            }\n            else\n                nQueens(k+1);\n        }\n    }\n}\n\nint main() {\n    int i,j;\n    printf(\"Enter the number of queens:\");\n    scanf(\"%d\",&n);\n\n    printf(\"\\nColumn of the queen in each row 1..%d:\",n);\n    clock_t start=clock();\n    nQueens(1);\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(solutions>0) {\n        printf(\"\\n\\nBoard for solution 1:\");\n        for(i=1;i<=n;i++) {\n            printf(\"\\n\");\n            for(j=1;j<=n;j++)\n                if(first[i]==j)\n                    printf(\"Q \");\n                else\n                    printf(\". \");\n        }\n    }\n    printf(\"\\nTotal solutions:%d\",solutions);\n    printf(\"\\nNumber of comparisons:%d\",comp);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n!)\");\n    printf(\"\\nSpace complexity: O(n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/18-3ce65432ff.wasm",
+  "samples": [
+   {
+    "stdin": "4",
+    "output": "Enter the number of queens:4\n\nColumn of the queen in each row 1..4:\nSolution 1:\t2\t4\t1\t3\nSolution 2:\t3\t1\t4\t2\n\nBoard for solution 1:\n. Q . .\n. . . Q\nQ . . .\n. . Q .\nTotal solutions:2\nNumber of comparisons:84\nTime taken:0.000008 seconds\nTime complexity: O(n!)\nSpace complexity: O(n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "19",
+  "file": "19_travelling_salesman.c",
+  "aim": "Write a program in c to solve the travelling salesman problem using dynamic programming and find its execution time using the time function.",
+  "algorithm": "Algorithm: TSP(cost, n)\n(g(i, S) = cheapest path that starts at city i, visits every city in set S once, and ends at city 1)\n\n1. Start\n2. For i <- 2 to n do\n3.        g(i, {}) <- cost[i][1]\n4. For each set S not containing city 1, in increasing size do\n5.        For each city i not in S do\n6.              g(i, S) <- infinity\n7.              For each city k in S do\n8.                    if cost[i][k] + g(k, S - {k}) < g(i, S) then\n9.                          g(i, S) <- cost[i][k] + g(k, S - {k})\n10.                         next(i, S) <- k\n11. print \"Minimum cost\" g(1, {2, 3, ..., n})\n12. Follow next(i, S) from city 1 to print the tour\n13. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint cost[15][15];\nint g[1<<15][15],nxt[1<<15][15];\n\nint main() {\n    int n,i,j,k,S,full,count=0;\n    printf(\"Enter the number of cities:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %dx%d cost matrix:\\n\",n,n);\n    for(i=0;i<n;i++)\n        for(j=0;j<n;j++)\n            scanf(\"%d\",&cost[i][j]);\n\n    clock_t start=clock();\n    // S is a bitmask of cities; bit 0 (city 1) is never in S\n    full=(1<<n)-1;\n    for(i=0;i<n;i++)\n        g[0][i]=cost[i][0];\n    for(S=1;S<=full;S++) {\n        if(S&1)\n            continue;\n        for(i=0;i<n;i++) {\n            if(S&(1<<i))\n                continue;\n            g[S][i]=999999999;\n            for(k=1;k<n;k++) {\n                if(S&(1<<k)) {\n                    count++;\n                    int c=cost[i][k]+g[S^(1<<k)][k];\n                    if(c<g[S][i]) {\n                        g[S][i]=c;\n                        nxt[S][i]=k;\n                    }\n                }\n            }\n        }\n    }\n    S=full^1;\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nMinimum cost of tour:%d\",g[S][0]);\n    printf(\"\\nOptimal tour:1\");\n    i=0;\n    while(S!=0) {\n        k=nxt[S][i];\n        printf(\" -> %d\",k+1);\n        S=S^(1<<k);\n        i=k;\n    }\n    printf(\" -> 1\");\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n^2 * 2^n)\");\n    printf(\"\\nSpace complexity: O(n * 2^n)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/19-a09d3ac036.wasm",
+  "samples": [
+   {
+    "stdin": "4\n0 10 15 20\n5 0 9 10\n6 13 0 12\n8 8 9 0",
+    "output": "Enter the number of cities:4\nEnter the 4x4 cost matrix:\n0 10 15 20\n5 0 9 10\n6 13 0 12\n8 8 9 0\n\nMinimum cost of tour:35\nOptimal tour:1 -> 2 -> 4 -> 3 -> 1\nNumber of comparisons:24\nTime taken:0.000008 seconds\nTime complexity: O(n^2 * 2^n)\nSpace complexity: O(n * 2^n)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "20",
+  "file": "20_bfs.c",
+  "aim": "Write a program in c to traverse a graph using breadth first search (BFS) and find its execution time using the time function.",
+  "algorithm": "Algorithm: BFS(G, s)\n\n1. Start\n2. For each vertex u in G do\n3.        visited[u] <- 0\n4.        d[u] <- infinity\n5. visited[s] <- 1, d[s] <- 0\n6. Enqueue(Q, s)\n7. While Q is not empty do\n8.        u <- Dequeue(Q)\n9.        print u\n10.       For each vertex v adjacent to u do\n11.             if visited[v] == 0 then\n12.                   visited[v] <- 1\n13.                   d[v] <- d[u] + 1\n14.                   Enqueue(Q, v)\n15. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint main() {\n    int n,i,u,v,s,front=0,rear=0,count=0;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    int adj[n+1][n+1],visited[n+1],d[n+1],Q[n];\n    printf(\"Enter the %dx%d adjacency matrix:\\n\",n,n);\n    for(u=1;u<=n;u++)\n        for(v=1;v<=n;v++)\n            scanf(\"%d\",&adj[u][v]);\n    printf(\"Enter the source vertex:\");\n    scanf(\"%d\",&s);\n\n    clock_t start=clock();\n    for(u=1;u<=n;u++) {\n        visited[u]=0;\n        d[u]=-1;\n    }\n    visited[s]=1;\n    d[s]=0;\n    Q[rear++]=s;\n    printf(\"\\nBFS traversal:\");\n    while(front<rear) {\n        u=Q[front++];\n        printf(\"\\t%d\",u);\n        for(v=1;v<=n;v++) {\n            count++;\n            if(adj[u][v]==1 && visited[v]==0) {\n                visited[v]=1;\n                d[v]=d[u]+1;\n                Q[rear++]=v;\n            }\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nVertex\\tDistance from %d\",s);\n    for(i=1;i<=n;i++)\n        if(d[i]==-1)\n            printf(\"\\n%d\\tunreachable\",i);\n        else\n            printf(\"\\n%d\\t%d\",i,d[i]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\");\n    printf(\"\\nSpace complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/20-989b5d5c3e.wasm",
+  "samples": [
+   {
+    "stdin": "6\n0 1 1 0 0 0\n1 0 0 1 1 0\n1 0 0 0 1 0\n0 1 0 0 0 1\n0 1 1 0 0 1\n0 0 0 1 1 0\n1",
+    "output": "Enter the number of vertices:6\nEnter the 6x6 adjacency matrix:\n0 1 1 0 0 0\n1 0 0 1 1 0\n1 0 0 0 1 0\n0 1 0 0 0 1\n0 1 1 0 0 1\n0 0 0 1 1 0\nEnter the source vertex:1\n\nBFS traversal:\t1\t2\t3\t4\t5\t6\nVertex\tDistance from 1\n1\t0\n2\t1\n3\t1\n4\t2\n5\t2\n6\t3\nNumber of comparisons:36\nTime taken:0.000003 seconds\nTime complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\nSpace complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "21",
+  "file": "21_dfs.c",
+  "aim": "Write a program in c to traverse a graph using depth first search (DFS) and find its execution time using the time function.",
+  "algorithm": "Algorithm: DFS(G, s)\n\n1. Start\n2. For each vertex u in G do\n3.        visited[u] <- 0\n4. time <- 0\n5. DFS-Visit(s)\n6. For each vertex u in G do\n7.        if visited[u] == 0 then\n8.              DFS-Visit(u)\n9. Stop\n\nAlgorithm: DFS-Visit(u)\n\n1. visited[u] <- 1\n2. time <- time+1, d[u] <- time\n3. print u\n4. For each vertex v adjacent to u do\n5.        if visited[v] == 0 then\n6.              DFS-Visit(v)\n7. time <- time+1, f[u] <- time",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint adj[50][50],visited[50],d[50],f[50];\nint n,t=0,count=0;\n\nvoid dfsVisit(int u) {\n    int v;\n    visited[u]=1;\n    d[u]=++t;\n    printf(\"\\t%d\",u);\n    for(v=1;v<=n;v++) {\n        count++;\n        if(adj[u][v]==1 && visited[v]==0)\n            dfsVisit(v);\n    }\n    f[u]=++t;\n}\n\nint main() {\n    int u,v,s;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %dx%d adjacency matrix:\\n\",n,n);\n    for(u=1;u<=n;u++)\n        for(v=1;v<=n;v++)\n            scanf(\"%d\",&adj[u][v]);\n    printf(\"Enter the source vertex:\");\n    scanf(\"%d\",&s);\n\n    clock_t start=clock();\n    for(u=1;u<=n;u++)\n        visited[u]=0;\n    printf(\"\\nDFS traversal:\");\n    dfsVisit(s);\n    for(u=1;u<=n;u++)\n        if(visited[u]==0)\n            dfsVisit(u);\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nVertex\\tDiscovery\\tFinish\");\n    for(u=1;u<=n;u++)\n        printf(\"\\n%d\\t%d\\t\\t%d\",u,d[u],f[u]);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\");\n    printf(\"\\nSpace complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/21-1fab593995.wasm",
+  "samples": [
+   {
+    "stdin": "6\n0 1 1 0 0 0\n1 0 0 1 1 0\n1 0 0 0 1 0\n0 1 0 0 0 1\n0 1 1 0 0 1\n0 0 0 1 1 0\n1",
+    "output": "Enter the number of vertices:6\nEnter the 6x6 adjacency matrix:\n0 1 1 0 0 0\n1 0 0 1 1 0\n1 0 0 0 1 0\n0 1 0 0 0 1\n0 1 1 0 0 1\n0 0 0 1 1 0\nEnter the source vertex:1\n\nDFS traversal:\t1\t2\t4\t6\t5\t3\nVertex\tDiscovery\tFinish\n1\t1\t\t12\n2\t2\t\t11\n3\t6\t\t7\n4\t3\t\t10\n5\t5\t\t8\n6\t4\t\t9\nNumber of comparisons:36\nTime taken:0.000006 seconds\nTime complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix\nSpace complexity: O(V+E) with adjacency list, O(V^2) with adjacency matrix",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "22",
+  "file": "22_job_assignment_using_branch&bound.c",
+  "aim": "Write a program in c to solve the job assignment problem using branch and bound and find its execution time using the time function.",
+  "algorithm": "Algorithm: JOB-ASSIGNMENT(C, n)   (Least Cost Branch and Bound)\n(lb(X) = cost of the jobs assigned so far in X\n         + for every worker not yet assigned, his cheapest job among the jobs still free)\n\n1. Start\n2. Create the root node: no worker assigned, cost <- 0\n3. lb(root) <- lower bound of root\n4. Insert root into the list of live nodes\n5. While the list of live nodes is not empty do\n6.       E <- the live node with minimum lb\n7.       Remove E from the list of live nodes\n8.       if all n workers are assigned in E then\n9.             print the assignment in E and its cost as the optimal solution\n10.            Stop\n11.      i <- the next worker to be assigned in E\n12.      For each job j not yet assigned in E do\n13.            Create a child X of E with worker i assigned job j\n14.            cost(X) <- cost(E) + C[i][j]\n15.            lb(X) <- lower bound of X\n16.            Insert X into the list of live nodes\n17. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n#define INF 99999\n#define MAX 100000\n\nint n,c[15][15],count=0,total=0;\nint parent[MAX],level[MAX],job[MAX],used[MAX],cost[MAX],lb[MAX],live[MAX];\n\nint bound(int k) {\n    int i,j,min,b=cost[k];\n    for(i=level[k]+1;i<=n;i++) {\n        min=INF;\n        for(j=1;j<=n;j++) {\n            count++;\n            if(!(used[k]&(1<<j)) && c[i][j]<min)\n                min=c[i][j];\n        }\n        b+=min;\n    }\n    return b;\n}\n\nvoid new_node(int p,int j) {\n    int k=total++;\n    parent[k]=p;\n    if(p==-1) {\n        level[k]=0;\n        job[k]=0;\n        used[k]=0;\n        cost[k]=0;\n    }\n    else {\n        level[k]=level[p]+1;\n        job[k]=j;\n        used[k]=used[p]|(1<<j);\n        cost[k]=cost[p]+c[level[k]][j];\n    }\n    lb[k]=bound(k);\n    live[k]=1;\n}\n\nvoid assignment(int k) {\n    if(parent[k]==-1) {\n        printf(\"root\");\n        return;\n    }\n    if(parent[parent[k]]!=-1) {\n        assignment(parent[k]);\n        printf(\", \");\n    }\n    printf(\"W%d->J%d\",level[k],job[k]);\n}\n\nint main() {\n    int i,j,k,E,ans=-1,expanded=0;\n    printf(\"Enter the number of workers/jobs:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %dx%d cost matrix (row = worker, column = job):\\n\",n,n);\n    for(i=1;i<=n;i++)\n        for(j=1;j<=n;j++)\n            scanf(\"%d\",&c[i][j]);\n\n    int order[MAX],first[MAX];\n\n    clock_t start=clock();\n    new_node(-1,0);\n    while(1) {\n        E=-1;\n        for(k=0;k<total;k++) {\n            if(live[k]) {\n                count++;\n                if(E==-1 || lb[k]<lb[E])\n                    E=k;\n            }\n        }\n        if(E==-1)\n            break;\n        live[E]=0;\n        if(level[E]==n) {\n            ans=E;\n            break;\n        }\n        order[expanded]=E;\n        first[expanded]=total;\n        expanded++;\n        for(j=1;j<=n;j++)\n            if(!(used[E]&(1<<j)))\n                new_node(E,j);\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nNodes expanded (least lb first):\");\n    for(i=0;i<expanded;i++) {\n        E=order[i];\n        printf(\"\\nE = {\");\n        assignment(E);\n        printf(\"}  lb = %d\",lb[E]);\n        for(k=first[i];k<first[i]+n-level[E];k++)\n            printf(\"\\n      W%d->J%d   cost = %-4d lb = %d\",level[k],job[k],cost[k],lb[k]);\n    }\n\n    printf(\"\\n\\nOptimal assignment:\");\n    for(i=1;i<=n;i++) {\n        k=ans;\n        while(level[k]!=i)\n            k=parent[k];\n        printf(\"\\nWorker %d -> Job %d\\tcost = %d\",i,job[k],c[i][job[k]]);\n    }\n    printf(\"\\nMinimum total cost:%d\",cost[ans]);\n    printf(\"\\nNodes generated:%d\",total);\n    printf(\"\\nNodes expanded:%d\",expanded);\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(n!) in the worst case, far less when the bound prunes the tree\");\n    printf(\"\\nSpace complexity: O(n!) in the worst case for the live nodes\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/22-004b833f2c.wasm",
+  "samples": [
+   {
+    "stdin": "4\n9 2 7 8\n6 4 3 7\n5 8 1 8\n7 6 9 4",
+    "output": "Enter the number of workers/jobs:4\nEnter the 4x4 cost matrix (row = worker, column = job):\n9 2 7 8\n6 4 3 7\n5 8 1 8\n7 6 9 4\n\nNodes expanded (least lb first):\nE = {root}  lb = 10\n      W1->J1   cost = 9    lb = 17\n      W1->J2   cost = 2    lb = 10\n      W1->J3   cost = 7    lb = 20\n      W1->J4   cost = 8    lb = 18\nE = {W1->J2}  lb = 10\n      W2->J1   cost = 8    lb = 13\n      W2->J3   cost = 5    lb = 14\n      W2->J4   cost = 9    lb = 17\nE = {W1->J2, W2->J1}  lb = 13\n      W3->J3   cost = 9    lb = 13\n      W3->J4   cost = 16   lb = 25\nE = {W1->J2, W2->J1, W3->J3}  lb = 13\n      W4->J4   cost = 13   lb = 13\n\nOptimal assignment:\nWorker 1 -> Job 2\tcost = 2\nWorker 2 -> Job 1\tcost = 6\nWorker 3 -> Job 3\tcost = 1\nWorker 4 -> Job 4\tcost = 4\nMinimum total cost:13\nNodes generated:11\nNodes expanded:4\nNumber of comparisons:121\nTime taken:0.000009 seconds\nTime complexity: O(n!) in the worst case, far less when the bound prunes the tree\nSpace complexity: O(n!) in the worst case for the live nodes",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "23",
+  "file": "23_dijkstra.c",
+  "aim": "Write a program in c to find the shortest path from a source vertex to all other vertices using Dijkstra's algorithm and find its execution time using the time function.",
+  "algorithm": "Algorithm: DA(G, w, s)\n\n1. INITIALIZE-SINGLE-SOURCE(G, s)\n2. S <- Ø\n3. Q <- V[G]\n4. while Q != Ø\n5.       do u <- EXTRACT-MIN(Q)\n6.          S <- S U {u}\n7.          for each vertex v in Adj[u]\n8.                do RELAX(u, v, w)\n\nINITIALIZE-SINGLE-SOURCE(G, s)\n1. for each vertex v in V[G]\n2.       do d[v] <- infinity\n3.          p[v] <- NIL\n4. d[s] <- 0\n\nEXTRACT-MIN(Q)\n1. u <- the vertex in Q with minimum d[u]\n2. Q <- Q - {u}\n3. return u\n\nRELAX(u, v, w)\n1. if d[v] > d[u] + w(u,v)\n2.       then d[v] <- d[u] + w(u,v)\n3.            p[v] <- u",
+  "code": "#include<stdio.h>\n#include<time.h>\n#define INF 99999\n\nint n,count=0;\nint w[50][50],d[50],p[50],S[50],Q[50];\n\nvoid initialize_single_source(int s) {\n    int v;\n    for(v=1;v<=n;v++) {\n        d[v]=INF;\n        p[v]=0;\n    }\n    d[s]=0;\n}\n\nint extract_min() {\n    int v,u=0;\n    for(v=1;v<=n;v++) {\n        count++;\n        if(Q[v]==1 && (u==0 || d[v]<d[u]))\n            u=v;\n    }\n    Q[u]=0;\n    return u;\n}\n\nvoid relax(int u,int v) {\n    count++;\n    if(d[v]>d[u]+w[u][v]) {\n        d[v]=d[u]+w[u][v];\n        p[v]=u;\n    }\n}\n\nvoid path(int v) {\n    if(p[v]==0) {\n        printf(\"%d\",v);\n        return;\n    }\n    path(p[v]);\n    printf(\" -> %d\",v);\n}\n\nint main() {\n    int i,j,u,v,s,q_size,step=0;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %dx%d weight matrix (0 for no edge):\\n\",n,n);\n    for(u=1;u<=n;u++)\n        for(v=1;v<=n;v++)\n            scanf(\"%d\",&w[u][v]);\n    printf(\"Enter the source vertex:\");\n    scanf(\"%d\",&s);\n\n    int order[n+1],pos[n+1],trace[n+1][n+1];\n    char cell[12];\n\n    clock_t start=clock();\n    initialize_single_source(s);\n    for(v=1;v<=n;v++)\n        S[v]=0;\n    for(v=1;v<=n;v++)\n        Q[v]=1;\n    q_size=n;\n    while(q_size!=0) {\n        u=extract_min();\n        q_size--;\n        S[u]=1;\n        step++;\n        order[step]=u;\n        pos[u]=step;\n        for(v=1;v<=n;v++)\n            trace[step][v]=d[v];\n        for(v=1;v<=n;v++)\n            if(w[u][v]!=0)\n                relax(u,v);\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nS = { }\");\n    printf(\"\\nS = {%d}  (source, d[%d] = 0)\\n\",s,s);\n    printf(\"\\nu     \");\n    for(v=1;v<=n;v++)\n        if(v!=s)\n            printf(\"%-6d\",v);\n    printf(\"S\");\n    for(i=2;i<=step;i++) {\n        if(trace[i][order[i]]==INF)\n            break;\n        printf(\"\\n%-6d\",order[i]);\n        for(v=1;v<=n;v++) {\n            if(v==s)\n                continue;\n            if(trace[i][v]==INF)\n                printf(\"%-6s\",\"INF\");\n            else if(pos[v]<=i) {\n                sprintf(cell,\"(%d)\",trace[i][v]);\n                printf(\"%-6s\",cell);\n            }\n            else\n                printf(\"%-6d\",trace[i][v]);\n        }\n        printf(\"{\");\n        for(j=1;j<=i;j++)\n            printf(j==1?\"%d\":\", %d\",order[j]);\n        printf(\"}\");\n    }\n    printf(\"\\n( ) = vertex is in S, its shortest distance is final\");\n\n    printf(\"\\n\\nVertex\\tDistance\\tPath\");\n    for(i=1;i<=n;i++) {\n        if(d[i]==INF)\n            printf(\"\\n%d\\tunreachable\",i);\n        else {\n            printf(\"\\n%d\\t%d\\t\\t\",i,d[i]);\n            path(i);\n        }\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(V^2) with adjacency matrix, O(E log V) with adjacency list\");\n    printf(\"\\nSpace complexity: O(V^2) with adjacency matrix, O(V+E) with adjacency list\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/23-8ddcfda7c8.wasm",
+  "samples": [
+   {
+    "stdin": "6\n0 2 4 0 0 0\n0 0 1 7 0 0\n0 0 0 0 3 0\n0 0 0 0 0 1\n0 0 0 2 0 5\n0 0 0 0 0 0\n1",
+    "output": "Enter the number of vertices:6\nEnter the 6x6 weight matrix (0 for no edge):\n0 2 4 0 0 0\n0 0 1 7 0 0\n0 0 0 0 3 0\n0 0 0 0 0 1\n0 0 0 2 0 5\n0 0 0 0 0 0\nEnter the source vertex:1\nS = { }\nS = {1}  (source, d[1] = 0)\n\nu     2     3     4     5     6     S\n2     (2)   4     INF   INF   INF   {1, 2}\n3     (2)   (3)   9     INF   INF   {1, 2, 3}\n5     (2)   (3)   9     (6)   INF   {1, 2, 3, 5}\n4     (2)   (3)   (8)   (6)   11    {1, 2, 3, 5, 4}\n6     (2)   (3)   (8)   (6)   (9)   {1, 2, 3, 5, 4, 6}\n( ) = vertex is in S, its shortest distance is final\n\nVertex\tDistance\tPath\n1\t0\t\t1\n2\t2\t\t1 -> 2\n3\t3\t\t1 -> 2 -> 3\n4\t8\t\t1 -> 2 -> 3 -> 5 -> 4\n5\t6\t\t1 -> 2 -> 3 -> 5\n6\t9\t\t1 -> 2 -> 3 -> 5 -> 4 -> 6\nNumber of comparisons:44\nTime taken:0.000002 seconds\nTime complexity: O(V^2) with adjacency matrix, O(E log V) with adjacency list\nSpace complexity: O(V^2) with adjacency matrix, O(V+E) with adjacency list",
+    "verified": true
+   },
+   {
+    "stdin": "6\n0 50 45 10 0 0\n0 0 10 15 0 0\n0 0 0 0 30 0\n20 0 0 0 15 0\n0 20 35 0 0 0\n0 0 0 0 3 0\n1",
+    "output": "Enter the number of vertices:6\nEnter the 6x6 weight matrix (0 for no edge):\n0 50 45 10 0 0\n0 0 10 15 0 0\n0 0 0 0 30 0\n20 0 0 0 15 0\n0 20 35 0 0 0\n0 0 0 0 3 0\nEnter the source vertex:1\nS = { }\nS = {1}  (source, d[1] = 0)\n\nu     2     3     4     5     6     S\n4     50    45    (10)  INF   INF   {1, 4}\n5     50    45    (10)  (25)  INF   {1, 4, 5}\n2     (45)  45    (10)  (25)  INF   {1, 4, 5, 2}\n3     (45)  (45)  (10)  (25)  INF   {1, 4, 5, 2, 3}\n( ) = vertex is in S, its shortest distance is final\n\nVertex\tDistance\tPath\n1\t0\t\t1\n2\t45\t\t1 -> 4 -> 5 -> 2\n3\t45\t\t1 -> 3\n4\t10\t\t1 -> 4\n5\t25\t\t1 -> 4 -> 5\n6\tunreachable\nNumber of comparisons:47\nTime taken:0.000002 seconds\nTime complexity: O(V^2) with adjacency matrix, O(E log V) with adjacency list\nSpace complexity: O(V^2) with adjacency matrix, O(V+E) with adjacency list",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "24",
+  "file": "24_floyd_warshall.c",
+  "aim": "Write a program in c to find the shortest paths between all pairs of vertices using the Floyd-Warshall algorithm and find its execution time using the time function.",
+  "algorithm": "Algorithm: FLOYD-WARSHALL(W)\n\n1. Start\n2. n <- number of vertices\n3. For i <- 1 to n do\n4.        For j <- 1 to n do\n5.              if i == j then D[i][j] <- 0\n6.              else if there is an edge (i,j) then D[i][j] <- W[i][j]\n7.              else D[i][j] <- infinity\n8. For k <- 1 to n do\n9.        For i <- 1 to n do\n10.             For j <- 1 to n do\n11.                   if D[i][k] + D[k][j] < D[i][j] then\n12.                         D[i][j] <- D[i][k] + D[k][j]\n13. Print D\n14. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n#define INF 99999\n\nint main() {\n    int n,i,j,k,count=0;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    int D[n+1][n+1];\n    printf(\"Enter the %dx%d weight matrix (0 for no edge):\\n\",n,n);\n    for(i=1;i<=n;i++)\n        for(j=1;j<=n;j++)\n            scanf(\"%d\",&D[i][j]);\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++)\n        for(j=1;j<=n;j++)\n            if(i!=j && D[i][j]==0)\n                D[i][j]=INF;\n    for(k=1;k<=n;k++)\n        for(i=1;i<=n;i++)\n            for(j=1;j<=n;j++) {\n                count++;\n                if(D[i][k]!=INF && D[k][j]!=INF && D[i][k]+D[k][j]<D[i][j])\n                    D[i][j]=D[i][k]+D[k][j];\n            }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    printf(\"\\nShortest distance matrix:\\n\");\n    for(j=1;j<=n;j++)\n        printf(\"\\t%d\",j);\n    for(i=1;i<=n;i++) {\n        printf(\"\\n%d\",i);\n        for(j=1;j<=n;j++)\n            if(D[i][j]==INF)\n                printf(\"\\tINF\");\n            else\n                printf(\"\\t%d\",D[i][j]);\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(V^3)\");\n    printf(\"\\nSpace complexity: O(V^2)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/24-5017275d16.wasm",
+  "samples": [
+   {
+    "stdin": "4\n0 3 0 7\n8 0 2 0\n5 0 0 1\n2 0 0 0",
+    "output": "Enter the number of vertices:4\nEnter the 4x4 weight matrix (0 for no edge):\n0 3 0 7\n8 0 2 0\n5 0 0 1\n2 0 0 0\n\nShortest distance matrix:\n\t1\t2\t3\t4\n1\t0\t3\t5\t6\n2\t5\t0\t2\t3\n3\t3\t6\t0\t1\n4\t2\t5\t7\t0\nNumber of comparisons:64\nTime taken:0.000006 seconds\nTime complexity: O(V^3)\nSpace complexity: O(V^2)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "25",
+  "file": "25_bellman_ford.c",
+  "aim": "Write a program in c to find the shortest path from a source vertex to all other vertices using the Bellman-Ford algorithm and find its execution time using the time function.",
+  "algorithm": "Algorithm: BELLMAN-FORD(G, w, s)\n\n1. Start\n2. For each vertex v in G do\n3.        d[v] <- infinity\n4.        p[v] <- NIL\n5. d[s] <- 0\n6. For i <- 1 to n-1 do\n7.        For each edge (u,v) in G do\n8.              if d[u] + w(u,v) < d[v] then\n9.                    d[v] <- d[u] + w(u,v)\n10.                   p[v] <- u\n11. For each edge (u,v) in G do\n12.       if d[u] + w(u,v) < d[v] then\n13.             print \"Graph contains a negative weight cycle\"\n14.             Stop\n15. Print d[v] and the path to every vertex v using p\n16. Stop",
+  "code": "#include<stdio.h>\n#include<time.h>\n#define INF 99999\n\nint p[50];\n\nvoid path(int v) {\n    if(p[v]==0) {\n        printf(\"%d\",v);\n        return;\n    }\n    path(p[v]);\n    printf(\" -> %d\",v);\n}\n\nint main() {\n    int n,e,i,j,s,neg=0,count=0;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the number of edges:\");\n    scanf(\"%d\",&e);\n    int u[e],v[e],w[e],d[n+1];\n    printf(\"Enter the edges (source destination weight):\\n\");\n    for(j=0;j<e;j++)\n        scanf(\"%d%d%d\",&u[j],&v[j],&w[j]);\n    printf(\"Enter the source vertex:\");\n    scanf(\"%d\",&s);\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++) {\n        d[i]=INF;\n        p[i]=0;\n    }\n    d[s]=0;\n    for(i=1;i<=n-1;i++)\n        for(j=0;j<e;j++) {\n            count++;\n            if(d[u[j]]!=INF && d[u[j]]+w[j]<d[v[j]]) {\n                d[v[j]]=d[u[j]]+w[j];\n                p[v[j]]=u[j];\n            }\n        }\n    for(j=0;j<e;j++) {\n        count++;\n        if(d[u[j]]!=INF && d[u[j]]+w[j]<d[v[j]]) {\n            neg=1;\n            break;\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(neg)\n        printf(\"\\nGraph contains a negative weight cycle\");\n    else {\n        printf(\"\\nVertex\\tDistance\\tPath\");\n        for(i=1;i<=n;i++) {\n            if(d[i]==INF)\n                printf(\"\\n%d\\tunreachable\",i);\n            else {\n                printf(\"\\n%d\\t%d\\t\\t\",i,d[i]);\n                path(i);\n            }\n        }\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(VE)\");\n    printf(\"\\nSpace complexity: O(V+E)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/25-addc016ac5.wasm",
+  "samples": [
+   {
+    "stdin": "5\n10\n1 2 6\n1 4 7\n2 3 5\n2 4 8\n2 5 -4\n3 2 -2\n4 3 -3\n4 5 9\n5 1 2\n5 3 7\n1",
+    "output": "Enter the number of vertices:5\nEnter the number of edges:10\nEnter the edges (source destination weight):\n1 2 6\n1 4 7\n2 3 5\n2 4 8\n2 5 -4\n3 2 -2\n4 3 -3\n4 5 9\n5 1 2\n5 3 7\nEnter the source vertex:1\n\nVertex\tDistance\tPath\n1\t0\t\t1\n2\t2\t\t1 -> 4 -> 3 -> 2\n3\t4\t\t1 -> 4 -> 3\n4\t7\t\t1 -> 4\n5\t-2\t\t1 -> 4 -> 3 -> 2 -> 5\nNumber of comparisons:50\nTime taken:0.000009 seconds\nTime complexity: O(VE)\nSpace complexity: O(V+E)",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "26",
+  "file": "26_prims.c",
+  "aim": "Write a program in c to find the minimum cost spanning tree of a graph using Prim's algorithm and find its execution time using the time function.",
+  "algorithm": "Algorithm: MST-PRIM(G, w, r)\n\n1. for each u in V[G]\n2.       do key[u] <- infinity\n3.          p[u] <- NIL\n4. key[r] <- 0\n5. Q <- V[G]\n6. while Q != Ø\n7.       do u <- EXTRACT-MIN(Q)\n8.          for each v in Adj[u]\n9.                do if v in Q and w(u,v) < key[v]\n10.                     then p[v] <- u\n11.                          key[v] <- w(u,v)\n\nEXTRACT-MIN(Q)\n1. u <- the vertex in Q with minimum key[u]\n2. Q <- Q - {u}\n3. return u",
+  "code": "#include<stdio.h>\n#include<time.h>\n#define INF 99999\n\nint n,count=0;\nint w[50][50],key[50],p[50],Q[50];\n\nint extract_min() {\n    int v,u=0;\n    for(v=1;v<=n;v++) {\n        count++;\n        if(Q[v]==1 && (u==0 || key[v]<key[u]))\n            u=v;\n    }\n    Q[u]=0;\n    return u;\n}\n\nint main() {\n    int i,u,v,r,q_size,step=0,cost=0;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the %dx%d weight matrix (0 for no edge):\\n\",n,n);\n    for(u=1;u<=n;u++)\n        for(v=1;v<=n;v++)\n            scanf(\"%d\",&w[u][v]);\n    printf(\"Enter the root vertex:\");\n    scanf(\"%d\",&r);\n\n    int order[n+1];\n\n    clock_t start=clock();\n    for(u=1;u<=n;u++) {\n        key[u]=INF;\n        p[u]=0;\n    }\n    key[r]=0;\n    for(u=1;u<=n;u++)\n        Q[u]=1;\n    q_size=n;\n    while(q_size!=0) {\n        u=extract_min();\n        q_size--;\n        if(key[u]==INF)\n            break;\n        step++;\n        order[step]=u;\n        for(v=1;v<=n;v++)\n            if(w[u][v]!=0) {\n                count++;\n                if(Q[v]==1 && w[u][v]<key[v]) {\n                    p[v]=u;\n                    key[v]=w[u][v];\n                }\n            }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(step<n)\n        printf(\"\\nGraph is disconnected, no spanning tree exists\");\n    else {\n        printf(\"\\nEdges in the minimum spanning tree (in the order added):\");\n        printf(\"\\nEdge\\t\\tWeight\");\n        for(i=2;i<=n;i++) {\n            v=order[i];\n            printf(\"\\n%d - %d\\t\\t%d\",p[v],v,key[v]);\n            cost+=key[v];\n        }\n        printf(\"\\nMinimum cost of spanning tree:%d\",cost);\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(V^2) with adjacency matrix, O(E log V) with adjacency list and binary heap\");\n    printf(\"\\nSpace complexity: O(V^2) with adjacency matrix, O(V+E) with adjacency list\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/26-4615c6d7d7.wasm",
+  "samples": [
+   {
+    "stdin": "9\n0 4 0 0 0 0 0 8 0\n4 0 8 0 0 0 0 11 0\n0 8 0 7 0 4 0 0 2\n0 0 7 0 9 14 0 0 0\n0 0 0 9 0 10 0 0 0\n0 0 4 14 10 0 2 0 0\n0 0 0 0 0 2 0 1 6\n8 11 0 0 0 0 1 0 7\n0 0 2 0 0 0 6 7 0\n1",
+    "output": "Enter the number of vertices:9\nEnter the 9x9 weight matrix (0 for no edge):\n0 4 0 0 0 0 0 8 0\n4 0 8 0 0 0 0 11 0\n0 8 0 7 0 4 0 0 2\n0 0 7 0 9 14 0 0 0\n0 0 0 9 0 10 0 0 0\n0 0 4 14 10 0 2 0 0\n0 0 0 0 0 2 0 1 6\n8 11 0 0 0 0 1 0 7\n0 0 2 0 0 0 6 7 0\nEnter the root vertex:1\n\nEdges in the minimum spanning tree (in the order added):\nEdge\t\tWeight\n1 - 2\t\t4\n2 - 3\t\t8\n3 - 9\t\t2\n3 - 6\t\t4\n6 - 7\t\t2\n7 - 8\t\t1\n3 - 4\t\t7\n4 - 5\t\t9\nMinimum cost of spanning tree:37\nNumber of comparisons:109\nTime taken:0.000005 seconds\nTime complexity: O(V^2) with adjacency matrix, O(E log V) with adjacency list and binary heap\nSpace complexity: O(V^2) with adjacency matrix, O(V+E) with adjacency list",
+    "verified": true
+   }
+  ],
+  "images": []
+ },
+ {
+  "id": "27",
+  "file": "27_kruskal.c",
+  "aim": "Write a program in c to find the minimum cost spanning tree of a graph using Kruskal's algorithm and find its execution time using the time function.",
+  "algorithm": "Algorithm: MST-KRUSKAL(G, w)\n\n1. A <- Ø\n2. for each vertex v in V[G]\n3.       do MAKE-SET(v)\n4. sort the edges of E into nondecreasing order by weight w\n5. for each edge (u,v) in E, taken in nondecreasing order by weight\n6.       do if FIND-SET(u) != FIND-SET(v)\n7.             then A <- A U {(u,v)}\n8.                  UNION(u,v)\n9. return A\n\nMAKE-SET(x)\n1. parent[x] <- x\n2. rank[x] <- 0\n\nFIND-SET(x)\n1. if x != parent[x]\n2.       then parent[x] <- FIND-SET(parent[x])\n3. return parent[x]\n\nUNION(x, y)\n1. x <- FIND-SET(x), y <- FIND-SET(y)\n2. if rank[x] > rank[y]\n3.       then parent[y] <- x\n4.       else parent[x] <- y\n5.            if rank[x] == rank[y]\n6.                  then rank[y] <- rank[y] + 1",
+  "code": "#include<stdio.h>\n#include<time.h>\n\nint parent[50],rnk[50];\n\nvoid make_set(int x) {\n    parent[x]=x;\n    rnk[x]=0;\n}\n\nint find_set(int x) {\n    if(x!=parent[x])\n        parent[x]=find_set(parent[x]);\n    return parent[x];\n}\n\nvoid union_set(int x,int y) {\n    x=find_set(x);\n    y=find_set(y);\n    if(rnk[x]>rnk[y])\n        parent[y]=x;\n    else {\n        parent[x]=y;\n        if(rnk[x]==rnk[y])\n            rnk[y]++;\n    }\n}\n\nint main() {\n    int n,e,i,j,k=0,cost=0,count=0,tu,tv,tw;\n    printf(\"Enter the number of vertices:\");\n    scanf(\"%d\",&n);\n    printf(\"Enter the number of edges:\");\n    scanf(\"%d\",&e);\n    int u[e],v[e],w[e],au[n],av[n],aw[n];\n    printf(\"Enter the edges (vertex vertex weight):\\n\");\n    for(i=0;i<e;i++)\n        scanf(\"%d%d%d\",&u[i],&v[i],&w[i]);\n\n    clock_t start=clock();\n    for(i=1;i<=n;i++)\n        make_set(i);\n    for(i=1;i<e;i++) {\n        tu=u[i];\n        tv=v[i];\n        tw=w[i];\n        j=i-1;\n        while(j>=0) {\n            count++;\n            if(w[j]<=tw)\n                break;\n            u[j+1]=u[j];\n            v[j+1]=v[j];\n            w[j+1]=w[j];\n            j--;\n        }\n        u[j+1]=tu;\n        v[j+1]=tv;\n        w[j+1]=tw;\n    }\n    for(i=0;i<e && k<n-1;i++) {\n        count++;\n        if(find_set(u[i])!=find_set(v[i])) {\n            au[k]=u[i];\n            av[k]=v[i];\n            aw[k]=w[i];\n            k++;\n            union_set(u[i],v[i]);\n        }\n    }\n    clock_t end=clock();\n    double time_taken=(double)(end-start)/CLOCKS_PER_SEC;\n\n    if(k<n-1)\n        printf(\"\\nGraph is disconnected, no spanning tree exists\");\n    else {\n        printf(\"\\nEdges in the minimum spanning tree (in the order added):\");\n        printf(\"\\nEdge\\t\\tWeight\");\n        for(i=0;i<k;i++) {\n            printf(\"\\n%d - %d\\t\\t%d\",au[i],av[i],aw[i]);\n            cost+=aw[i];\n        }\n        printf(\"\\nMinimum cost of spanning tree:%d\",cost);\n    }\n    printf(\"\\nNumber of comparisons:%d\",count);\n    printf(\"\\nTime taken:%f seconds\",time_taken);\n    printf(\"\\nTime complexity: O(E log E) with merge sort, O(E^2) with the insertion sort used here\");\n    printf(\"\\nSpace complexity: O(V+E)\");\n    printf(\"\\n\");\n    return 0;\n}\n",
+  "lang": "c",
+  "wasm": "/wasm/daa/27-7c9f43742b.wasm",
+  "samples": [
+   {
+    "stdin": "9\n14\n1 2 4\n1 8 8\n2 3 8\n2 8 11\n3 4 7\n3 6 4\n3 9 2\n4 5 9\n4 6 14\n5 6 10\n6 7 2\n7 8 1\n7 9 6\n8 9 7",
+    "output": "Enter the number of vertices:9\nEnter the number of edges:14\nEnter the edges (vertex vertex weight):\n1 2 4\n1 8 8\n2 3 8\n2 8 11\n3 4 7\n3 6 4\n3 9 2\n4 5 9\n4 6 14\n5 6 10\n6 7 2\n7 8 1\n7 9 6\n8 9 7\n\nEdges in the minimum spanning tree (in the order added):\nEdge\t\tWeight\n7 - 8\t\t1\n3 - 9\t\t2\n6 - 7\t\t2\n1 - 2\t\t4\n3 - 6\t\t4\n3 - 4\t\t7\n1 - 8\t\t8\n4 - 5\t\t9\nMinimum cost of spanning tree:37\nNumber of comparisons:71\nTime taken:0.000010 seconds\nTime complexity: O(E log E) with merge sort, O(E^2) with the insertion sort used here\nSpace complexity: O(V+E)",
+    "verified": true
+   }
+  ],
+  "images": []
+ }
+]
