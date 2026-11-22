@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { Check, Sparkles, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { CodeBlock, OutputBlock } from "../code-block";
 import { Mascot } from "../mascot";
@@ -21,9 +21,17 @@ type ViewProps<K extends Exercise["kind"]> = {
   lang?: HLang;
 };
 
-const SELECTED = "border-(--ds-hue-blue) bg-[color-mix(in_srgb,var(--ds-hue-blue)_10%,var(--ds-bg-elevated))] text-(--ds-hue-blue) [--ledge:var(--ds-hue-blue)]";
-const RIGHT = "border-success bg-success-subtle text-success [--ledge:var(--ds-success)]";
-const WRONG = "border-danger bg-danger-subtle text-danger [--ledge:var(--ds-danger)]";
+// Option text always stays text-foreground so it is readable in both themes;
+// state shows through the border, tint, ledge and the filled number badge.
+const SELECTED = "border-(--ds-hue-blue) bg-[color-mix(in_srgb,var(--ds-hue-blue)_8%,var(--ds-bg-elevated))] [--ledge:var(--ds-hue-blue)]";
+const RIGHT = "border-success bg-success-subtle [--ledge:var(--ds-success)]";
+const WRONG = "border-danger bg-danger-subtle [--ledge:var(--ds-danger)]";
+const BADGE = {
+  idle: "border-border text-secondary-fg",
+  selected: "border-(--ds-hue-blue) bg-(--ds-hue-blue) text-white",
+  right: "border-success bg-success text-white",
+  wrong: "border-danger bg-danger text-white",
+};
 
 function Prompt({ children, mood = "happy" }: { children: React.ReactNode; mood?: "happy" | "think" }) {
   return (
@@ -117,7 +125,8 @@ export function McqView({ ex, answer, setAnswer, phase, lang, long }: ViewProps<
       <div className="grid grid-cols-1 gap-3" role="radiogroup" aria-label="Options">
         {ex.options.map((opt, idx) => {
           const sel = answer === opt;
-          const state = phase === "answer" ? (sel ? SELECTED : "") : opt === ex.answer ? RIGHT : sel ? WRONG : "opacity-60";
+          const status = phase === "answer" ? (sel ? "selected" : "idle") : opt === ex.answer ? "right" : sel ? "wrong" : "idle";
+          const state = status === "selected" ? SELECTED : status === "right" ? RIGHT : status === "wrong" ? WRONG : "";
           return (
             <button
               key={opt}
@@ -129,14 +138,15 @@ export function McqView({ ex, answer, setAnswer, phase, lang, long }: ViewProps<
                 playSound("tap");
               }}
               className={cn(
-                "ledge flex min-h-14 items-center gap-3 rounded-2xl border-2 border-border bg-elevated px-4 py-3 text-left text-[15px] font-bold [--ledge:var(--ds-border)] disabled:opacity-100",
+                "ledge flex min-h-14 items-center gap-3 rounded-2xl border-2 border-border bg-elevated px-4 py-3 text-left text-[15px] font-bold text-foreground [--ledge:var(--ds-border)] disabled:opacity-100",
                 mono && "font-mono text-sm",
-                long && "text-sm font-medium leading-snug",
+                long && "text-sm leading-snug",
+                phase !== "answer" && status === "idle" && "text-secondary-fg",
                 state,
               )}
             >
-              <span className={cn("grid size-7 shrink-0 place-items-center rounded-lg border-2 border-border font-sans text-xs font-extrabold text-secondary-fg", sel && phase === "answer" && "border-current text-current")}>
-                {idx + 1}
+              <span className={cn("grid size-7 shrink-0 place-items-center rounded-lg border-2 font-sans text-xs font-extrabold", BADGE[status])}>
+                {status === "right" ? <Check className="size-4" strokeWidth={3.5} /> : status === "wrong" ? <X className="size-4" strokeWidth={3.5} /> : idx + 1}
               </span>
               <span className="min-w-0 break-words">{opt}</span>
             </button>
@@ -161,7 +171,7 @@ export function BlankView({ ex, answer, setAnswer, phase, lang }: ViewProps<"bla
       <Prompt>{ex.prompt}</Prompt>
       <div className="code-surface mb-8 overflow-x-auto p-4 text-sm">
         {ex.context.map((l, i) => (
-          <pre key={i} className="whitespace-pre opacity-55">
+          <pre key={i} className="whitespace-pre opacity-75">
             <Highlight code={l} lang={lang} />
           </pre>
         ))}
