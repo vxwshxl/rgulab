@@ -9,6 +9,7 @@ import type { Exercise } from "@/lib/exercises";
 import { Highlight, type HLang } from "@/lib/highlight";
 import { playSound } from "@/lib/sound";
 import { cn } from "@/lib/utils";
+import { Disclosure } from "../ui/disclosure";
 
 export type Answer = string | number[] | null;
 type Phase = "answer" | "right" | "wrong";
@@ -64,9 +65,8 @@ export function IntroView({ program }: { program: Program }) {
       )}
       <CodeBlock code={program.code} numbers lang={program.lang} />
       {(program.samples[0]?.output || program.images.length > 0) && (
-        <details className="card group p-4">
-          <summary className="cursor-pointer text-sm font-extrabold uppercase tracking-wider text-secondary-fg">Expected output</summary>
-          <div className="mt-3 flex flex-col gap-3">
+        <Disclosure summary={<span className="text-sm font-extrabold uppercase tracking-wider text-secondary-fg">Expected output</span>}>
+          <div className="flex flex-col gap-3">
             {program.samples[0]?.stdin && (
               <p className="text-sm">
                 <span className="font-bold">Input typed: </span>
@@ -79,7 +79,7 @@ export function IntroView({ program }: { program: Program }) {
               <img key={src} src={src} alt={`Graph from program ${program.id}`} className="rounded-xl border-2 border-border bg-white" />
             ))}
           </div>
-        </details>
+        </Disclosure>
       )}
     </div>
   );

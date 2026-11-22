@@ -20,6 +20,7 @@ import { CodeEditor, type EditorHandle } from "./code-editor";
 import { Button } from "./ui/button";
 import { bootPython, downloadFile, restartPython, runPython, uploadFiles, usePy, type PyEvent } from "@/lib/python";
 import { cn } from "@/lib/utils";
+import { Tooltip } from "./ui/tooltip";
 
 type RunLog = { n: number; chunks: PyEvent[]; ok?: boolean; ms?: number };
 
@@ -170,23 +171,26 @@ export function Simulator({ initialCode, storageKey, restoreDraft = true, fileNa
               {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
             </button>
             {initialCode.trim() && (
+              <Tooltip label="Reset code" side="bottom">
               <button
                 onClick={() => setCode(initialCode)}
                 className="flex size-10 items-center justify-center rounded-xl text-secondary-fg hover:bg-muted"
                 aria-label="Reset to the original code"
-                title="Reset code"
               >
                 <RotateCcw className="size-4" />
               </button>
+              </Tooltip>
             )}
             {status === "running" ? (
               <Button variant="danger" size="sm" onClick={restartPython} aria-label="Stop">
                 <Square className="size-4" fill="currentColor" /> Stop
               </Button>
             ) : (
-              <Button size="sm" onClick={run} disabled={busy} title="Run file (F5 or ⌘/Ctrl + Enter)">
-                <Play className="size-4" fill="currentColor" /> Run
-              </Button>
+              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom">
+                <Button size="sm" onClick={run} disabled={busy}>
+                  <Play className="size-4" fill="currentColor" /> Run
+                </Button>
+              </Tooltip>
             )}
           </div>
         </div>
@@ -283,18 +287,21 @@ export function Simulator({ initialCode, storageKey, restoreDraft = true, fileNa
             <span className="text-xs font-extrabold uppercase tracking-wide text-secondary-fg">Console</span>
             <div className="ml-auto flex min-w-0 items-center gap-1">
               <StatusPill />
+              <Tooltip label="Input for input()" side="bottom">
               <button
                 onClick={() => setShowStdin((s) => !s)}
                 className={cn("flex size-9 items-center justify-center rounded-lg text-secondary-fg hover:bg-muted", showStdin && "bg-accent-subtle text-primary")}
                 aria-label="Input for input()"
                 aria-pressed={showStdin}
-                title="Input for input()"
               >
                 <Keyboard className="size-4" />
               </button>
-              <button onClick={() => setLogs([])} className="flex size-9 items-center justify-center rounded-lg text-secondary-fg hover:bg-muted" aria-label="Clear console" title="Clear console">
-                <Trash2 className="size-4" />
-              </button>
+              </Tooltip>
+              <Tooltip label="Clear console" side="bottom">
+                <button onClick={() => setLogs([])} className="flex size-9 items-center justify-center rounded-lg text-secondary-fg hover:bg-muted" aria-label="Clear console">
+                  <Trash2 className="size-4" />
+                </button>
+              </Tooltip>
             </div>
           </div>
           {showStdin && (

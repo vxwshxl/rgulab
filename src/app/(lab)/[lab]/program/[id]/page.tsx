@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { getLab, getProgram, labs, type LabId } from "@/data/labs";
 import { abs, labMeta, ld } from "@/lib/site";
 import { hueVars } from "@/lib/utils";
+import { Disclosure } from "@/components/ui/disclosure";
 
 export function generateStaticParams() {
   return labs.flatMap((l) => l.programs.map((p) => ({ lab: l.id, id: p.id })));
@@ -173,14 +174,10 @@ export default async function ProgramPage({ params }: PageProps<"/[lab]/program/
           </h2>
           <div className="flex flex-col gap-3">
             {p.mcq.map((q) => (
-              <details key={q.q} className="card group p-4">
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-3 font-bold">
-                  {q.q}
-                  <span className="mt-0.5 shrink-0 text-xs font-extrabold uppercase tracking-wider text-(--u) group-open:hidden">Show</span>
-                </summary>
-                <p className="mt-3 font-extrabold text-success">{q.correct}</p>
+              <Disclosure key={q.q} summary={q.q}>
+                <p className="font-extrabold text-success">{q.correct}</p>
                 <p className="mt-1 text-sm text-secondary-fg">{q.why}</p>
-              </details>
+              </Disclosure>
             ))}
             <Link href={`${base}/viva`} className="text-sm font-bold text-primary hover:underline">
               More {L.subject} viva questions →

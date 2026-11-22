@@ -14,6 +14,7 @@ import { diffCode, outputsMatch } from "@/lib/diff";
 import { playSound } from "@/lib/sound";
 import { useProgress } from "@/lib/store";
 import { cn, formatClock, pick } from "@/lib/utils";
+import { Select } from "./ui/select";
 
 type Phase = "setup" | "drawing" | "writing" | "review";
 
@@ -143,16 +144,16 @@ export function Exam({ lab, preset }: { lab: LabId; preset?: string }) {
                   ))}
                 </fieldset>
               )}
-              <label className="flex items-center gap-3 text-sm font-bold">
+              <div className="flex items-center gap-3 text-sm font-bold">
                 <Clock className="size-4 text-secondary-fg" /> Time limit
-                <select value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} className="h-11 rounded-xl border-2 border-border bg-elevated px-3 font-bold">
-                  {[15, 20, 30, 45, 60, 0].map((m) => (
-                    <option key={m} value={m}>
-                      {m ? `${m} min` : "No limit"}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                <Select
+                  className="w-36"
+                  label="Time limit"
+                  value={String(minutes)}
+                  onChange={(v) => setMinutes(Number(v))}
+                  options={[15, 20, 30, 45, 60, 0].map((m) => ({ value: String(m), label: m ? `${m} min` : "No limit", hint: m === 30 ? "lab" : undefined }))}
+                />
+              </div>
               <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
                 {program ? (
                   <>

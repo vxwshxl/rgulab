@@ -7,6 +7,7 @@ import { Stats, useMounted } from "./shell";
 import { ButtonLink } from "./ui/button";
 import { getLab, type LabId } from "@/data/labs";
 import { useProgress, useTodayXp } from "@/lib/store";
+import { Select } from "./ui/select";
 
 export function DailyGoal() {
   const xp = useTodayXp();
@@ -20,18 +21,15 @@ export function DailyGoal() {
         <h3 className="flex items-center gap-2 text-base font-extrabold">
           <Target className="size-5 text-streak" /> Daily goal
         </h3>
-        <select
-          value={goal}
-          onChange={(e) => setGoal(Number(e.target.value))}
-          aria-label="Daily XP goal"
-          className="h-9 rounded-lg border-2 border-border bg-elevated px-2 text-xs font-bold"
-        >
-          {[30, 50, 100, 200].map((g) => (
-            <option key={g} value={g}>
-              {g} XP
-            </option>
-          ))}
-        </select>
+        <Select
+          size="sm"
+          align="end"
+          className="w-28"
+          label="Daily XP goal"
+          value={String(goal)}
+          onChange={(v) => setGoal(Number(v))}
+          options={[30, 50, 100, 200].map((g) => ({ value: String(g), label: `${g} XP`, hint: g <= 30 ? "chill" : g >= 200 ? "intense" : undefined }))}
+        />
       </div>
       <div className="flex items-center gap-3">
         <div className="h-4 flex-1 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Daily goal progress">
@@ -67,7 +65,7 @@ export function MasteryCard({ lab }: { lab: LabId }) {
             <Link
               key={p.id}
               href={`/${lab}/program/${p.id}`}
-              title={`${p.id} · ${p.title}`}
+              aria-label={`${p.id} · ${p.title}`}
               tabIndex={-1}
               className={
                 "grid aspect-square place-items-center rounded-md text-[10px] font-extrabold " +

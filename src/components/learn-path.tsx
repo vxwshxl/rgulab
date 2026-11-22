@@ -9,6 +9,7 @@ import { ButtonLink } from "./ui/button";
 import { getLab, type LabId, type Unit } from "@/data/labs";
 import { useProgress } from "@/lib/store";
 import { cn, hueVars } from "@/lib/utils";
+import { Tooltip } from "./ui/tooltip";
 
 const ZIG = [0, 48, 80, 48, 0, -48, -80, -48];
 
@@ -116,9 +117,11 @@ function PathNode({ lab, id, idx, isNext, open, onToggle }: { lab: LabId; id: st
                   <Dumbbell className="size-4" /> Recall
                 </Link>
               ) : (
-                <span className="flex h-11 items-center justify-center gap-1.5 rounded-xl border-2 border-white/25 text-xs font-extrabold uppercase tracking-wide opacity-70" title="Finish the lesson first">
-                  <Lock className="size-4" /> Recall
-                </span>
+                <Tooltip label="Finish the lesson first" className="w-full">
+                  <span tabIndex={0} className="flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border-2 border-white/25 text-xs font-extrabold uppercase tracking-wide opacity-70">
+                    <Lock className="size-4" /> Recall
+                  </span>
+                </Tooltip>
               )}
             </div>
           </div>

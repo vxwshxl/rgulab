@@ -9,6 +9,7 @@ import { Logo } from "./logo";
 import { labs, type LabId } from "@/data/labs";
 import { useLiveStreak, useProgress } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { Tooltip } from "./ui/tooltip";
 
 const navFor = (lab: LabId) => [
   { href: `/${lab}`, label: "Learn", icon: House, exact: true },
@@ -74,15 +75,21 @@ export function Stats({ className, lab }: { className?: string; lab?: LabId }) {
   const mounted = useMounted();
   return (
     <div className={cn("flex items-center gap-4 text-sm font-extrabold", className)}>
-      <span className={cn("flex items-center gap-1.5", mounted && streak ? "text-streak" : "text-locked-fg")} title="Day streak">
-        <Flame className="size-5" fill={mounted && streak ? "currentColor" : "none"} /> {mounted ? streak : 0}
-      </span>
-      <span className="flex items-center gap-1.5 text-xp" title="Total XP">
-        <Zap className="size-5" fill="currentColor" /> {mounted ? xp : 0}
-      </span>
-      <span className="flex items-center gap-1.5 text-gold-ledge dark:text-gold" title="Crowns in this lab">
-        <Crown className="size-5" fill="currentColor" /> {mounted ? crowns : 0}
-      </span>
+      <Tooltip label="Day streak" side="bottom">
+        <span tabIndex={0} aria-label={`Day streak ${mounted ? streak : 0}`} className={cn("flex items-center gap-1.5 rounded-md", mounted && streak ? "text-streak" : "text-locked-fg")}>
+          <Flame className="size-5" fill={mounted && streak ? "currentColor" : "none"} /> {mounted ? streak : 0}
+        </span>
+      </Tooltip>
+      <Tooltip label="Total XP" side="bottom">
+        <span tabIndex={0} aria-label={`Total XP ${mounted ? xp : 0}`} className="flex items-center gap-1.5 rounded-md text-xp">
+          <Zap className="size-5" fill="currentColor" /> {mounted ? xp : 0}
+        </span>
+      </Tooltip>
+      <Tooltip label={lab ? "Crowns in this lab" : "Crowns"} side="bottom">
+        <span tabIndex={0} aria-label={`Crowns ${mounted ? crowns : 0}`} className="flex items-center gap-1.5 rounded-md text-gold-ledge dark:text-gold">
+          <Crown className="size-5" fill="currentColor" /> {mounted ? crowns : 0}
+        </span>
+      </Tooltip>
     </div>
   );
 }

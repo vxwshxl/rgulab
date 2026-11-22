@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { PageLoading } from "@/components/page-loading";
 import { ExamFromQuery } from "@/components/route-clients";
 import { labMeta } from "@/lib/site";
 import { getLab, type LabId } from "@/data/labs";
@@ -17,7 +18,7 @@ export default async function ExamPage({ params }: PageProps<"/[lab]/exam">) {
   const { lab } = await params;
   if (!getLab(lab)) notFound();
   return (
-    <Suspense>
+    <Suspense fallback={<PageLoading label="Shuffling exam questions…" />}>
       <ExamFromQuery lab={lab as LabId} />
     </Suspense>
   );

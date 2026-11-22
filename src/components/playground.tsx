@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { NativeSimulator } from "./native-sim";
 import { Simulator } from "./simulator";
+import { Select } from "./ui/select";
 import { makeYourOwn, titanicDrills } from "@/data/labs/cheatsheet-ds";
 import { getLab, type LabId } from "@/data/labs";
 
@@ -86,50 +87,32 @@ export function Playground({ lab, preset }: { lab: LabId; preset: { key: string;
             Your draft is saved in this browser.
           </p>
         </div>
-        <label className="flex items-center gap-2 text-sm font-bold">
+        <div className="flex items-center gap-2 text-sm font-bold">
           <span className="text-secondary-fg">Load</span>
-          <select
+          <Select
+            searchable
+            align="end"
+            className="w-72 max-w-[calc(100vw-6rem)]"
+            label="Load a template"
+            placeholder="Choose a template…"
             value={choice}
-            onChange={(e) => {
-              const k = e.target.value;
+            onChange={(k) => {
               setChoice(k);
               const c = templates.get(k);
               if (c !== undefined) setCode(c);
             }}
-            className="h-11 max-w-72 rounded-xl border-2 border-border bg-elevated px-3 text-sm font-bold"
-          >
-            <option value="" disabled>
-              Choose a template…
-            </option>
-            <option value="welcome">Welcome tour</option>
-            <option value="blank">Blank file</option>
-            <optgroup label={`${L.name} programs`}>
-              {L.programs.map((p) => (
-                <option key={p.id} value={`p:${p.id}`}>
-                  {p.id} · {p.title}
-                </option>
-              ))}
-            </optgroup>
-            {lab === "ds" && (
-              <>
-                <optgroup label="Make your own data">
-                  {makeYourOwn.map((s) => (
-                    <option key={s.id} value={`s:${s.id}`}>
-                      {s.title}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="Titanic drills">
-                  {titanicDrills.map((s) => (
-                    <option key={s.id} value={`s:${s.id}`}>
-                      {s.title}
-                    </option>
-                  ))}
-                </optgroup>
-              </>
-            )}
-          </select>
-        </label>
+            options={[
+              { group: "Start", options: [{ value: "welcome", label: "Welcome tour" }, { value: "blank", label: "Blank file" }] },
+              { group: `${L.name} programs`, options: L.programs.map((p) => ({ value: `p:${p.id}`, label: `${p.id} · ${p.title}` })) },
+              ...(lab === "ds"
+                ? [
+                    { group: "Make your own data", options: makeYourOwn.map((s) => ({ value: `s:${s.id}`, label: s.title })) },
+                    { group: "Titanic drills", options: titanicDrills.map((s) => ({ value: `s:${s.id}`, label: s.title })) },
+                  ]
+                : []),
+            ]}
+          />
+        </div>
       </div>
       {L.lang === "python" ? (
         <Simulator initialCode={code} storageKey={`rgulab-${lab}-playground`} restoreDraft={!preset} className="min-h-0 flex-1 lg:h-[calc(100dvh-140px)]" />

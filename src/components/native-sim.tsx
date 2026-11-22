@@ -10,6 +10,7 @@ import type { Lab, Program } from "@/data/labs";
 import { parseArrays, parseMetrics, parseSchedule } from "@/lib/insights";
 import { runNative, stop, useNative, type NativeEvent, type NativeResult } from "@/lib/native";
 import { cn } from "@/lib/utils";
+import { Tooltip } from "./ui/tooltip";
 
 type Props = {
   lab: Lab;
@@ -135,18 +136,22 @@ export function NativeSimulator({ lab, program, initialCode, fileName, storageKe
               {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
             </button>
             {initialCode.trim() && (
-              <button onClick={() => setCode(initialCode)} className="flex size-10 items-center justify-center rounded-xl text-secondary-fg hover:bg-muted" aria-label="Reset to the original code" title="Reset code">
-                <RotateCcw className="size-4" />
-              </button>
+              <Tooltip label="Reset code" side="bottom">
+                <button onClick={() => setCode(initialCode)} className="flex size-10 items-center justify-center rounded-xl text-secondary-fg hover:bg-muted" aria-label="Reset to the original code">
+                  <RotateCcw className="size-4" />
+                </button>
+              </Tooltip>
             )}
             {busy ? (
               <Button variant="danger" size="sm" onClick={() => stop()}>
                 <Square className="size-4" fill="currentColor" /> Stop
               </Button>
             ) : (
-              <Button size="sm" onClick={run} title="Run (F5 or ⌘/Ctrl + Enter)">
-                <Play className="size-4" fill="currentColor" /> Run
-              </Button>
+              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom">
+                <Button size="sm" onClick={run}>
+                  <Play className="size-4" fill="currentColor" /> Run
+                </Button>
+              </Tooltip>
             )}
           </div>
         </div>
