@@ -1,12 +1,10 @@
-import { notFound } from "next/navigation";
-import { getLab, LAB_IDS } from "@/data/labs";
+import { LabFrame } from "@/components/lab-frame";
+import { LAB_IDS } from "@/data/labs";
 
 export function generateStaticParams() {
   return LAB_IDS.map((lab) => ({ lab }));
 }
 
-export default async function FocusLayout({ children, params }: LayoutProps<"/[lab]">) {
-  const { lab } = await params;
-  if (!getLab(lab)) notFound();
-  return <div className={`lab-${lab} min-h-dvh`}>{children}</div>;
+export default function FocusLayout({ children }: LayoutProps<"/[lab]">) {
+  return <LabFrame>{children}</LabFrame>;
 }

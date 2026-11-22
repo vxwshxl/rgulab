@@ -1,11 +1,12 @@
 import { getLab, type Lab, type Lang, type Program } from "@/data/labs";
+import { explainHeader, explainImport, explainOrder, explainToken } from "./explain";
 import { sample, shuffle } from "./utils";
 
 export type Exercise =
   | { kind: "intro"; key: string }
-  | { kind: "mcq"; key: string; tag: "import" | "concept"; prompt: string; code?: string; options: string[]; answer: string; why?: string }
-  | { kind: "blank"; key: string; prompt: string; context: string[]; before: string; after: string; answer: string; bank: string[] | null }
-  | { kind: "order"; key: string; prompt: string; lines: string[]; start: string[] };
+  | { kind: "mcq"; key: string; tag: "import" | "concept"; prompt: string; code?: string; options: string[]; answer: string; why?: string; whyNot?: Record<string, string> }
+  | { kind: "blank"; key: string; prompt: string; context: string[]; before: string; after: string; answer: string; bank: string[] | null; why: string }
+  | { kind: "order"; key: string; prompt: string; lines: string[]; start: string[]; why: string };
 
 /* ---------- statement splitting ---------- */
 
@@ -176,7 +177,7 @@ function setupMcqs(p: Program, n: number): Exercise[] {
       code: `#include <____>`,
       options: shuffle([h, ...sample(ALL_HEADERS.filter((x) => x !== h), 3)]),
       answer: h,
-      why: `${fn} is declared in <${h}>.`,
+      why: explainHeader(h, fn),
     }));
   }
   if (p.lang !== "python") return [];
@@ -198,13 +199,13 @@ function setupMcqs(p: Program, n: number): Exercise[] {
       code: `from ____ import ${name}`,
       options: shuffle([module, ...[...sample(fam, 2), ...sample(other, 3)].slice(0, 3)]),
       answer: module,
-      why: line,
+      why: `${line}\n${explainImport(module, name)}`,
     });
   }
   const plain = [...p.code.matchAll(/^import\s+([\w.]+)\s+as\s+(\w+)\s*$/gm)];
   for (const m of sample(plain, Math.max(0, n - ex.length))) {
     const wrong = ["matplotlib", "pyplot", "seaborn.pyplot", "matplotlib.plot", "pandas.plot", "plotly"].filter((w) => w !== m[1]);
-    ex.push({ kind: "mcq", key: `imp-${p.id}-${m[2]}`, tag: "import", prompt: `How do you import ${m[2]}?`, code: `import ____ as ${m[2]}`, options: shuffle([m[1]!, ...sample(wrong, 3)]), answer: m[1]!, why: m[0] });
+    ex.push({ kind: "mcq", key: `imp-${p.id}-${m[2]}`, tag: "import", prompt: `How do you import ${m[2]}?`, code: `import ____ as ${m[2]}`, options: shuffle([m[1]!, ...sample(wrong, 3)]), answer: m[1]!, why: `${m[0]}\n${explainImport(m[1]!, m[2]!, true)}` });
   }
   return ex;
 }
@@ -245,6 +246,7 @@ function blankExercises(p: Program, n: number, typed: boolean, avoid = new Set<s
         after: line.slice(pos + tok.length),
         answer: tok,
         bank,
+        why: explainToken(tok, line, p.lang, p.code),
       },
     ];
   });
@@ -260,7 +262,7 @@ function orderExercise(p: Program, max: number): Exercise | null {
     if (new Set(lines.map((l) => l.trim())).size < lines.length) continue;
     let mixed = shuffle(lines);
     for (let t = 0; t < 5 && mixed.every((l, i) => l === lines[i]); t++) mixed = shuffle(lines);
-    return { kind: "order", key: `order-${p.id}-${start}`, prompt: "Put the lines in the right order", lines, start: mixed };
+    return { kind: "order", key: `order-${p.id}-${start}`, prompt: "Put the lines in the right order", lines, start: mixed, why: explainOrder(lines, p.lang, p.steps) };
   }
   return null;
 }
@@ -302,15 +304,19 @@ export function buildReview(ps: Program[]): Exercise[] {
 
 /** Subject-viva quiz: each question's answer against three other answers from the same lab. */
 export function buildVivaQuiz(lab: Lab, n = 10): Exercise[] {
-  return sample(lab.viva, n).map((v, i) => ({
-    kind: "mcq" as const,
-    key: `viva-${i}-${v.q.slice(0, 10)}`,
-    tag: "concept" as const,
-    prompt: v.q,
-    options: shuffle([v.a, ...sample(lab.viva.filter((o) => o.q !== v.q), 3).map((o) => o.a)]),
-    answer: v.a,
-    why: v.topic,
-  }));
+  return sample(lab.viva, n).map((v, i) => {
+    const others = sample(lab.viva.filter((o) => o.q !== v.q && o.a !== v.a), 3);
+    return {
+      kind: "mcq" as const,
+      key: `viva-${i}-${v.q.slice(0, 10)}`,
+      tag: "concept" as const,
+      prompt: v.q,
+      options: shuffle([v.a, ...others.map((o) => o.a)]),
+      answer: v.a,
+      why: `Topic: ${v.topic}. The other options are real answers too, but to different questions: ${others.map((o) => `“${o.q}”`).join(", ")}.`,
+      whyNot: Object.fromEntries(others.map((o) => [o.a, `That option answers a different question: “${o.q}”`])),
+    };
+  });
 }
 
 export function importMap(lab: Lab): { module: string; names: string[] }[] {

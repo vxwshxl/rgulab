@@ -105,7 +105,7 @@ export default async function ProgramPage({ params }: PageProps<"/[lab]/program/
         </div>
       </div>
 
-      <div className="grid gap-8">
+      <div className="grid grid-cols-1 gap-8">
         <section aria-labelledby="recipe">
           <h2 id="recipe" className="mb-3 text-xl font-extrabold">
             {p.algorithm ? "Algorithm" : "The recipe"}

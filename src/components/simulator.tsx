@@ -186,7 +186,7 @@ export function Simulator({ initialCode, storageKey, restoreDraft = true, fileNa
                 <Square className="size-4" fill="currentColor" /> Stop
               </Button>
             ) : (
-              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom">
+              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom" align="end">
                 <Button size="sm" onClick={run} disabled={busy}>
                   <Play className="size-4" fill="currentColor" /> Run
                 </Button>
@@ -297,7 +297,7 @@ export function Simulator({ initialCode, storageKey, restoreDraft = true, fileNa
                 <Keyboard className="size-4" />
               </button>
               </Tooltip>
-              <Tooltip label="Clear console" side="bottom">
+              <Tooltip label="Clear console" side="bottom" align="end">
                 <button onClick={() => setLogs([])} className="flex size-9 items-center justify-center rounded-lg text-secondary-fg hover:bg-muted" aria-label="Clear console">
                   <Trash2 className="size-4" />
                 </button>

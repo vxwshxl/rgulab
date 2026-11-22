@@ -176,7 +176,7 @@ export const dsNotes: Record<string, Note> = {
       "Compare test R² and the coefficients",
     ],
     mcq: [
-      m("Which one can shrink a coefficient to exactly 0?", "Lasso (L1 penalty)", ["Ridge (L2 penalty)", "Plain LinearRegression", "Both equally"], "That is why Lasso also does feature selection; see Distance → -0. here."),
+      m("Which one can shrink a coefficient to exactly 0?", "Lasso (L1 penalty)", ["Ridge (L2 penalty)", "Plain LinearRegression", "Both equally"], "That is why Lasso also does feature selection: a coefficient printed as 0 (or -0.) means that feature was dropped."),
       m("Ridge adds which penalty to the loss?", "Sum of squared coefficients (L2)", ["Sum of absolute coefficients (L1)", "Number of features", "The MSE squared"], "L2 shrinks all coefficients smoothly but rarely to zero."),
       m("Why scale the features before Ridge/Lasso?", "The penalty treats all coefficients equally, so features must share a scale", ["It makes training slower", "Lasso can't read integers", "It removes outliers"], "Otherwise a feature measured in big units gets penalised differently."),
     ],
@@ -221,7 +221,7 @@ export const dsNotes: Record<string, Note> = {
     mcq: [
       m("What is k in kNN?", "The number of nearest neighbours that vote", ["The number of classes", "The number of features", "The number of folds"], "The new point takes the majority label of its k closest training points."),
       m("What does kNN do during fit()?", "It just stores the training data (lazy learner)", ["Builds a tree", "Finds a separating line", "Computes class means"], "All the work happens at predict time."),
-      m("The Iris dataset has…", "150 samples, 4 features, 3 classes", ["178 samples, 13 features, 3 classes", "569 samples, 30 features, 2 classes", "100 samples, 2 features, 2 classes"], "The other two are Wine and Breast Cancer."),
+      m("The Iris dataset has…", "150 samples, 4 features, 3 classes", ["178 samples, 13 features, 3 classes", "569 samples, 30 features, 2 classes", "100 samples, 2 features, 2 classes"], "Iris, Wine and Breast Cancer all ship with scikit-learn, so they load without internet."),
     ],
   },
   "17": {

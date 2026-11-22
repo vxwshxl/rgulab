@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Clock, Heart, Target, X, Zap } from "lucide-react";
+import { Check, Clock, Heart, Lightbulb, Target, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Mascot } from "../mascot";
@@ -312,7 +312,7 @@ export function LessonPlayer({ lab, programId, mode }: { lab: LabId; programId: 
             </>
           ) : (
             <>
-              <Feedback ex={ex!} ok={phase === "right"} />
+              <Feedback ex={ex!} ok={phase === "right"} picked={answer} />
               <Button variant={phase === "right" ? "primary" : "danger"} size="lg" onClick={next} className="w-full shrink-0 sm:w-44" autoFocus>
                 {phase === "right" ? "Continue" : "Got it"}
               </Button>
@@ -324,22 +324,44 @@ export function LessonPlayer({ lab, programId, mode }: { lab: LabId; programId: 
   );
 }
 
-function Feedback({ ex, ok }: { ex: Exercise; ok: boolean }) {
+function Feedback({ ex, ok, picked }: { ex: Exercise; ok: boolean; picked: Answer }) {
   const [praise] = useState(() => ["Nicely done!", "Great job!", "Correct!", "You got it!", "Spot on!"][Math.floor(Math.random() * 5)]);
   const answerText =
     ex.kind === "mcq" ? ex.answer : ex.kind === "blank" ? `${ex.before.trimStart()}${ex.answer}${ex.after}` : ex.kind === "order" ? ex.lines.join("\n") : "";
+  const why = ex.kind === "intro" ? "" : ex.why ?? "";
+  const whyNot = !ok && ex.kind === "mcq" && typeof picked === "string" ? ex.whyNot?.[picked] : undefined;
+  const typedWrong = !ok && ex.kind === "blank" && !ex.bank && typeof picked === "string" && picked.trim() ? picked.trim() : null;
   return (
-    <div className={cn("flex min-w-0 gap-4", ok ? "text-success" : "text-danger")} role="status">
+    <div className={cn("flex min-w-0 flex-1 gap-4", ok ? "text-success" : "text-danger")} role="status">
       <span className={cn("hidden size-14 shrink-0 place-items-center rounded-full bg-elevated sm:grid")}>
         {ok ? <Check className="size-8" strokeWidth={3.5} /> : <X className="size-8" strokeWidth={3.5} />}
       </span>
-      <div className="min-w-0">
+      <div className="max-h-[42dvh] min-w-0 flex-1 overflow-y-auto pr-1">
         <p className="text-xl font-extrabold">{ok ? praise : "Correct answer:"}</p>
         {!ok && (
-          <pre className="mt-1 max-h-32 overflow-auto whitespace-pre-wrap break-words font-mono text-sm font-bold">{answerText}</pre>
+          <pre
+            className={cn(
+              "mt-1 max-h-32 overflow-auto whitespace-pre-wrap break-words text-sm font-bold",
+              ex.kind === "mcq" && ex.tag === "concept" ? "font-sans" : "font-mono",
+            )}
+          >
+            {answerText}
+          </pre>
         )}
-        {ex.kind === "mcq" && ex.why && (
-          <p className={cn("mt-1 text-sm", ex.tag === "import" && "font-mono")}>{ex.why}</p>
+        {typedWrong && (
+          <p className="mt-1 text-sm">
+            You typed <code className="rounded bg-elevated px-1 font-mono font-bold">{typedWrong}</code>. Spelling and capitals must match exactly.
+          </p>
+        )}
+        {(why || whyNot) && (
+          <div className="mt-2 flex gap-2 rounded-xl bg-elevated/70 px-3 py-2 text-sm text-foreground">
+            <Lightbulb className="mt-0.5 size-4 shrink-0 text-gold" />
+            <div className="min-w-0 space-y-1">
+              <p className="text-[11px] font-extrabold uppercase tracking-widest text-secondary-fg">Why</p>
+              {whyNot && <p className="font-bold">{whyNot}</p>}
+              {why && !whyNot && <p className={cn("whitespace-pre-line leading-snug", ex.kind === "mcq" && ex.tag === "import" && "font-mono text-xs")}>{why}</p>}
+            </div>
+          </div>
         )}
       </div>
     </div>

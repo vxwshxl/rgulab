@@ -114,7 +114,7 @@ export function McqView({ ex, answer, setAnswer, phase, lang, long }: ViewProps<
           }
         />
       )}
-      <div className="grid gap-3" role="radiogroup" aria-label="Options">
+      <div className="grid grid-cols-1 gap-3" role="radiogroup" aria-label="Options">
         {ex.options.map((opt, idx) => {
           const sel = answer === opt;
           const state = phase === "answer" ? (sel ? SELECTED : "") : opt === ex.answer ? RIGHT : sel ? WRONG : "opacity-60";

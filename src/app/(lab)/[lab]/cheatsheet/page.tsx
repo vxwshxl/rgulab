@@ -116,7 +116,7 @@ function DsSheet({ lab }: { lab: Lab }) {
           { id: "titanic", title: "Titanic drills", intro: "If titanic.csv is provided, these cover the usual asks. The simulator has a practice titanic.csv with the same columns (synthetic rows).", list: titanicDrills },
         ].map((sec) => (
           <Section key={sec.id} id={sec.id} title={sec.title} intro={sec.intro}>
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 gap-6">
               {sec.list.map((s) => (
                 <div key={s.id} className="flex flex-col gap-2">
                   <div className="flex flex-wrap items-end justify-between gap-2">

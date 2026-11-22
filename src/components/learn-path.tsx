@@ -56,7 +56,8 @@ function PathNode({ lab, id, idx, isNext, open, onToggle }: { lab: LabId; id: st
   }, [open, onToggle]);
 
   return (
-    <div ref={ref} className="relative flex flex-col items-center" style={{ transform: `translateX(${ZIG[idx % ZIG.length]}px)` }}>
+    // The zig-zag transform makes each node its own stacking context, so raise the open one above its siblings.
+    <div ref={ref} className={cn("relative flex flex-col items-center", open ? "z-30" : isNext && "z-10")} style={{ transform: `translateX(${ZIG[idx % ZIG.length]}px)` }}>
       {isNext && !open && (
         <div className="absolute -top-12 z-10 animate-float rounded-xl border-2 border-border bg-elevated px-3 py-2 text-xs font-extrabold uppercase tracking-wide text-(--u) shadow-e1">
           Start

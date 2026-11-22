@@ -147,7 +147,7 @@ export function NativeSimulator({ lab, program, initialCode, fileName, storageKe
                 <Square className="size-4" fill="currentColor" /> Stop
               </Button>
             ) : (
-              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom">
+              <Tooltip label="F5 or ⌘/Ctrl + Enter" side="bottom" align="end">
                 <Button size="sm" onClick={run}>
                   <Play className="size-4" fill="currentColor" /> Run
                 </Button>

@@ -40,7 +40,7 @@ export const daaNotes: Record<string, DaaNote> = {
   ] },
   "09": { title: "Merge sort", paradigm: "Divide & conquer", best: "O(n log n)", avg: "O(n log n)", worst: "O(n log n)", mcq: [
     m("Merge sort's recurrence is…", "T(n) = 2T(n/2) + O(n)", ["T(n) = T(n − 1) + O(1)", "T(n) = 2T(n − 1)", "T(n) = T(n/2) + O(1)"], "By the master theorem, that solves to O(n log n)."),
-    m("Merge sort's extra space is…", "O(n) for the temporary array", ["O(1)", "O(log n)", "O(n²)"], "Its time is always O(n log n), even in the worst case."),
+    m("Merge sort's extra space is…", "O(n) for the temporary array", ["O(1)", "O(log n)", "O(n²)"], "merge() copies both halves into a temporary array of size n before writing them back. Time stays O(n log n) in every case."),
   ] },
   "10": { title: "Fibonacci (recursive)", paradigm: "Recursion", best: "O(2ⁿ)", avg: "O(2ⁿ)", worst: "O(2ⁿ)", mcq: [
     m("Why is recursive Fibonacci exponential?", "It recomputes the same subproblems many times", ["Recursion is always exponential", "It uses arrays", "It prints every term"], "fib(n − 2) is computed by both fib(n) and fib(n − 1)."),

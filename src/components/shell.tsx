@@ -85,7 +85,7 @@ export function Stats({ className, lab }: { className?: string; lab?: LabId }) {
           <Zap className="size-5" fill="currentColor" /> {mounted ? xp : 0}
         </span>
       </Tooltip>
-      <Tooltip label={lab ? "Crowns in this lab" : "Crowns"} side="bottom">
+      <Tooltip label={lab ? "Crowns in this lab" : "Crowns"} side="bottom" align="end">
         <span tabIndex={0} aria-label={`Crowns ${mounted ? crowns : 0}`} className="flex items-center gap-1.5 rounded-md text-gold-ledge dark:text-gold">
           <Crown className="size-5" fill="currentColor" /> {mounted ? crowns : 0}
         </span>
