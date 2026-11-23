@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Crown, Flame, GraduationCap, House, MessageCircleQuestion, Monitor, Moon, Sun, Terminal, Volume2, VolumeX, Zap } from "lucide-react";
+import { BookOpen, FileCode2, Crown, Flame, GraduationCap, House, MessageCircleQuestion, Monitor, Moon, Sun, Terminal, Volume2, VolumeX, Zap } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -8,6 +8,7 @@ import { useSyncExternalStore } from "react";
 import { Logo } from "./logo";
 import { labs, type LabId } from "@/data/labs";
 import { useLiveStreak, useProgress } from "@/lib/store";
+import { quickHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Tooltip } from "./ui/tooltip";
 
@@ -17,6 +18,7 @@ const navFor = (lab: LabId) => [
   { href: `/${lab}/exam`, label: "Exam mode", icon: GraduationCap },
   { href: `/${lab}/viva`, label: "Viva prep", icon: MessageCircleQuestion },
   { href: `/${lab}/cheatsheet`, label: "Cheatsheet", icon: BookOpen },
+  { href: quickHref(lab), label: "Codes + viva", icon: FileCode2 },
 ];
 
 const noop = () => () => {};
@@ -174,7 +176,7 @@ export function AppShell({ lab, children }: { lab: LabId; children: React.ReactN
               href={href}
               aria-label={label}
               aria-current={active(href, exact) ? "page" : undefined}
-              className={cn("my-2 flex min-w-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] font-bold text-secondary-fg", active(href, exact) && "bg-accent-subtle text-primary")}
+              className={cn("my-2 flex min-w-12 flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] font-bold text-secondary-fg", active(href, exact) && "bg-accent-subtle text-primary")}
             >
               <Icon className="size-6" />
               {label.split(" ")[0]}

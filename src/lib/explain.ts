@@ -642,3 +642,102 @@ export function explainImportLine(line: string): { q: string; a: string } | null
   const why = list.map((n) => PY[n] ?? EXTRA[n]).filter(Boolean).slice(0, 3).join(" ");
   return { q: `Why ${list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list.at(-1)}` : list[0]} from ${mod}?`, a: `${PY_MODULES[mod!] ?? `${mod}.`} ${why}`.trim() };
 }
+
+/* ---------- C / bash: per-line and header/command viva ---------- */
+
+const C_EXTRA: Record<string, string> = {
+  main: "main() is where the program starts running.",
+  malloc: "malloc() reserves memory at run time.",
+  free: "free() gives malloc'd memory back.",
+  sizeof: "sizeof gives the size in bytes of a type or variable.",
+  struct: "struct groups related fields into one type.",
+  qsort: "qsort() is the C library quicksort.",
+  rand: "rand() returns a pseudo-random number.",
+  swap: "swap() exchanges two values through pointers.",
+  wt: "wt holds each process's waiting time.",
+  bt: "bt holds each process's burst time (CPU time needed).",
+  at: "at holds each process's arrival time.",
+  ct: "ct holds each process's completion time.",
+  pr: "pr holds each process's priority.",
+  n: "n is the number of elements (or processes).",
+  a: "a is the array being searched or sorted.",
+  i: "i is the loop counter.",
+  j: "j is the inner loop counter.",
+};
+
+const SH_EXTRA: Record<string, string> = {
+  "#!/bin/bash": "The shebang: tells the system to run this file with bash.",
+  "$(( ))": "$(( … )) does integer arithmetic.",
+  "$( )": "$( … ) runs a command and puts its output here (command substitution).",
+  "[ ]": "[ … ] is a test; it's true or false, used by if and while.",
+  "(( ))": "(( … )) is an arithmetic test or C-style loop.",
+  "${arr[@]}": "${arr[@]} expands to every element of the array.",
+  $1: "$1 is the first argument passed to the function or script.",
+  "-e": "echo -e lets echo understand \\n and \\t escapes.",
+};
+
+const isNoise = (t: string, lang: Lang) =>
+  !t || /^[{}();]+$/.test(t) || (lang === "c" ? /^(\/\/|\/\*|\*|#\s*include)/.test(t) : /^#(?!!)/.test(t)) || /^(do|done|then|fi|else|esac|;;)$/.test(t);
+
+/** Explain one C or bash line; returns "" for lines not worth a viva row. */
+export function explainCodeLine(line: string, lang: Exclude<Lang, "python">, code: string): string {
+  const t = line.trim();
+  if (isNoise(t, lang)) return "";
+  const parts: string[] = [];
+  const role = lineRole(t, lang);
+  const clean = t.replace(/(["'])(?:\\.|(?!\1).)*\1/g, (s) => " ".repeat(s.length));
+  if (lang === "bash") {
+    if (t.startsWith("#!")) return SH_EXTRA["#!/bin/bash"]!;
+    if (/\$\(\(/.test(t)) parts.push(SH_EXTRA["$(( ))"]!);
+    else if (/\$\(/.test(t)) parts.push(SH_EXTRA["$( )"]!);
+    if (/\[\s/.test(clean) && !/\[@\]/.test(clean)) parts.push(SH_EXTRA["[ ]"]!);
+    if (/^\s*(for|while|if)\s*\(\(/.test(t)) parts.push(SH_EXTRA["(( ))"]!);
+    if (/\$\{\w+\[@\]\}/.test(t)) parts.push(SH_EXTRA["${arr[@]}"]!);
+    if (/\$1\b/.test(t)) parts.push(SH_EXTRA.$1!);
+    if (/echo\s+-e\b/.test(t)) parts.push(SH_EXTRA["-e"]!);
+    if (/\|\s*bc/.test(t)) parts.push(SH[`bc`]!);
+    if (/^read\s/.test(t)) {
+      const vars = t.replace(/^read\s+(-\w+\s+(\S+\s+)?)*/, "").trim();
+      parts.push(`read waits for keyboard input and stores it in ${vars.split(/\s+/).join(", ")}.`);
+    }
+    const asg = t.match(/^([A-Za-z_]\w*)=/);
+    if (asg && !parts.length) parts.push(`Sets the variable ${asg[1]} (no spaces around = in bash).`);
+    for (const m of clean.matchAll(/(?<![\w$])-?[a-z]+\b/g)) {
+      const w = m[0];
+      if (SH[w] && !/^(read|bc)$/.test(w) && parts.length < 3 && !parts.includes(SH[w]!)) parts.push(SH[w]!);
+    }
+  } else {
+    if (/^\s*(int|float|double|char|long|clock_t)\s+[^(]*;\s*$/.test(t)) parts.push("Declares the variables used below.");
+    if (/\w+\s*\+\+|\+\+\s*\w+/.test(t) && /\bcount|comp|calls|step\b/.test(t)) parts.push("Counts one more basic operation.");
+    if (/temp\s*=/.test(t)) parts.push("Part of a swap: temp holds one value while the two are exchanged.");
+    const seen = new Set<string>();
+    for (const m of clean.matchAll(/\b[A-Za-z_]\w*\b/g)) {
+      const tok = m[0];
+      if (seen.has(tok) || parts.length >= 3) continue;
+      seen.add(tok);
+      let def = C_EXTRA[tok] ?? C[tok];
+      if (!def && new RegExp(`^\\s*(?:int|void|double|float|char|long|struct\\s+\\w+)\\s*\\*?\\s*${tok}\\s*\\(`, "m").test(code) && tok !== "main") def = `${tok}() is a function this program defines.`;
+      if (def && /^[a-j]$/.test(tok) && parts.length) continue;
+      if (def && !parts.includes(def)) parts.push(def);
+    }
+  }
+  if (role && !parts.some((p) => p.startsWith(role.slice(0, 12)))) parts.unshift(role);
+  return parts.slice(0, 3).join(" ");
+}
+
+/** Module-style viva for C headers and bash commands. */
+export function explainModules(code: string, lang: Exclude<Lang, "python">): { q: string; a: string }[] {
+  if (lang === "c") {
+    const fns: Record<string, string[]> = { "stdio.h": ["printf", "scanf", "sprintf", "puts", "getchar"], "time.h": ["clock", "clock_t", "CLOCKS_PER_SEC"], "stdlib.h": ["malloc", "free", "qsort", "rand", "abs", "exit"], "string.h": ["strlen", "strcpy", "strcmp", "strcat", "memset"], "math.h": ["sqrt", "pow", "fabs", "ceil", "floor"], "limits.h": ["INT_MAX", "INT_MIN"] };
+    return [...code.matchAll(/#include\s*<([\w.]+)>/g)].map((m) => {
+      const h = m[1]!;
+      const used = (fns[h] ?? []).filter((f) => new RegExp(`\\b${f}\\b`).test(code));
+      return { q: `Why #include <${h}>?`, a: `${C_HEADERS[h] ?? `${h} is a standard C header.`}${used.length ? ` Used here for: ${used.join(", ")}.` : ""}` };
+    });
+  }
+  const out: { q: string; a: string }[] = [];
+  if (/^#!\s*\/bin\/(ba)?sh/.test(code.trim())) out.push({ q: "Why #!/bin/bash on the first line?", a: "It's the shebang: it tells the system to run the file with bash. Run it with bash file.sh or ./file.sh after chmod +x." });
+  const cmds = [...new Set([...code.replace(/(["'])(?:\\.|(?!\1).)*\1/g, "").matchAll(/(?:^|[;|&(]|\bthen|\bdo|\belse)\s*([a-z]+)\b/gm)].map((m) => m[1]!))].filter((c) => SH[c] && !/^(then|else|elif|fi|do|done|esac|in)$/.test(c));
+  if (cmds.length) out.push({ q: "Which commands does this script use, and for what?", a: cmds.map((c) => SH[c]).join(" ") });
+  return out;
+}

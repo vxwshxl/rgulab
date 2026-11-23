@@ -37,3 +37,6 @@ export function labMeta(lab: string, title: string, description: string, path: s
     twitter: { card: "summary_large_image" as const, title, description, images: images.map((i) => i.url) },
   };
 }
+
+/** The code + viva page for a lab: /quick is DS (the default), others live at /quick/<lab>. */
+export const quickHref = (lab: string) => (lab === "ds" ? "/quick" : `/quick/${lab}`);

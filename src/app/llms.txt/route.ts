@@ -1,5 +1,5 @@
 import { labs } from "@/data/labs";
-import { abs, SITE } from "@/lib/site";
+import { abs, quickHref, SITE } from "@/lib/site";
 
 // llms.txt (https://llmstxt.org): a plain-text map of the site for AI answer engines.
 export function GET() {
@@ -17,6 +17,7 @@ export function GET() {
     lines.push(`## ${l.name}: ${l.subject}`, "", `${l.tagline}. Runtime: ${l.runtime}.`, "");
     lines.push(`- [${l.name} viva questions and answers](${abs(`/${l.id}/viva`)}): ${l.viva.length} subject questions with model answers`);
     lines.push(`- [${l.name} cheatsheet](${abs(`/${l.id}/cheatsheet`)})`);
+    lines.push(`- [${l.name}: all codes + viva](${abs(quickHref(l.id))}): copy-paste code, output and line-by-line viva answers for every record program`);
     lines.push(`- [${l.name} online simulator](${abs(`/${l.id}/simulator`)})`);
     for (const p of l.programs) lines.push(`- [${l.short} ${p.id}: ${p.title}](${abs(`/${l.id}/program/${p.id}`)}): ${p.aim}`);
     lines.push("");

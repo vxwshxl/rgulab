@@ -4,7 +4,7 @@ import { LearnPath } from "@/components/learn-path";
 import { DailyGoal, ExamCard, SideRail } from "@/components/side-rail";
 import { ButtonLink } from "@/components/ui/button";
 import { getLab, type LabId } from "@/data/labs";
-import { abs, labMeta, ld } from "@/lib/site";
+import { abs, labMeta, ld, quickHref } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lab]">) {
   const { lab } = await params;
@@ -45,11 +45,9 @@ export default async function LearnPage({ params }: PageProps<"/[lab]">) {
             <h1 className="text-3xl font-extrabold">{L.name} path</h1>
           </div>
           <div className="flex flex-wrap gap-2">
-            {id === "ds" && (
-              <ButtonLink href="/quick" size="sm">
-                <Rocket className="size-4" /> All codes + viva
-              </ButtonLink>
-            )}
+            <ButtonLink href={quickHref(id)} size="sm">
+              <Rocket className="size-4" /> All codes + viva
+            </ButtonLink>
             <ButtonLink href={`/${id}/lesson/review`} variant="secondary" size="sm">
               <Dumbbell className="size-4" /> Mixed review
             </ButtonLink>

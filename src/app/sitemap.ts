@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date("2026-11-22");
   return [
     { url: abs("/"), lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: abs("/quick"), lastModified: new Date("2026-11-23"), changeFrequency: "monthly", priority: 0.9 },
+    ...["/quick", "/quick/os", "/quick/daa"].map((u) => ({ url: abs(u), lastModified: new Date("2026-11-23"), changeFrequency: "monthly" as const, priority: 0.9 })),
     ...labs.flatMap((l) => [
       { url: abs(`/${l.id}`), lastModified: now, changeFrequency: "weekly" as const, priority: 0.9 },
       { url: abs(`/${l.id}/viva`), lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 },
