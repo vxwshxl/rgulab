@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 
 export type IndexItem = { id: string; title: string; group: string; text: string };
 
-type Props = { items: IndexItem[]; allCode: string; total: number; prefix: string };
+export type IndexExtra = { href: string; short: string; label: string };
+type Props = { items: IndexItem[]; allCode: string; total: number; prefix: string; extras: IndexExtra[] };
 
 function useFilter(items: IndexItem[], q: string) {
   return useMemo(() => {
@@ -65,7 +66,7 @@ function Row({ it, href, active, selected, onPick }: { it: IndexItem; href: stri
 }
 
 /** Searchable program index, floating program rail with prev/next, and a Find popup. */
-export function QuickIndex({ items, allCode, total, prefix }: Props) {
+export function QuickIndex({ items, allCode, total, prefix, extras }: Props) {
   const [q, setQ] = useState("");
   const hits = useFilter(items, q);
   const [open, setOpen] = useState(false);
@@ -122,14 +123,7 @@ export function QuickIndex({ items, allCode, total, prefix }: Props) {
             </li>
           ))}
           {hits.length === 0 && <li className="px-2 py-4 text-sm text-secondary-fg">No program matches “{q}”.</li>}
-          {!q.trim() && (
-            <li>
-              <a href={`#${prefix}-viva`} className="flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-accent-subtle">
-                <span className="grid h-8 min-w-10 shrink-0 place-items-center rounded-md bg-muted text-sm font-extrabold text-primary">Q&amp;A</span>
-                <span className="font-bold">Subject viva</span>
-              </a>
-            </li>
-          )}
+          {!q.trim() && <ExtraRows extras={extras} />}
         </ul>
       </nav>
 
@@ -201,7 +195,7 @@ export function QuickIndex({ items, allCode, total, prefix }: Props) {
         <Search className="size-5" /> Find
       </button>
 
-      {open && <FindPopup items={items} prefix={prefix} current={current} onClose={() => setOpen(false)} onPick={(id) => go(id)} />}
+      {open && <FindPopup items={items} prefix={prefix} extras={extras} current={current} onClose={() => setOpen(false)} onPick={(id) => go(id)} />}
     </>
   );
 }
@@ -270,7 +264,7 @@ function SearchBox({ q, setQ, onEnter, onKeyDown, autoFocus }: { q: string; setQ
 }
 
 /** Modal program picker: search, ↑/↓ to move, Enter to jump, Esc or outside click to close. */
-function FindPopup({ items, prefix, current, onClose, onPick }: { items: IndexItem[]; prefix: string; current: string | null; onClose: () => void; onPick: (id: string) => void }) {
+function FindPopup({ items, prefix, extras, current, onClose, onPick }: { items: IndexItem[]; prefix: string; extras: IndexExtra[]; current: string | null; onClose: () => void; onPick: (id: string) => void }) {
   const [q, setQ] = useState("");
   const hits = useFilter(items, q);
   const [sel, setSel] = useState(() => Math.max(0, items.findIndex((it) => it.id === current)));
@@ -332,17 +326,21 @@ function FindPopup({ items, prefix, current, onClose, onPick }: { items: IndexIt
             </li>
           ))}
           {hits.length === 0 && <li className="px-3 py-6 text-center text-sm text-secondary-fg">No program matches “{q}”.</li>}
-          {!q.trim() && (
-            <li>
-              <a href={`#${prefix}-viva`} onClick={onClose} className="flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-accent-subtle">
-                <span className="grid h-8 min-w-10 shrink-0 place-items-center rounded-md bg-muted text-sm font-extrabold text-primary">Q&amp;A</span>
-                <span className="font-bold">Subject viva</span>
-              </a>
-            </li>
-          )}
+          {!q.trim() && <ExtraRows extras={extras} onClick={onClose} />}
         </ul>
         <p className="hidden border-t-2 border-border px-4 py-2 text-xs font-bold text-secondary-fg sm:block">↑ ↓ to move · Enter to open · Esc to close · [ ] for previous / next program</p>
       </div>
     </div>
   );
+}
+
+function ExtraRows({ extras, onClick }: { extras: IndexExtra[]; onClick?: () => void }) {
+  return extras.map((x) => (
+    <li key={x.href}>
+      <a href={x.href} onClick={onClick} className="flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-accent-subtle">
+        <span className="grid h-8 min-w-10 shrink-0 place-items-center rounded-md bg-muted px-1.5 text-xs font-extrabold text-primary">{x.short}</span>
+        <span className="font-bold">{x.label}</span>
+      </a>
+    </li>
+  ));
 }

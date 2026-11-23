@@ -1,14 +1,16 @@
-import { ArrowLeft, ListOrdered, MessageCircleQuestion, Package, Pencil, Terminal } from "lucide-react";
+import { ArrowLeft, BookOpen, ClipboardList, ExternalLink, Gauge, ListOrdered, MessageCircleQuestion, Package, Pencil, PlayCircle, Terminal, Workflow } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock, OutputBlock } from "./code-block";
 import { CopyButton } from "./copy-button";
 import { Logo } from "./logo";
-import { QuickIndex, type IndexItem } from "./quick-index";
+import { QuickIndex, type IndexExtra, type IndexItem } from "./quick-index";
 import { QuickLabSwitch } from "./quick-lab-switch";
 import { ThemeToggle } from "./shell";
 import { getLab, type Lab, type LabId, type Program } from "@/data/labs";
+import { linuxCmds, schedFormulas, shellSyntax, testOps } from "@/data/labs/cheatsheet-os";
 import { changes, groups as dsGroups } from "@/data/quick-ds";
+import { daaTheory, examCopy, resources, type TheoryBlock } from "@/data/quick-theory";
 import { statements } from "@/lib/exercises";
 import { explainCodeLine, explainImportLine, explainModules, explainPyLine } from "@/lib/explain";
 import { abs, labMeta, ld, quickHref } from "@/lib/site";
@@ -28,7 +30,8 @@ export function quickMeta(labId: LabId): Metadata {
   const lab = getLab(labId)!;
   const n = recordPrograms(lab).length;
   const title = `${lab.name}: all ${n} codes + viva questions with answers`;
-  const description = `Copy-paste ${COPY[labId].what} code for all ${n} ${lab.name} record programs with their output${labId === "ds" ? " and graphs" : ""}, each with viva questions answered: ${COPY[labId].mod}, what every line does and concept questions.`;
+  const extra = labId === "daa" ? "algorithm, output and time/space complexity" : labId === "os" ? "algorithm and output" : "output and graphs";
+  const description = `Copy-paste ${COPY[labId].what} code for all ${n} ${lab.name} record programs with their ${extra}, each with viva questions answered: ${COPY[labId].mod}, what every line does and concept questions.${labId === "daa" ? " Plus P, NP, NP-complete and NP-hard theory." : ""}`;
   return {
     ...labMeta(COPY[labId].og, title, description, quickHref(labId), "article"),
     keywords: [`${lab.name} programs`, `${lab.subject} lab code`, `${lab.name} viva questions`, `${lab.subject} viva`, "lab exam", "viva questions with answers"],
@@ -55,6 +58,80 @@ function QA({ q, a }: { q: string; a: string }) {
     </div>
   );
 }
+
+/** Exam-copy algorithm: DAA has its own Algorithm block; OS steps become Start → steps → Stop. */
+function algorithmOf(p: Program): string {
+  if (p.algorithm?.trim()) return p.algorithm.trim();
+  if (!p.steps?.length) return "";
+  const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+  return ["1. Start", ...p.steps.map((x, i) => `${i + 2}. ${cap(x)}`), `${p.steps.length + 2}. Stop`].join("\n");
+}
+
+/** The time/space complexity lines the program prints (what goes in the exam copy). */
+function printedComplexity(code: string): { time?: string; space?: string } {
+  const grab = (k: string) => code.match(new RegExp(`${k} complexity:([^"]*)"`, "i"))?.[1]?.replace(/\\n/g, "").trim();
+  return { time: grab("Time"), space: grab("Space") };
+}
+
+function PlainBlock({ text }: { text: string }) {
+  return (
+    <div className="relative">
+      <pre className="code-surface whitespace-pre-wrap break-words p-4 pt-16 font-mono text-[13px] leading-relaxed sm:pr-28 sm:pt-4">{text}</pre>
+      <CopyButton text={text} label="Copy" className="absolute right-3 top-3 h-9" />
+    </div>
+  );
+}
+
+function Theory({ blocks }: { blocks: TheoryBlock[] }) {
+  return (
+    <div className="flex flex-col gap-8">
+      {blocks.map((b) => (
+        <div key={b.title}>
+          <h3 className="mb-3 text-lg font-extrabold">{b.title}</h3>
+          {b.points && (
+            <ul className="mb-3 flex flex-col gap-2">
+              {b.points.map((x) => (
+                <li key={x} className="flex gap-2 leading-snug">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                  <span>{x}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {b.table && (
+            <div className="card overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-muted text-xs font-extrabold uppercase tracking-wider text-secondary-fg">
+                  <tr>{b.table.head.map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr>
+                </thead>
+                <tbody className="divide-y-2 divide-border">
+                  {b.table.rows.map((r) => (
+                    <tr key={r.join("|")}>
+                      {r.map((c, i) => (
+                        <td key={i} className={cn("px-4 py-3 align-top", i === 0 && "whitespace-nowrap font-mono text-[13px] font-bold")}>{c}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {b.qa && (
+            <div className="grid grid-cols-1 gap-2 text-sm md:grid-cols-2">
+              {b.qa.map(([q, a]) => <QA key={q} q={q} a={a} />)}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const osTheory: TheoryBlock[] = [
+  { title: "CPU scheduling formulas", table: { head: ["Formula", "Meaning"], rows: schedFormulas } },
+  { title: "Test operators inside [ ]", table: { head: ["Operator", "Meaning"], rows: testOps } },
+  { title: "Common Linux commands", table: { head: ["Command", "What it does"], rows: linuxCmds } },
+];
 
 type Card = {
   p: Program;
@@ -114,6 +191,13 @@ export function QuickView({ labId }: { labId: LabId }) {
     return { id, title: p.title, group, text: `${p.aim} ${words}` };
   });
 
+  const copyGuide = examCopy[labId];
+  const theory = labId === "daa" ? daaTheory : labId === "os" ? osTheory : [];
+  const links = resources[labId] ?? [];
+  const extras: IndexExtra[] = [
+    ...(theory.length ? [{ href: `#${labId}-theory`, short: "Th", label: labId === "daa" ? "Theory: complexity classes" : "Theory: formulas and commands" }] : []),
+    { href: `#${labId}-viva`, short: "Q&A", label: "Subject viva" },
+  ];
   const meta = quickMeta(labId);
   const title = String(meta.title);
   const description = String(meta.description);
@@ -164,7 +248,24 @@ export function QuickView({ labId }: { labId: LabId }) {
           <QuickLabSwitch current={labId} />
         </div>
 
-        <QuickIndex items={indexItems} allCode={allCode} total={order.length} prefix={labId} />
+        {copyGuide && (
+          <aside className="card mb-6 border-primary bg-accent-subtle/60 p-4 sm:p-5">
+            <p className="flex items-center gap-2 font-extrabold">
+              <ClipboardList className="size-5 text-primary" /> What to write in the exam copy
+            </p>
+            <ol className="mt-3 flex flex-wrap gap-2">
+              {copyGuide.steps.map((x, i) => (
+                <li key={x} className="flex items-center gap-2 rounded-xl border-2 border-border bg-elevated px-3 py-1.5 text-sm font-bold">
+                  <span className="grid size-6 place-items-center rounded-full bg-primary text-xs font-extrabold text-primary-foreground">{i + 1}</span>
+                  {x}
+                </li>
+              ))}
+            </ol>
+            <p className="mt-3 text-sm leading-snug text-secondary-fg">{copyGuide.note}</p>
+          </aside>
+        )}
+
+        <QuickIndex items={indexItems} allCode={allCode} total={order.length} prefix={labId} extras={extras} />
 
         <div className="mt-10 flex flex-col gap-14">
           {cards.map((g) => (
@@ -192,7 +293,17 @@ export function QuickView({ labId }: { labId: LabId }) {
                   </div>
 
                   <div className="flex flex-col gap-6 p-5">
-                    <CodeBlock code={p.code} lang={p.lang} />
+                    {algorithmOf(p) && (
+                      <div>
+                        <Label icon={<Workflow className="size-4 text-primary" />}>Algorithm</Label>
+                        <PlainBlock text={algorithmOf(p)} />
+                      </div>
+                    )}
+
+                    <div>
+                      {algorithmOf(p) && <Label icon={<Terminal className="size-4 text-primary" />}>Program</Label>}
+                      <CodeBlock code={p.code} lang={p.lang} />
+                    </div>
 
                     <div>
                       <Label icon={<Terminal className="size-4 text-primary" />}>Output</Label>
@@ -223,6 +334,34 @@ export function QuickView({ labId }: { labId: LabId }) {
                         )}
                       </div>
                     </div>
+
+                    {labId === "daa" && (() => {
+                      const pc = printedComplexity(p.code);
+                      const c = p.complexity;
+                      const copy = [pc.time && `Time complexity: ${pc.time}`, pc.space && `Space complexity: ${pc.space}`].filter(Boolean).join("\n");
+                      return (
+                        <div>
+                          <Label icon={<Gauge className="size-4 text-primary" />}>Complexity</Label>
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                            {copy && <PlainBlock text={copy} />}
+                            {c && (
+                              <div className="card overflow-hidden">
+                                <table className="w-full text-left text-sm">
+                                  <tbody className="divide-y-2 divide-border">
+                                    {[["Best case", c.best], ["Average case", c.avg], ["Worst case", c.worst], ["Paradigm", c.paradigm]].map(([k, v]) => (
+                                      <tr key={k}>
+                                        <th className="w-36 bg-muted px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-secondary-fg">{k}</th>
+                                        <td className="px-4 py-2 font-mono font-bold">{v}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     {modules.length > 0 && (
                       <div>
@@ -276,6 +415,44 @@ export function QuickView({ labId }: { labId: LabId }) {
               ))}
             </section>
           ))}
+
+          {theory.length > 0 && (
+            <section id={`${labId}-theory`} aria-labelledby={`${labId}-theory-h`} className="scroll-mt-6">
+              <h2 id={`${labId}-theory-h`} className="border-b-2 border-border pb-2 text-2xl font-extrabold sm:text-3xl">
+                {labId === "daa" ? "Theory: complexity classes" : "Theory: formulas and commands"}
+              </h2>
+              {links.length > 0 && (
+                <div className="mt-6">
+                  <Label icon={<BookOpen className="size-4 text-primary" />}>Watch and read</Label>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {links.map((r) => (
+                      <a key={r.href} href={r.href} target="_blank" rel="noopener noreferrer" className="card flex items-center gap-3 p-3 hover:border-(--ds-accent)">
+                        {r.kind === "video" ? <PlayCircle className="size-8 shrink-0 text-danger" /> : <BookOpen className="size-8 shrink-0 text-primary" />}
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-bold leading-snug">{r.label}</span>
+                          <span className="block text-xs text-secondary-fg">{r.by}</span>
+                        </span>
+                        <ExternalLink className="size-4 shrink-0 text-secondary-fg" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {labId === "os" && (
+                <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+                  {shellSyntax.map((x) => (
+                    <div key={x.title} className="flex min-w-0 flex-col gap-1.5">
+                      <p className="text-sm font-extrabold">{x.title}</p>
+                      <CodeBlock code={x.code} lang="bash" />
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="mt-6">
+                <Theory blocks={theory} />
+              </div>
+            </section>
+          )}
 
           <section id={`${labId}-viva`} aria-labelledby={`${labId}-viva-h`} className="scroll-mt-6">
             <h2 id={`${labId}-viva-h`} className="border-b-2 border-border pb-2 text-2xl font-extrabold sm:text-3xl">

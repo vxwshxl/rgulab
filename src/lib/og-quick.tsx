@@ -10,7 +10,10 @@ export function quickOg(labId: LabId) {
   return ogImage({
     eyebrow: `${lab.name} · exam day`,
     title: `All ${n} ${lab.short} lab codes + viva answers.`,
-    subtitle: `Copy-paste ${lang} for every record program, with output${labId === "ds" ? ", graphs" : ""} and line-by-line, ${labId === "ds" ? "module" : labId === "os" ? "command" : "header"} and concept viva answers.`,
+    subtitle:
+      labId === "daa"
+        ? "Algorithm, C program, output and time/space complexity for every record program, plus P vs NP theory and viva answers."
+        : `Copy-paste ${lang} for every record program, with ${labId === "os" ? "the algorithm, output" : "output, graphs"} and line-by-line, ${labId === "ds" ? "module" : "command"} and concept viva answers.`,
     chips: [
       { label: "Copy code", hue: accent },
       { label: "Viva Q&A", hue: labId === "os" ? "green" : "purple" },
