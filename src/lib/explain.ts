@@ -537,3 +537,108 @@ export function explainOrder(lines: string[], lang: Lang, steps: string[]): stri
   if (steps.length) parts.push(`Program flow: ${steps.slice(0, 4).join(" → ")}${steps.length > 4 ? " → …" : ""}.`);
   return parts.join(" ");
 }
+
+/* ---------- whole-line explanations (viva: "what does this line do?") ---------- */
+
+const EXTRA: Record<string, string> = {
+  DataFrame: "pd.DataFrame builds a table from the dict: each key becomes a column.",
+  subplots: "plt.subplots(rows, cols) makes a figure with a grid of boxes (axes) to draw in.",
+  items: "items() gives (name, model) pairs so the loop can use both.",
+  mean: "mean() is the average.",
+  T: ".T transposes the array (rows ↔ columns).",
+  info: "info() prints the column names, non-null counts and data types (it prints by itself).",
+  feature_importances_: "feature_importances_ says how much each feature helped the forest.",
+};
+
+/** Meanings that depend on the line a word appears in. */
+function inContext(tok: string, line: string): string | undefined {
+  const val = line.match(new RegExp(`\\b${tok}\\s*=\\s*([^,)]+)`))?.[1]?.trim();
+  switch (tok) {
+    case "alpha":
+      return /scatter|plot|hist|bar/.test(line) ? `alpha=${val} sets transparency (0 = invisible, 1 = solid).` : undefined;
+    case "title":
+      return /plt\.title\(|set_title\(/.test(line) ? "title() puts a heading on the graph." : undefined;
+    case "criterion":
+      return /fcluster/.test(line) ? "criterion='maxclust' means: cut the tree into exactly t clusters." : undefined;
+    case "loc":
+      return /interval/.test(line) ? "loc=mean centres the interval on the sample mean." : undefined;
+    case "scale":
+      return /interval/.test(line) ? "scale=stats.sem(data) uses the standard error as the spread." : undefined;
+    case "test_size":
+      return val && !Number.isNaN(Number(val)) ? `test_size=${val} keeps ${Math.round(Number(val) * 100)}% of the rows for testing; the rest train the model.` : undefined;
+    case "get":
+      return /key\s*=/.test(line) ? "key=cv.get makes max() compare the dict's values (the scores) and return the best name." : undefined;
+    case "c":
+      return /scatter/.test(line) ? "c= colours each point (here by its cluster label)." : undefined;
+    case "n_clusters":
+      return val ? `n_clusters=${val}: the number of groups to find.` : undefined;
+    case "data":
+      return /\bdata\s*=(?!=)/.test(line) && /sns\.|px\./.test(line) ? "data=df tells seaborn which table to take the columns from." : undefined;
+    case "labels":
+      return /pie\(/.test(line) ? "labels= names each slice." : /\blabels\s*=(?!=)/.test(line) ? undefined : undefined;
+    case "size":
+      return /px\./.test(line) ? `size=${val} draws bigger bubbles for bigger values.` : /random/.test(line) ? "size is how many numbers to generate." : undefined;
+    case "index":
+      return /index\s*=\s*False/.test(line) ? "index=False stops pandas saving the row numbers as an extra column." : undefined;
+    case "columns":
+      return /drop\(/.test(line) ? `columns=${val} names the column to remove.` : undefined;
+    case "random_state":
+      return "random_state fixes the randomness so you get the same result every run.";
+  }
+  return undefined;
+}
+
+/** Explain one Python statement (may span several lines) in plain words. */
+export function explainPyLine(stmt: string): string {
+  const t = stmt.trim();
+  const clean = t.replace(/(["'])(?:\\.|(?!\1).)*\1/g, (s) => " ".repeat(s.length));
+  const parts: string[] = [];
+  const seen = new Set<string>();
+  for (const m of clean.matchAll(/\b[A-Za-z_]\w*\b/g)) {
+    const tok = m[0];
+    const i = m.index!;
+    const before = clean[i - 1];
+    const after = clean.slice(i + tok.length).trimStart();
+    const prev = clean.slice(0, i).trimEnd().at(-1);
+    const kwarg = /^=(?!=)/.test(after) && (prev === "(" || prev === ",");
+    const callish = before === "." || after.startsWith("(") || kwarg || /^[A-Z]/.test(tok);
+    const def = inContext(tok, t) ?? EXTRA[tok] ?? PY[tok];
+    if (!def || !callish || seen.has(tok)) continue;
+    seen.add(tok);
+    parts.push(def);
+    if (parts.length >= 3) break;
+  }
+  if (/^X\s*,\s*y\s*=/.test(t)) parts.unshift("X = the input columns (features), y = the answer column the model must predict (target).");
+  else if (/^X_train,\s*X_test,\s*y_train,\s*y_test\s*=/.test(t)) parts.push("You get 4 parts: features and answers for training, and features and answers for testing.");
+  if (/^for\s/.test(t)) {
+    const m = t.match(/^for\s+(.+?)\s+in\s+(.+):/);
+    if (m) parts.unshift(`Loop: repeats the indented lines for every ${m[1]} in ${m[2]}.`);
+  } else if (/^print\(/.test(t)) {
+    const label = t.match(/^print\(\s*f?(["'])(.*?)\1/)?.[2]?.replace(/\\n/g, "").replace(/\{[^}]*\}/g, "…").trim();
+    parts.unshift(label ? `Prints "${label}" with the result.` : "Prints the result.");
+  } else if (/^\w[\w\s,]*=(?!=)/.test(t) && !parts.length) {
+    const lhs = t.split("=")[0]!.trim();
+    parts.push(`Stores the value in ${lhs} for the next lines.`);
+  } else if (/^[\w\[\]'", ]+\s*=(?!=)/.test(t)) {
+    const lhs = t.split("=")[0]!.trim();
+    if (/\[/.test(lhs)) parts.push(`Creates (or replaces) ${lhs} with this value.`);
+    else if (!/^(X|y|df|model)\b/.test(lhs) || parts.length < 2) parts.push(`The result is stored in ${lhs}.`);
+  }
+  return parts.join(" ") || "Runs this step of the program.";
+}
+
+/** Viva Q&A for an import line. */
+export function explainImportLine(line: string): { q: string; a: string } | null {
+  const t = line.trim();
+  const plain = t.match(/^import\s+([\w.]+)(?:\s+as\s+(\w+))?/);
+  if (plain) {
+    const [, mod, alias] = plain;
+    return { q: alias ? `Why import ${mod} as ${alias}?` : `Why import ${mod}?`, a: `${PY_MODULES[mod!] ?? `${mod}.`}${alias ? ` ${alias} is just a short name so we can type ${alias}.something.` : ""}` };
+  }
+  const from = t.match(/^from\s+([\w.]+)\s+import\s+(.+)$/);
+  if (!from) return null;
+  const [, mod, names] = from;
+  const list = names!.split(",").map((n) => n.trim().split(/\s+as\s+/)[0]!);
+  const why = list.map((n) => PY[n] ?? EXTRA[n]).filter(Boolean).slice(0, 3).join(" ");
+  return { q: `Why ${list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list.at(-1)}` : list[0]} from ${mod}?`, a: `${PY_MODULES[mod!] ?? `${mod}.`} ${why}`.trim() };
+}

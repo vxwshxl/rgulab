@@ -60,7 +60,7 @@ export default function Home() {
             href="/quick"
             className="ledge flex items-center gap-2 rounded-2xl border-2 border-primary bg-accent-subtle px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-primary [--ledge:var(--ds-accent-ledge)]"
           >
-            <Rocket className="size-5" /> DS exam today? Revise everything in 90 min
+            <Rocket className="size-5" /> DS exam? All 29 codes + viva answers
           </Link>
         </section>
 

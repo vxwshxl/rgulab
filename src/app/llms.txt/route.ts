@@ -10,7 +10,7 @@ export function GET() {
     "",
     "Every program page has the aim, the algorithm or recipe, the full source code, a sample input and output, and viva questions with answers. Each lab also has a subject-level viva bank and a cheatsheet.",
     "",
-    `- [DS lab in 90 minutes](${abs("/quick")}): one-page revision of all 29 DS record programs with plain-English explanations, code, outputs, imports, common errors and viva answers`,
+    `- [DS lab: all codes + viva](${abs("/quick")}): copy-paste code for all 29 DS record programs with module, line-by-line, concept and quick-change viva questions answered`,
     "",
   ];
   for (const l of labs) {

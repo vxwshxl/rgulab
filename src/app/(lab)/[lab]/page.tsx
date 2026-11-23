@@ -47,7 +47,7 @@ export default async function LearnPage({ params }: PageProps<"/[lab]">) {
           <div className="flex flex-wrap gap-2">
             {id === "ds" && (
               <ButtonLink href="/quick" size="sm">
-                <Rocket className="size-4" /> 90-min revision
+                <Rocket className="size-4" /> All codes + viva
               </ButtonLink>
             )}
             <ButtonLink href={`/${id}/lesson/review`} variant="secondary" size="sm">
