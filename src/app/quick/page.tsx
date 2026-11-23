@@ -1,7 +1,7 @@
-import { ArrowLeft, ListOrdered, MessageCircleQuestion, Package, Pencil } from "lucide-react";
+import { ArrowLeft, ListOrdered, MessageCircleQuestion, Package, Pencil, Terminal } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CodeBlock } from "@/components/code-block";
+import { CodeBlock, OutputBlock } from "@/components/code-block";
 import { CopyButton } from "@/components/copy-button";
 import { QuickIndex, type IndexItem } from "@/components/quick-index";
 import { Logo } from "@/components/logo";
@@ -11,10 +11,11 @@ import { changes, groups } from "@/data/quick-ds";
 import { statements } from "@/lib/exercises";
 import { explainImportLine, explainPyLine } from "@/lib/explain";
 import { abs, labMeta, ld } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 const title = "DS lab: all 29 codes + viva questions with answers";
 const description =
-  "Copy-paste Python code for all 29 DS record programs, each with viva questions answered: which module is used and why, what every line does, concept questions and quick changes examiners ask for.";
+  "Copy-paste Python code for all 29 DS record programs with their output and graphs, each with viva questions answered: which module is used and why, what every line does, concept questions and quick changes examiners ask for.";
 
 export const metadata: Metadata = {
   ...labMeta("quick", title, description, "/quick", "article"),
@@ -115,7 +116,7 @@ export default function QuickPage() {
       <main className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
         <div className="pb-6 pt-8">
           <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">DS lab: all codes + viva</h1>
-          <p className="mt-2 max-w-3xl text-lg text-secondary-fg">29 record programs. Copy any code, and read the viva answers right below it.</p>
+          <p className="mt-2 max-w-3xl text-lg text-secondary-fg">29 record programs. Copy any code; the output, graphs and viva answers are right below it.</p>
         </div>
 
         <QuickIndex items={indexItems} allCode={allCode} />
@@ -147,6 +148,28 @@ export default function QuickPage() {
 
                   <div className="flex flex-col gap-6 p-5">
                     <CodeBlock code={p.code} />
+
+                    <div>
+                      <Label icon={<Terminal className="size-4 text-primary" />}>Output</Label>
+                      <div className="flex flex-col gap-3">
+                        {p.samples.map((s, i) => (
+                          <OutputBlock key={i} text={s.output.replace(/\n+$/, "")} />
+                        ))}
+                        {p.images.length > 0 && (
+                          <div className={cn("grid grid-cols-1 gap-3", p.images.length > 1 && "md:grid-cols-2")}>
+                            {p.images.map((src, i) => (
+                              <figure key={src} className="overflow-hidden rounded-xl border-2 border-border bg-white">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={src} alt={`Graph ${i + 1} produced by DS program ${p.id}: ${p.title}`} className="w-full" loading="lazy" />
+                                <figcaption className="border-t-2 border-border bg-elevated px-3 py-1.5 text-xs font-bold text-secondary-fg">
+                                  Graph{p.images.length > 1 ? ` ${i + 1}` : ""} · Program {p.id}
+                                </figcaption>
+                              </figure>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
                     <div>
                       <Label icon={<Package className="size-4 text-primary" />}>Viva: which module is used and why</Label>
