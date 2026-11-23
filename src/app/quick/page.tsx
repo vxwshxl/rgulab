@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { CopyButton } from "@/components/copy-button";
+import { QuickIndex, type IndexItem } from "@/components/quick-index";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/shell";
 import { getLab } from "@/data/labs";
@@ -28,6 +29,14 @@ const allCode = order
     return `# ===== Program ${id}: ${p.title} =====\n${p.code.replace(/\n+$/, "")}\n`;
   })
   .join("\n");
+
+// Search text per program: title, aim, and every imported name / called function in the code.
+const indexItems: IndexItem[] = order.map((id) => {
+  const p = lab.byId.get(id)!;
+  const group = groups.find((g) => g.programs.some((x) => x.id === id))!.title;
+  const words = [...new Set(p.code.match(/[A-Za-z_][\w.]*/g) ?? [])].filter((w) => w.length > 2).join(" ");
+  return { id, title: p.title, group, text: `${p.aim} ${words}` };
+});
 
 function Label({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) {
   return (
@@ -109,19 +118,7 @@ export default function QuickPage() {
           <p className="mt-2 max-w-3xl text-lg text-secondary-fg">29 record programs. Copy any code, and read the viva answers right below it.</p>
         </div>
 
-        <nav aria-label="Jump to a program" className="card z-30 p-3 sm:p-4 md:sticky md:top-2">
-          <div className="flex flex-wrap items-center gap-2">
-            {order.map((id) => (
-              <a key={id} href={`#p${id}`} className="grid h-9 min-w-10 place-items-center rounded-lg bg-muted px-2 font-mono text-sm font-extrabold hover:bg-accent-subtle hover:text-primary">
-                {id}
-              </a>
-            ))}
-            <a href="#viva" className="grid h-9 place-items-center rounded-lg bg-muted px-3 text-sm font-extrabold hover:bg-accent-subtle hover:text-primary">
-              Subject viva
-            </a>
-            <CopyButton text={allCode} label="Copy all 29" className="ml-auto" />
-          </div>
-        </nav>
+        <QuickIndex items={indexItems} allCode={allCode} />
 
         <div className="mt-10 flex flex-col gap-14">
           {cards.map((g) => (
