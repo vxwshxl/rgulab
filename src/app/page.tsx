@@ -1,4 +1,5 @@
-import { Dices, MessageCircleQuestion, Sparkles, Terminal } from "lucide-react";
+import Link from "next/link";
+import { Dices, MessageCircleQuestion, Sparkles, Terminal, Rocket } from "lucide-react";
 import { LabCards } from "@/components/lab-cards";
 import { Logo } from "@/components/logo";
 import { Mascot } from "@/components/mascot";
@@ -55,6 +56,12 @@ export default function Home() {
           <p className="max-w-xl text-lg text-secondary-fg">
             rguLAB turns your DS, OS and DAA lab programs into lessons, live simulators, mock exams and viva drills.
           </p>
+          <Link
+            href="/quick"
+            className="ledge flex items-center gap-2 rounded-2xl border-2 border-primary bg-accent-subtle px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-primary [--ledge:var(--ds-accent-ledge)]"
+          >
+            <Rocket className="size-5" /> DS exam today? Revise everything in 90 min
+          </Link>
         </section>
 
         <LabCards />

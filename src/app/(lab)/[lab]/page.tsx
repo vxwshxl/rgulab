@@ -1,4 +1,4 @@
-import { Dumbbell } from "lucide-react";
+import { Dumbbell, Rocket } from "lucide-react";
 import { notFound } from "next/navigation";
 import { LearnPath } from "@/components/learn-path";
 import { DailyGoal, ExamCard, SideRail } from "@/components/side-rail";
@@ -44,9 +44,16 @@ export default async function LearnPage({ params }: PageProps<"/[lab]">) {
             </p>
             <h1 className="text-3xl font-extrabold">{L.name} path</h1>
           </div>
-          <ButtonLink href={`/${id}/lesson/review`} variant="secondary" size="sm">
-            <Dumbbell className="size-4" /> Mixed review
-          </ButtonLink>
+          <div className="flex flex-wrap gap-2">
+            {id === "ds" && (
+              <ButtonLink href="/quick" size="sm">
+                <Rocket className="size-4" /> 90-min revision
+              </ButtonLink>
+            )}
+            <ButtonLink href={`/${id}/lesson/review`} variant="secondary" size="sm">
+              <Dumbbell className="size-4" /> Mixed review
+            </ButtonLink>
+          </div>
         </div>
         <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:hidden">
           <DailyGoal />
