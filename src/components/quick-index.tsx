@@ -2,13 +2,12 @@
 
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CopyButton } from "./copy-button";
 import { cn } from "@/lib/utils";
 
 export type IndexItem = { id: string; title: string; group: string; text: string };
 
 export type IndexExtra = { href: string; short: string; label: string };
-type Props = { items: IndexItem[]; allCode: string; total: number; prefix: string; extras: IndexExtra[] };
+type Props = { items: IndexItem[]; prefix: string; extras: IndexExtra[] };
 
 function useFilter(items: IndexItem[], q: string) {
   return useMemo(() => {
@@ -66,10 +65,11 @@ function Row({ it, href, active, selected, onPick }: { it: IndexItem; href: stri
 }
 
 /** Searchable program index, floating program rail with prev/next, and a Find popup. */
-export function QuickIndex({ items, allCode, total, prefix, extras }: Props) {
+export function QuickIndex({ items, prefix, extras }: Props) {
   const [q, setQ] = useState("");
   const hits = useFilter(items, q);
   const [open, setOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const { current, indexVisible } = useCurrent(items, prefix);
   const pos = current ? items.findIndex((it) => it.id === current) : -1;
 
@@ -112,16 +112,22 @@ export function QuickIndex({ items, allCode, total, prefix, extras }: Props) {
     <>
       {/* Inline index at the top of the page */}
       <nav id={`${prefix}-find`} aria-label="Find a program" className="card scroll-mt-4 p-3 sm:p-4">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex">
           <SearchBox q={q} setQ={setQ} onEnter={() => hits[0] && go(hits[0].id)} />
-          <CopyButton text={allCode} label={`Copy all ${total}`} className="h-12" />
         </div>
-        <ul className="mt-3 grid max-h-[22rem] grid-cols-1 gap-1 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+        <ul className="mt-3 grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
           {hits.map((it, i) => (
-            <li key={it.id}>
+            <li key={it.id} className={cn(!showAll && !q.trim() && i >= 6 && "hidden sm:block")}>
               <Row it={it} href={`#${prefix}-p${it.id}`} selected={i === 0 && q.trim().length > 0} onPick={() => go(it.id)} />
             </li>
           ))}
+          {!showAll && !q.trim() && hits.length > 6 && (
+            <li className="sm:hidden">
+              <button type="button" onClick={() => setShowAll(true)} className="flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border-2 border-border text-xs font-extrabold uppercase tracking-wide text-primary">
+                Show all {hits.length} programs <ChevronDown className="size-4" />
+              </button>
+            </li>
+          )}
           {hits.length === 0 && <li className="px-2 py-4 text-sm text-secondary-fg">No program matches “{q}”.</li>}
           {!q.trim() && <ExtraRows extras={extras} />}
         </ul>

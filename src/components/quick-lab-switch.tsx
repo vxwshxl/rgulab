@@ -9,15 +9,13 @@ import { quickHref } from "@/lib/site";
 export function QuickLabSwitch({ current }: { current: LabId }) {
   const router = useRouter();
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-extrabold uppercase tracking-wide text-secondary-fg">Lab</span>
+    <div className="w-full">
       <Select
         label="Switch lab"
-        align="end"
-        className="w-64 max-w-[calc(100vw-6rem)]"
+        className="w-full"
         value={current}
         onChange={(v) => router.push(quickHref(v))}
-        options={labs.map((l) => ({ value: l.id, label: `${l.name} · ${l.subject}`, hint: `${l.programs.filter((p) => p.record).length}` }))}
+        options={labs.map((l) => ({ value: l.id, label: l.name, hint: `${l.subject} · ${l.programs.filter((p) => p.record).length}` }))}
       />
     </div>
   );

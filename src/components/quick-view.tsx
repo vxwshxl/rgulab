@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Download, ClipboardList, ExternalLink, Gauge, ListOrdered, MessageCircleQuestion, Package, Pencil, PlayCircle, Terminal, Workflow } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronRight, Download, ClipboardList, ExternalLink, Gauge, ListOrdered, MessageCircleQuestion, Package, Pencil, PlayCircle, Terminal, Workflow } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock, OutputBlock } from "./code-block";
@@ -222,34 +222,38 @@ export function QuickView({ labId }: { labId: LabId }) {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 pb-24 sm:px-6">
-        <div className="flex flex-wrap items-end justify-between gap-4 pb-6 pt-8">
-          <div className="min-w-0">
-            <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">{lab.name}: all codes + viva</h1>
-            <p className="mt-2 max-w-3xl text-lg text-secondary-fg">
-              {order.length} record programs. Copy any code; the output{labId === "ds" ? ", graphs" : ""} and viva answers are right below it.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <QuickLabSwitch current={labId} />
+        <div className="pb-6 pt-8">
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl">{lab.name}: all codes + viva</h1>
+          <p className="mt-2 max-w-3xl text-lg text-secondary-fg">
+            {order.length} record programs. Copy any code; the output{labId === "ds" ? ", graphs" : ""} and viva answers are right below it.
+          </p>
+
+          {/* One toolbar: every control is h-11, rounded-xl, 2px border, same ledge */}
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+            <div className="col-span-2 sm:w-52">
+              <QuickLabSwitch current={labId} />
+            </div>
             <a
               href={pdfHref(labId)}
               download
-              className="ledge inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-extrabold uppercase tracking-wide text-primary-foreground [--ledge:var(--ds-accent-ledge)]"
+              className="ledge inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border-2 border-transparent bg-primary px-4 text-xs font-extrabold uppercase tracking-wide text-primary-foreground [--ledge:var(--ds-accent-ledge)]"
             >
-              <Download className="size-5" /> Download PDF
+              <Download className="size-4" strokeWidth={2.5} /> Download PDF
             </a>
+            <CopyButton text={allCode} label={`Copy all ${order.length}`} className="h-11 justify-center px-4" />
           </div>
         </div>
 
         {copyGuide && (
-          <aside className="card mb-6 border-primary bg-accent-subtle/60 p-4 sm:p-5">
+          <aside className="card mb-6 p-4 sm:p-5" aria-label="What to write in the exam copy">
             <p className="flex items-center gap-2 font-extrabold">
               <ClipboardList className="size-5 text-primary" /> What to write in the exam copy
             </p>
-            <ol className="mt-3 flex flex-wrap gap-2">
+            <ol className="mt-3 grid gap-2 text-sm font-bold sm:flex sm:flex-wrap sm:items-center sm:gap-x-2">
               {copyGuide.steps.map((x, i) => (
-                <li key={x} className="flex items-center gap-2 rounded-xl border-2 border-border bg-elevated px-3 py-1.5 text-sm font-bold">
-                  <span className="grid size-6 place-items-center rounded-full bg-primary text-xs font-extrabold text-primary-foreground">{i + 1}</span>
+                <li key={x} className="flex items-center gap-2">
+                  {i > 0 && <ChevronRight className="hidden size-4 text-secondary-fg sm:block" aria-hidden />}
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-accent-subtle text-xs font-extrabold text-primary">{i + 1}</span>
                   {x}
                 </li>
               ))}
@@ -258,7 +262,7 @@ export function QuickView({ labId }: { labId: LabId }) {
           </aside>
         )}
 
-        <QuickIndex items={indexItems} allCode={allCode} total={order.length} prefix={labId} extras={extras} />
+        <QuickIndex items={indexItems} prefix={labId} extras={extras} />
 
         <div className="mt-10 flex flex-col gap-14">
           {cards.map((g) => (
