@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, ClipboardList, ExternalLink, Gauge, ListOrdered, MessageCircleQuestion, Package, Pencil, PlayCircle, Terminal, Workflow } from "lucide-react";
+import { ArrowLeft, BookOpen, Download, ClipboardList, ExternalLink, Gauge, ListOrdered, MessageCircleQuestion, Package, Pencil, PlayCircle, Terminal, Workflow } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CodeBlock, OutputBlock } from "./code-block";
@@ -13,6 +13,7 @@ import { changes, groups as dsGroups } from "@/data/quick-ds";
 import { daaTheory, examCopy, resources, type TheoryBlock } from "@/data/quick-theory";
 import { statements } from "@/lib/exercises";
 import { explainCodeLine, explainImportLine, explainModules, explainPyLine } from "@/lib/explain";
+import { algorithmOf, pdfHref, printedComplexity, quickGroups } from "@/lib/quick";
 import { abs, labMeta, ld, quickHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -57,20 +58,6 @@ function QA({ q, a }: { q: string; a: string }) {
       </p>
     </div>
   );
-}
-
-/** Exam-copy algorithm: DAA has its own Algorithm block; OS steps become Start → steps → Stop. */
-function algorithmOf(p: Program): string {
-  if (p.algorithm?.trim()) return p.algorithm.trim();
-  if (!p.steps?.length) return "";
-  const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
-  return ["1. Start", ...p.steps.map((x, i) => `${i + 2}. ${cap(x)}`), `${p.steps.length + 2}. Stop`].join("\n");
-}
-
-/** The time/space complexity lines the program prints (what goes in the exam copy). */
-function printedComplexity(code: string): { time?: string; space?: string } {
-  const grab = (k: string) => code.match(new RegExp(`${k} complexity:([^"]*)"`, "i"))?.[1]?.replace(/\\n/g, "").trim();
-  return { time: grab("Time"), space: grab("Space") };
 }
 
 function PlainBlock({ text }: { text: string }) {
@@ -171,10 +158,7 @@ function buildCard(p: Program, extraViva: [string, string][] = []): Card {
 export function QuickView({ labId }: { labId: LabId }) {
   const lab = getLab(labId)!;
   const extra = new Map(dsGroups.flatMap((g) => g.programs.map((x) => [x.id, x.viva ?? []] as const)));
-  const groups =
-    labId === "ds"
-      ? dsGroups.map((g) => ({ id: g.id, title: g.title, ids: g.programs.map((x) => x.id) }))
-      : lab.units.map((u) => ({ id: u.id, title: u.title, ids: u.ids.filter((id) => lab.byId.get(id)?.record) })).filter((g) => g.ids.length);
+  const groups = quickGroups(labId);
   const cards = groups.map((g) => ({ ...g, cards: g.ids.map((id) => buildCard(lab.byId.get(id)!, labId === "ds" ? [...(extra.get(id) ?? [])] : [])) }));
   const order = groups.flatMap((g) => g.ids).sort();
   const comment = lab.lang === "c" ? "//" : "#";
@@ -245,7 +229,16 @@ export function QuickView({ labId }: { labId: LabId }) {
               {order.length} record programs. Copy any code; the output{labId === "ds" ? ", graphs" : ""} and viva answers are right below it.
             </p>
           </div>
-          <QuickLabSwitch current={labId} />
+          <div className="flex flex-wrap items-center gap-2">
+            <QuickLabSwitch current={labId} />
+            <a
+              href={pdfHref(labId)}
+              download
+              className="ledge inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-extrabold uppercase tracking-wide text-primary-foreground [--ledge:var(--ds-accent-ledge)]"
+            >
+              <Download className="size-5" /> Download PDF
+            </a>
+          </div>
         </div>
 
         {copyGuide && (

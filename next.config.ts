@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   // OG images read these fonts from disk at build/request time.
-  outputFileTracingIncludes: { "/**": ["./src/assets/fonts/*.ttf"] },
+  outputFileTracingIncludes: { "/**": ["./src/assets/fonts/*.ttf"], "/pdf/**": ["./public/graphs/*.png"] },
   partialPrefetching: true,
   turbopack: {
     rules: {
