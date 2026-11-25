@@ -235,4 +235,40 @@ export const osNotes: Record<string, Note> = {
       m("sed 's/apple/grape/g' does…", "Replace every 'apple' with 'grape' on each line", ["Delete apple", "Search only", "Sort the file"], "Without g, only the first match on each line is replaced."),
     ],
   },
+  "31": {
+    title: "Round Robin scheduling",
+    steps: ["read n, each burst time into bt[i] (copy into rem[i]), and the time quantum q", "loop while processes are left: each one with rem[i] > 0 runs min(q, rem[i]); when rem[i] hits 0, ct[i] = time", "tat = ct (all arrive at 0), wt = tat − bt; print the Gantt chart, the table and both averages"],
+    mcq: [
+      m("Round Robin is…", "Preemptive: each process runs for at most one time quantum", ["Non-preemptive", "Priority based", "Shortest job first"], "When the quantum runs out, the process goes to the back of the ready queue."),
+      m("With bursts 5, 3, 8 and q = 4, the order of slices is…", "P1 P2 P3 P1 P3", ["P1 P2 P3", "P2 P1 P3", "P1 P1 P2 P3 P3"], "P1 runs 4 (1 left), P2 finishes in 3, P3 runs 4 (4 left), then P1 finishes, then P3."),
+      m("If the time quantum is very large, Round Robin becomes…", "FCFS", ["SJF", "Priority scheduling", "Impossible to run"], "Every process finishes inside its first slice, so it is first come, first served."),
+      m("A very small quantum causes…", "Too many context switches (overhead)", ["Starvation", "The convoy effect", "Fewer context switches"], "Typical quanta are 10–100 ms, much larger than a context switch."),
+      m("Why does the script keep a separate rem[] array?", "bt[] must stay unchanged to compute WT = TAT − BT at the end", ["Bash arrays are read-only", "To sort the processes", "rem is the quantum"], "rem[i] is the remaining burst; it counts down to 0."),
+    ],
+    tip: "Answer for the sample: Gantt 0 | P1 | 4 | P2 | 7 | P3 | 11 | P1 | 12 | P3 | 16, avg WT = 6.33, avg TAT = 11.66 (bc truncates 11.666…). Starvation can't happen in RR.",
+  },
+  "32": {
+    title: "Banker's algorithm (deadlock avoidance)",
+    steps: ["read n, m, the Allocation and Max matrices (row by row) and Available", "Need[i][j] = Max[i][j] − Allocation[i][j]; Work = Available, Finish[i] = 0", "repeat: find a process with Finish = 0 and Need ≤ Work; add its Allocation to Work, mark it finished, append it to the safe sequence. All finished → SAFE, else UNSAFE"],
+    mcq: [
+      m("The Banker's algorithm is used for deadlock…", "Avoidance", ["Prevention", "Detection only", "Recovery"], "It refuses any request that would leave the system in an unsafe state."),
+      m("Need = ?", "Max − Allocation", ["Max + Allocation", "Available − Allocation", "Allocation − Max"], "What the process may still ask for."),
+      m("A process can run in the safety check when…", "Its Need ≤ Work for every resource", ["Its Allocation ≤ Work", "Its Max ≤ Allocation", "Work is 0"], "Then it can finish and return all it holds: Work = Work + Allocation."),
+      m("A safe state means…", "There is an order in which every process can finish", ["No process holds any resource", "Deadlock has happened", "All Need values are 0"], "Unsafe does not always mean deadlock, but deadlock is possible."),
+      m("Why are the matrices stored as alloc[i * m + j]?", "Bash has only 1D arrays, so row i, column j is flattened", ["It is faster", "bash needs it for read", "To sort the rows"], "With m = 3, row 2 column 1 is index 7."),
+    ],
+    tip: "Classic sample: Available 3 3 2 → safe sequence P1 P3 P4 P0 P2. Remember the 4 deadlock conditions: mutual exclusion, hold and wait, no preemption, circular wait.",
+  },
+  "33": {
+    title: "First Fit, Best Fit, Worst Fit",
+    steps: ["read the block sizes into block[] and the process sizes into proc[]", "allocate() copies block[] to hole[]; for each process scan every block that is big enough: First Fit takes the first, Best Fit the smallest, Worst Fit the largest", "subtract the process size from that block (hole[pick] −= size), print the block and what is left, or 'Not allocated'"],
+    mcq: [
+      m("Best Fit chooses…", "The smallest free block that is big enough", ["The first block big enough", "The largest block", "A random block"], "It leaves the smallest leftover hole."),
+      m("Worst Fit chooses…", "The largest free block", ["The smallest block that fits", "The first block that fits", "The last block"], "It leaves a big leftover that may still be useful."),
+      m("Which one is usually fastest?", "First Fit: it stops at the first block that fits", ["Best Fit", "Worst Fit", "All take the same time"], "Best and Worst Fit must scan every block."),
+      m("These methods suffer from…", "External fragmentation", ["Internal fragmentation only", "Belady's anomaly", "Thrashing"], "Free memory is split into small holes; compaction or paging fixes it."),
+      m("Blocks 100 500 200 300 600, processes 212 417 112 426: which method places all four?", "Best Fit", ["First Fit", "Worst Fit", "None of them"], "First and Worst Fit leave 426 Not allocated."),
+    ],
+    tip: "Why hole[] and not block[]? Each method must start with all blocks free again, so the original sizes are copied before every run.",
+  },
 };

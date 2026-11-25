@@ -115,7 +115,7 @@ function Theory({ blocks }: { blocks: TheoryBlock[] }) {
 }
 
 const osTheory: TheoryBlock[] = [
-  { title: "CPU scheduling formulas", table: { head: ["Formula", "Meaning"], rows: schedFormulas } },
+  { title: "Scheduling, deadlock and memory formulas", table: { head: ["Formula", "Meaning"], rows: schedFormulas } },
   { title: "Test operators inside [ ]", table: { head: ["Operator", "Meaning"], rows: testOps } },
   { title: "Common Linux commands", table: { head: ["Command", "What it does"], rows: linuxCmds } },
 ];

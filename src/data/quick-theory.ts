@@ -11,7 +11,7 @@ export const examCopy: Partial<Record<LabId, { steps: string[]; note: string }>>
   },
   os: {
     steps: ["Aim", "Algorithm", "Program (type and run it on the machine)", "Output"],
-    note: "Type and run the script or C program on the machine, then copy the algorithm and output. For the scheduling programs, also write the formulas used.",
+    note: "Type and run the script or C program on the machine, then copy the algorithm and output. For Round Robin, FCFS, priority, Banker's and the memory fits, also write the formulas used.",
   },
 };
 

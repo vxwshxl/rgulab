@@ -180,7 +180,7 @@ function OsSheet() {
         <Section id="linux" title="Linux commands (program 30 and beyond)">
           <Table rows={linuxCmds} head={["Command", "What it does"]} />
         </Section>
-        <Section id="sched" title="CPU scheduling formulas" intro="Programs 15 and 16 assume every process arrives at time 0.">
+        <Section id="sched" title="Scheduling, deadlock and memory formulas" intro="Programs 15, 16 and 31 assume every process arrives at time 0. Program 32 is the Banker's algorithm; 33 is First / Best / Worst Fit.">
           <Table rows={schedFormulas} head={["Formula", "Meaning"]} />
         </Section>
         <Section id="run" title="Running in the lab">

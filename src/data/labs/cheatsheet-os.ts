@@ -38,4 +38,8 @@ export const schedFormulas: [string, string][] = [
   ["RT = first run − AT", "response time"],
   ["FCFS (AT = 0)", "wt[i] = wt[i−1] + bt[i−1]"],
   ["Average", "sum of WT (or TAT) ÷ n"],
+  ["Round Robin", "run min(q, remaining); unfinished → back of queue"],
+  ["Banker's: Need", "Need = Max − Allocation"],
+  ["Banker's: safe", "Need ≤ Work → Work = Work + Allocation"],
+  ["First / Best / Worst Fit", "first big-enough / smallest that fits / largest block"],
 ];
